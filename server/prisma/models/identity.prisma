@@ -1,0 +1,219 @@
+enum UserType {
+  AGENCY
+  LANDLORD
+}
+
+enum UserStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum EmployeeStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum PermissionEffect {
+  ALLOW
+  DENY
+}
+
+model Organization {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  legalName String?
+  email     String
+  phone     String?
+  address   String?
+  timezone  String   @default("Africa/Lagos")
+  currency  String   @default("NGN") @db.VarChar(3)
+  locale    String   @default("en-NG")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users               User[]
+  roles               Role[]
+  permissions         Permission[]
+  employees           Employee[]
+  landlords           Landlord[]
+  properties          Property[]
+  tenants             Tenant[]
+  leases              Lease[]
+  payments            Payment[]
+  transactions        Transaction[]
+  maintenanceRequests MaintenanceRequest[]
+  documents           Document[]
+  communications      Communication[]
+  inspections         Inspection[]
+  complaints          Complaint[]
+  auditEvents         AuditEvent[]
+
+  @@map("organizations")
+}
+
+model User {
+  id                String     @id @default(uuid()) @db.Uuid
+  organizationId    String     @db.Uuid
+  email             String
+  passwordHash      String?
+  name              String
+  phone             String?
+  type              UserType
+  status            UserStatus @default(INVITED)
+  emailVerifiedAt   DateTime?
+  lastLoginAt       DateTime?
+  passwordChangedAt DateTime?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  organization         Organization         @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  employee             Employee?
+  landlord             Landlord?
+  sessions             Session[]
+  invitations          Invitation[]         @relation("InvitationRecipient")
+  invitedUsers         Invitation[]         @relation("InvitationCreator")
+  paymentsCreated      Payment[]            @relation("PaymentCreatedBy")
+  paymentsVoided       Payment[]            @relation("PaymentVoidedBy")
+  transactionsCreated  Transaction[]        @relation("TransactionCreatedBy")
+  transactionsVoided   Transaction[]        @relation("TransactionVoidedBy")
+  createdDocuments     Document[]
+  documentVersions     DocumentVersion[]
+  documentGrants       DocumentGrant[]
+  communications       Communication[]
+  notifications        Notification[]
+  maintenanceAssigned  MaintenanceRequest[] @relation("MaintenanceAssignedTo")
+  maintenanceCompleted MaintenanceRequest[] @relation("MaintenanceCompletedBy")
+  maintenanceVerified  MaintenanceRequest[] @relation("MaintenanceVerifiedBy")
+  inspections          Inspection[]
+  complaintsAssigned   Complaint[]
+  complaintMessages    ComplaintMessage[]
+  auditEvents          AuditEvent[]
+
+  @@unique([organizationId, email])
+  @@index([organizationId, type, status])
+  @@map("users")
+}
+
+model Session {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @unique
+  ipAddress String?
+  userAgent String?
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@map("sessions")
+}
+
+model Invitation {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  invitedById String?   @db.Uuid
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  user      User  @relation("InvitationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  invitedBy User? @relation("InvitationCreator", fields: [invitedById], references: [id], onDelete: SetNull)
+
+  @@index([userId, expiresAt])
+  @@map("invitations")
+}
+
+model Role {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @db.Uuid
+  name           String
+  description    String?
+  isSystem       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  employees       Employee[]
+  rolePermissions RolePermission[]
+
+  @@unique([organizationId, name])
+  @@map("roles")
+}
+
+model Permission {
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @db.Uuid
+  resource       String
+  action         String
+
+  organization      Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  rolePermissions   RolePermission[]
+  employeeOverrides EmployeePermission[]
+
+  @@unique([organizationId, resource, action])
+  @@index([organizationId, resource])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String @db.Uuid
+  permissionId String @db.Uuid
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model Employee {
+  id             String         @id @default(uuid()) @db.Uuid
+  organizationId String         @db.Uuid
+  userId         String         @unique @db.Uuid
+  roleId         String         @db.Uuid
+  department     String?
+  jobTitle       String?
+  status         EmployeeStatus @default(INVITED)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  organization Organization         @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role         Role                 @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  properties   EmployeeProperty[]
+  overrides    EmployeePermission[]
+
+  @@index([organizationId, roleId, status])
+  @@map("employees")
+}
+
+model EmployeePermission {
+  employeeId   String           @db.Uuid
+  permissionId String           @db.Uuid
+  effect       PermissionEffect
+
+  employee   Employee   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([employeeId, permissionId])
+  @@map("employee_permissions")
+}
+
+model EmployeeProperty {
+  employeeId String   @db.Uuid
+  propertyId String   @db.Uuid
+  createdAt  DateTime @default(now())
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@id([employeeId, propertyId])
+  @@map("employee_properties")
+}

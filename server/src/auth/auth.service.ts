@@ -1,0 +1,212 @@
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../database/prisma.service';
+import { EnvironmentVariables } from '../config/environment';
+import { randomUUID } from 'node:crypto';
+
+export interface TokenPayload {
+  sub: string;
+  type: 'AGENCY' | 'LANDLORD';
+  organizationId: string;
+  email: string;
+  name: string;
+  sessionId: string;
+  role: string | null;
+  landlordId: string | null;
+}
+
+interface RefreshTokenPayload {
+  sub: string;
+  type: 'refresh';
+  sessionId: string;
+}
+
+function normalizeRoleName(name: string | null | undefined) {
+  return (
+    name
+      ?.trim()
+      .toUpperCase()
+      .replace(/[^A-Z0-9]+/g, '_') ?? null
+  );
+}
+
+function durationToMilliseconds(value: string) {
+  const match = /^(\d+)(s|m|h|d)$/.exec(value);
+  if (!match) {
+    throw new Error(`Unsupported token expiry format: ${value}`);
+  }
+
+  const amount = Number(match[1]);
+  const multipliers = { s: 1000, m: 60000, h: 3600000, d: 86400000 };
+  return amount * multipliers[match[2] as keyof typeof multipliers];
+}
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwt: JwtService,
+    private readonly config: ConfigService<EnvironmentVariables, true>,
+  ) {}
+
+  async validateUser(email: string, password: string, organizationId?: string) {
+    const users = await this.prisma.user.findMany({
+      where: {
+        email: { equals: email, mode: 'insensitive' },
+        status: 'ACTIVE',
+        ...(organizationId ? { organizationId } : {}),
+      },
+      include: { employee: { include: { role: true } }, landlord: true },
+      take: 2,
+    });
+
+    if (users.length !== 1) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const user = users[0];
+    if (!user || !user.passwordHash) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const isValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return user;
+  }
+
+  async login(userId: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId, status: 'ACTIVE' },
+      include: { employee: { include: { role: true } }, landlord: true },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User is not active');
+    }
+
+    const sessionId = randomUUID();
+    const accessPayload: TokenPayload = {
+      sub: user.id,
+      type: user.type,
+      organizationId: user.organizationId,
+      email: user.email,
+      name: user.name,
+      sessionId,
+      role: normalizeRoleName(user.employee?.role.name),
+      landlordId: user.landlord?.id ?? null,
+    };
+
+    const accessToken = await this.jwt.signAsync(accessPayload);
+    const refreshToken = await this.jwt.signAsync(
+      {
+        sub: user.id,
+        type: 'refresh',
+        sessionId,
+      } satisfies RefreshTokenPayload,
+      {
+        expiresIn: this.config.get('JWT_REFRESH_TOKEN_EXPIRY', { infer: true }),
+      },
+    );
+
+    const tokenHash = await bcrypt.hash(refreshToken, 10);
+    const session = await this.prisma.session.create({
+      data: {
+        id: sessionId,
+        userId: user.id,
+        tokenHash,
+        expiresAt: new Date(
+          Date.now() +
+            durationToMilliseconds(
+              this.config.get('JWT_REFRESH_TOKEN_EXPIRY', { infer: true }),
+            ),
+        ),
+      },
+    });
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { lastLoginAt: new Date() },
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      sessionId: session.id,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        type: user.type,
+        employee: user.employee
+          ? {
+              id: user.employee.id,
+              role: user.employee.role.name,
+              department: user.employee.department,
+              jobTitle: user.employee.jobTitle,
+            }
+          : null,
+        landlord: user.landlord
+          ? { id: user.landlord.id, code: user.landlord.code }
+          : null,
+      },
+    };
+  }
+
+  async refreshTokens(refreshToken: string) {
+    try {
+      const payload =
+        await this.jwt.verifyAsync<RefreshTokenPayload>(refreshToken);
+      if (payload.type !== 'refresh') {
+        throw new UnauthorizedException();
+      }
+
+      const session = await this.prisma.session.findFirst({
+        where: {
+          id: payload.sessionId,
+          userId: payload.sub,
+          revokedAt: null,
+          expiresAt: { gt: new Date() },
+        },
+      });
+
+      if (
+        !session ||
+        !(await bcrypt.compare(refreshToken, session.tokenHash))
+      ) {
+        throw new UnauthorizedException();
+      }
+
+      const revoked = await this.prisma.session.updateMany({
+        where: { id: session.id, revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
+
+      if (revoked.count !== 1) {
+        throw new UnauthorizedException();
+      }
+
+      return this.login(payload.sub);
+    } catch {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+  }
+
+  async logout(sessionId: string, userId: string) {
+    await this.prisma.session.updateMany({
+      where: { id: sessionId, userId },
+      data: { revokedAt: new Date() },
+    });
+  }
+
+  async logoutAll(userId: string) {
+    await this.prisma.session.updateMany({
+      where: { userId, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
+  }
+}

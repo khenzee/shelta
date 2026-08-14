@@ -1,0 +1,79 @@
+enum CommunicationStatus {
+  QUEUED
+  SENDING
+  SENT
+  FAILED
+}
+
+enum NotificationType {
+  RENT_DUE
+  RENT_OVERDUE
+  LEASE_EXPIRING
+  MAINTENANCE_ASSIGNED
+  MAINTENANCE_STATUS_CHANGED
+  PAYMENT_RECEIVED
+  DOCUMENT_SHARED
+  INSPECTION_SCHEDULED
+}
+
+model Communication {
+  id                String              @id @default(uuid()) @db.Uuid
+  organizationId    String              @db.Uuid
+  channel           String              @default("email")
+  senderId          String              @db.Uuid
+  subject           String
+  body              String
+  landlordId        String?             @db.Uuid
+  propertyId        String?             @db.Uuid
+  leaseId           String?             @db.Uuid
+  tenantId          String?             @db.Uuid
+  maintenanceId     String?             @db.Uuid
+  status            CommunicationStatus @default(QUEUED)
+  providerMessageId String?
+  sentAt            DateTime?
+  failedReason      String?
+  idempotencyKey    String?             @unique
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  organization Organization            @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  sender       User                    @relation(fields: [senderId], references: [id], onDelete: Restrict)
+  landlord     Landlord?               @relation(fields: [landlordId], references: [id], onDelete: SetNull)
+  property     Property?               @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  lease        Lease?                  @relation(fields: [leaseId], references: [id], onDelete: SetNull)
+  tenant       Tenant?                 @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  maintenance  MaintenanceRequest?     @relation(fields: [maintenanceId], references: [id], onDelete: SetNull)
+  documents    CommunicationDocument[]
+  attachments  Document[]
+
+  @@index([organizationId, status, createdAt])
+  @@map("communications")
+}
+
+model CommunicationDocument {
+  id              String @id @default(uuid()) @db.Uuid
+  communicationId String @db.Uuid
+  documentId      String @db.Uuid
+
+  communication Communication @relation(fields: [communicationId], references: [id], onDelete: Cascade)
+  document      Document      @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([communicationId, documentId])
+  @@map("communication_documents")
+}
+
+model Notification {
+  id        String           @id @default(uuid()) @db.Uuid
+  userId    String           @db.Uuid
+  type      NotificationType
+  title     String
+  body      String
+  link      Json?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt])
+  @@map("notifications")
+}

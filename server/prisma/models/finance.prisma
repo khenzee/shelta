@@ -1,0 +1,111 @@
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  VOIDED
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  CARD
+  CHEQUE
+  OTHER
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  VOIDED
+}
+
+model Payment {
+  id                String        @id @default(uuid()) @db.Uuid
+  organizationId    String        @db.Uuid
+  landlordId        String        @db.Uuid
+  propertyId        String        @db.Uuid
+  unitId            String?       @db.Uuid
+  tenantId          String        @db.Uuid
+  amount            Decimal       @db.Decimal(14, 2)
+  paidAt            DateTime      @default(now())
+  method            PaymentMethod @default(CASH)
+  reference         String?
+  receiptDocumentId String?       @db.Uuid
+  notes             String?
+  status            PaymentStatus @default(PENDING)
+  createdById       String?       @db.Uuid
+  voidedById        String?       @db.Uuid
+  voidedAt          DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  organization    Organization        @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  landlord        Landlord            @relation(fields: [landlordId], references: [id], onDelete: Restrict)
+  property        Property            @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  unit            Unit?               @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  allocations     PaymentAllocation[]
+  receiptDocument Document?           @relation("PaymentReceipt", fields: [receiptDocumentId], references: [id], onDelete: SetNull)
+  createdBy       User?               @relation("PaymentCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  voidedBy        User?               @relation("PaymentVoidedBy", fields: [voidedById], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, landlordId, paidAt])
+  @@index([organizationId, propertyId, paidAt])
+  @@index([organizationId, tenantId, paidAt])
+  @@map("payments")
+}
+
+model PaymentAllocation {
+  id              String   @id @default(uuid()) @db.Uuid
+  paymentId       String   @db.Uuid
+  rentChargeId    String   @db.Uuid
+  allocatedAmount Decimal  @db.Decimal(14, 2)
+  createdAt       DateTime @default(now())
+
+  payment    Payment    @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  rentCharge RentCharge @relation(fields: [rentChargeId], references: [id], onDelete: Cascade)
+
+  @@unique([paymentId, rentChargeId])
+  @@map("payment_allocations")
+}
+
+model Transaction {
+  id                String            @id @default(uuid()) @db.Uuid
+  organizationId    String            @db.Uuid
+  landlordId        String            @db.Uuid
+  propertyId        String            @db.Uuid
+  unitId            String?           @db.Uuid
+  tenantId          String?           @db.Uuid
+  type              TransactionType
+  category          String
+  amount            Decimal           @db.Decimal(14, 2)
+  transactionDate   DateTime
+  paymentMethod     PaymentMethod     @default(CASH)
+  reference         String?
+  receiptDocumentId String?           @db.Uuid
+  notes             String?
+  status            TransactionStatus @default(PENDING)
+  createdById       String?           @db.Uuid
+  voidedById        String?           @db.Uuid
+  voidedAt          DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  landlord        Landlord     @relation(fields: [landlordId], references: [id], onDelete: Restrict)
+  property        Property     @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  unit            Unit?        @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  tenant          Tenant?      @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  receiptDocument Document?    @relation("TransactionReceipt", fields: [receiptDocumentId], references: [id], onDelete: SetNull)
+  createdBy       User?        @relation("TransactionCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  voidedBy        User?        @relation("TransactionVoidedBy", fields: [voidedById], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, landlordId, transactionDate])
+  @@index([organizationId, propertyId, transactionDate])
+  @@index([organizationId, type, category])
+  @@map("transactions")
+}

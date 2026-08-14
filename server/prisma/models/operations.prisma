@@ -1,0 +1,109 @@
+enum ComplaintStatus {
+  SUBMITTED
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum InspectionType {
+  MOVE_IN
+  MOVE_OUT
+  PERIODIC
+  COMPLAINT
+}
+
+model Inspection {
+  id                String         @id @default(uuid()) @db.Uuid
+  organizationId    String         @db.Uuid
+  propertyId        String         @db.Uuid
+  unitId            String?        @db.Uuid
+  tenantId          String?        @db.Uuid
+  type              InspectionType
+  inspectorId       String?        @db.Uuid
+  scheduledDate     DateTime
+  completedDate     DateTime?
+  checklist         Json?
+  comments          String?
+  signatureMetadata Json?
+  reportDocumentId  String?        @unique @db.Uuid
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  property       Property     @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  unit           Unit?        @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  tenant         Tenant?      @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  inspector      User?        @relation(fields: [inspectorId], references: [id], onDelete: SetNull)
+  reportDocument Document?    @relation("InspectionReportDocument", fields: [reportDocumentId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, propertyId, scheduledDate])
+  @@map("inspections")
+}
+
+model Complaint {
+  id             String          @id @default(uuid()) @db.Uuid
+  organizationId String          @db.Uuid
+  propertyId     String          @db.Uuid
+  unitId         String?         @db.Uuid
+  tenantId       String?         @db.Uuid
+  category       String
+  title          String
+  description    String
+  status         ComplaintStatus @default(SUBMITTED)
+  assignedToId   String?         @db.Uuid
+  priority       String          @default("MEDIUM")
+  resolvedAt     DateTime?
+  closedAt       DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  organization Organization       @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  property     Property           @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  unit         Unit?              @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  tenant       Tenant?            @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  assignedTo   User?              @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
+  documents    Document[]
+  messages     ComplaintMessage[]
+
+  @@index([organizationId, propertyId, status])
+  @@map("complaints")
+}
+
+model ComplaintMessage {
+  id          String   @id @default(uuid()) @db.Uuid
+  complaintId String   @db.Uuid
+  senderId    String   @db.Uuid
+  body        String
+  attachments Json?
+  createdAt   DateTime @default(now())
+
+  complaint Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  sender    User      @relation(fields: [senderId], references: [id], onDelete: Restrict)
+
+  @@index([complaintId, createdAt])
+  @@map("complaint_messages")
+}
+
+model AuditEvent {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @db.Uuid
+  actorUserId    String?  @db.Uuid
+  action         String
+  resourceType   String
+  resourceId     String?
+  previousValue  Json?
+  newValue       Json?
+  reason         String?
+  ipAddress      String?
+  userAgent      String?
+  requestId      String?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  actor        User?        @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, resourceType, resourceId, createdAt])
+  @@index([organizationId, actorUserId, createdAt])
+  @@map("audit_events")
+}

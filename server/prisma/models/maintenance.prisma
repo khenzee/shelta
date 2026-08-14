@@ -1,0 +1,79 @@
+enum MaintenanceStatus {
+  OPEN
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  VERIFIED
+}
+
+enum MaintenancePriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum MaintenanceCategory {
+  PLUMBING
+  ELECTRICAL
+  HVAC
+  STRUCTURAL
+  APPLIANCE
+  CLEANING
+  SECURITY
+  OTHER
+}
+
+model MaintenanceRequest {
+  id                String              @id @default(uuid()) @db.Uuid
+  organizationId    String              @db.Uuid
+  propertyId        String              @db.Uuid
+  unitId            String?             @db.Uuid
+  tenantId          String?             @db.Uuid
+  category          MaintenanceCategory
+  title             String
+  description       String
+  priority          MaintenancePriority @default(MEDIUM)
+  status            MaintenanceStatus   @default(OPEN)
+  assignedToId      String?             @db.Uuid
+  estimatedCost     Decimal?            @db.Decimal(14, 2)
+  actualCost        Decimal?            @db.Decimal(14, 2)
+  invoiceDocumentId String?             @db.Uuid
+  completedAt       DateTime?
+  completedById     String?             @db.Uuid
+  verifiedAt        DateTime?
+  verifiedById      String?             @db.Uuid
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  organization    Organization               @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  property        Property                   @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  unit            Unit?                      @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  tenant          Tenant?                    @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  assignedTo      User?                      @relation("MaintenanceAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  completedBy     User?                      @relation("MaintenanceCompletedBy", fields: [completedById], references: [id], onDelete: SetNull)
+  verifiedBy      User?                      @relation("MaintenanceVerifiedBy", fields: [verifiedById], references: [id], onDelete: SetNull)
+  invoiceDocument Document?                  @relation("MaintenanceInvoice", fields: [invoiceDocumentId], references: [id], onDelete: SetNull)
+  statusHistory   MaintenanceStatusHistory[]
+  documents       Document[]
+  communications  Communication[]
+
+  @@index([organizationId, propertyId, status])
+  @@index([organizationId, status, priority])
+  @@map("maintenance_requests")
+}
+
+model MaintenanceStatusHistory {
+  id                   String            @id @default(uuid()) @db.Uuid
+  maintenanceRequestId String            @db.Uuid
+  status               MaintenanceStatus
+  actorUserId          String?           @db.Uuid
+  actorType            String
+  notes                String?
+  createdAt            DateTime          @default(now())
+
+  maintenanceRequest MaintenanceRequest @relation(fields: [maintenanceRequestId], references: [id], onDelete: Cascade)
+
+  @@index([maintenanceRequestId, createdAt])
+  @@map("maintenance_status_history")
+}

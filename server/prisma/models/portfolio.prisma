@@ -1,0 +1,130 @@
+enum LandlordStatus {
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum PortalStatus {
+  INACTIVE
+  INVITED
+  ACTIVE
+}
+
+enum PropertyStatus {
+  ACTIVE
+  VACANT
+  UNDER_MAINTENANCE
+  SOLD
+  ARCHIVED
+}
+
+enum UnitStatus {
+  OCCUPIED
+  VACANT
+  RESERVED
+  UNDER_REPAIR
+  ARCHIVED
+}
+
+model Landlord {
+  id                String         @id @default(uuid()) @db.Uuid
+  organizationId    String         @db.Uuid
+  userId            String?        @unique @db.Uuid
+  code              String
+  name              String
+  email             String
+  phone             String?
+  address           String?
+  bankDetailsCipher String?
+  emergencyContact  Json?
+  identification    Json?
+  notes             String?
+  status            LandlordStatus @default(ACTIVE)
+  portalStatus      PortalStatus   @default(INACTIVE)
+  archivedAt        DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  user           User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  properties     Property[]
+  tenants        Tenant[]
+  leases         Lease[]
+  finances       Transaction[]
+  payments       Payment[]
+  documents      Document[]
+  communications Communication[]
+
+  @@unique([organizationId, code])
+  @@unique([organizationId, email])
+  @@index([organizationId, status])
+  @@map("landlords")
+}
+
+model Property {
+  id             String         @id @default(uuid()) @db.Uuid
+  organizationId String         @db.Uuid
+  landlordId     String         @db.Uuid
+  code           String
+  name           String
+  type           String
+  address        String
+  state          String?
+  city           String?
+  latitude       Decimal?       @db.Decimal(10, 7)
+  longitude      Decimal?       @db.Decimal(10, 7)
+  amenities      Json?
+  status         PropertyStatus @default(ACTIVE)
+  archivedAt     DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  organization   Organization         @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  landlord       Landlord             @relation(fields: [landlordId], references: [id], onDelete: Restrict)
+  units          Unit[]
+  employees      EmployeeProperty[]
+  tenants        Tenant[]
+  leases         Lease[]
+  finances       Transaction[]
+  payments       Payment[]
+  maintenance    MaintenanceRequest[]
+  documents      Document[]
+  communications Communication[]
+  inspections    Inspection[]
+  complaints     Complaint[]
+
+  @@unique([organizationId, code])
+  @@index([organizationId, landlordId, status])
+  @@index([organizationId, city])
+  @@map("properties")
+}
+
+model Unit {
+  id              String     @id @default(uuid()) @db.Uuid
+  propertyId      String     @db.Uuid
+  number          String
+  floor           String?
+  type            String
+  bedrooms        Int        @default(0)
+  bathrooms       Decimal    @default(0) @db.Decimal(3, 1)
+  monthlyRent     Decimal    @db.Decimal(14, 2)
+  securityDeposit Decimal    @db.Decimal(14, 2)
+  status          UnitStatus @default(VACANT)
+  archivedAt      DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  property            Property             @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  leases              Lease[]
+  tenants             Tenant[]
+  payments            Payment[]
+  transactions        Transaction[]
+  maintenanceRequests MaintenanceRequest[]
+  documents           Document[]
+  inspections         Inspection[]
+  complaints          Complaint[]
+
+  @@unique([propertyId, number])
+  @@index([propertyId, status])
+  @@map("units")
+}

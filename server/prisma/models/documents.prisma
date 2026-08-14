@@ -1,0 +1,86 @@
+enum DocumentStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+model Document {
+  id             String         @id @default(uuid()) @db.Uuid
+  organizationId String         @db.Uuid
+  category       String
+  displayName    String
+  description    String?
+  status         DocumentStatus @default(ACTIVE)
+  landlordId     String?        @db.Uuid
+  propertyId     String?        @db.Uuid
+  unitId         String?        @db.Uuid
+  tenantId       String?        @db.Uuid
+  leaseId        String?        @db.Uuid
+  maintenanceId  String?        @db.Uuid
+  inspectionId   String?        @unique @db.Uuid
+  complaintId    String?        @db.Uuid
+  createdById    String         @db.Uuid
+  archivedAt     DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  organization           Organization            @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  landlord               Landlord?               @relation(fields: [landlordId], references: [id], onDelete: SetNull)
+  property               Property?               @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  unit                   Unit?                   @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  tenant                 Tenant?                 @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  lease                  Lease?                  @relation(fields: [leaseId], references: [id], onDelete: SetNull)
+  maintenance            MaintenanceRequest?     @relation(fields: [maintenanceId], references: [id], onDelete: SetNull)
+  inspection             Inspection?             @relation("InspectionReportDocument")
+  complaint              Complaint?              @relation(fields: [complaintId], references: [id], onDelete: SetNull)
+  createdBy              User                    @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  versions               DocumentVersion[]
+  grants                 DocumentGrant[]
+  paymentReceipts        Payment[]               @relation("PaymentReceipt")
+  transactionReceipts    Transaction[]           @relation("TransactionReceipt")
+  communications         Communication[]
+  maintenanceInvoices    MaintenanceRequest[]    @relation("MaintenanceInvoice")
+  communicationDocuments CommunicationDocument[]
+
+  @@index([organizationId, category])
+  @@index([organizationId, landlordId])
+  @@index([organizationId, propertyId])
+  @@index([organizationId, tenantId])
+  @@map("documents")
+}
+
+model DocumentVersion {
+  id               String   @id @default(uuid()) @db.Uuid
+  documentId       String   @db.Uuid
+  version          Int
+  storageKey       String
+  originalFileName String
+  mimeType         String
+  byteSize         Int
+  checksum         String
+  uploadedById     String   @db.Uuid
+  uploadedAt       DateTime @default(now())
+
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  uploadedBy User     @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@unique([documentId, version])
+  @@index([documentId, uploadedAt])
+  @@map("document_versions")
+}
+
+model DocumentGrant {
+  id           String   @id @default(uuid()) @db.Uuid
+  documentId   String   @db.Uuid
+  audienceType String
+  audienceId   String   @db.Uuid
+  canView      Boolean  @default(true)
+  canDownload  Boolean  @default(true)
+  grantedById  String   @db.Uuid
+  createdAt    DateTime @default(now())
+
+  document  Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  grantedBy User     @relation(fields: [grantedById], references: [id], onDelete: Restrict)
+
+  @@unique([documentId, audienceType, audienceId])
+  @@map("document_grants")
+}

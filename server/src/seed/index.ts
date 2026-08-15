@@ -9,29 +9,39 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+  const superAdminPassword = process.env.SUPERADMIN_PASSWORD;
+  if (!superAdminPassword || superAdminPassword.length < 12) {
+    throw new Error(
+      'SUPERADMIN_PASSWORD must be set and contain at least 12 characters',
+    );
+  }
+
+  const superAdminEmail = process.env.SUPERADMIN_EMAIL ?? 'admin@shelta.local';
   const org = await prisma.organization.upsert({
     where: { id: '00000000-0000-0000-0000-000000000001' },
     update: {},
     create: {
       id: '00000000-0000-0000-0000-000000000001',
-      name: 'Shelta Organization',
-      legalName: 'Shelta Real Estate Management',
-      email: 'admin@shelta.local',
-      phone: '+234801234567',
-      address: '123 Victoria Island, Lagos',
+      name: process.env.ORGANIZATION_NAME ?? 'Shelta Organization',
+      legalName:
+        process.env.ORGANIZATION_LEGAL_NAME ??
+        'Shelta Real Estate Management',
+      email: superAdminEmail,
+      phone: process.env.ORGANIZATION_PHONE ?? '+234801234567',
+      address: process.env.ORGANIZATION_ADDRESS ?? '123 Victoria Island, Lagos',
       timezone: 'Africa/Lagos',
       currency: 'NGN',
       locale: 'en-NG',
     },
   });
 
-  const passwordHash = await bcrypt.hash('password123', 10);
+  const passwordHash = await bcrypt.hash(superAdminPassword, 12);
 
   const superAdmin = await prisma.user.upsert({
     where: {
       organizationId_email: {
         organizationId: org.id,
-        email: 'admin@shelta.local',
+        email: superAdminEmail,
       },
     },
     update: {},
@@ -39,7 +49,7 @@ async function main() {
       organizationId: org.id,
       email: 'admin@shelta.local',
       passwordHash,
-      name: 'Super Admin',
+      name: process.env.SUPERADMIN_NAME ?? 'Super Admin',
       type: 'AGENCY',
       status: 'ACTIVE',
       emailVerifiedAt: new Date(),

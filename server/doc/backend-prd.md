@@ -813,6 +813,19 @@ Validate configuration at startup and fail fast when required values are missing
 
 ## 22. Delivery Phases
 
+### Implementation Queue: Secure Account Onboarding
+
+1. Add Super Admin and delegated `employees:manage` invitation endpoints.
+2. Add one-time, hashed, expiring employee and landlord invitation tokens.
+3. Add invitation validation, acceptance, password setup, resend, and revocation.
+4. Add SMTP delivery through the email queue with auditable delivery status.
+5. Add password reset and email verification using separate one-time tokens.
+6. Replace fixed role checks with permission and property-scope enforcement.
+7. Move refresh tokens to secure HttpOnly cookies and detect token reuse.
+8. Revoke sessions after password, role, status, permission, or scope changes.
+9. Add authentication rate limits, MFA for privileged roles, and audit events.
+10. Add integration and security tests for all onboarding and recovery paths.
+
 ### Phase 1: Foundation
 
 * Prisma and PostgreSQL setup.

@@ -1,10 +1,9 @@
 import {
   Injectable,
   NotFoundException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
-import { SupabaseStorageService } from '../../storage/supabase-storage.service';
+import { LocalStorageService } from '../../storage/local-storage.service';
 import { CreateDocumentDto } from '../dtos/create-document.dto';
 import { DocumentQueryDto } from '../dtos/document-query.dto';
 import type { Prisma } from '../../generated/prisma/client';
@@ -13,7 +12,7 @@ import type { Prisma } from '../../generated/prisma/client';
 export class DocumentsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly storage: SupabaseStorageService,
+    private readonly storage: LocalStorageService,
   ) {}
 
   async list(
@@ -145,7 +144,7 @@ export class DocumentsService {
     });
   }
 
-  async getDownloadUrl(
+  async getDownloadPath(
     organizationId: string,
     documentId: string,
     version: number,
@@ -162,10 +161,6 @@ export class DocumentsService {
       throw new NotFoundException('Document version not found');
     }
 
-    if (!this.storage.isConfigured()) {
-      throw new ForbiddenException('Storage not configured');
-    }
-
-    return this.storage.createSignedDownloadUrl(documentVersion.storageKey);
+    return this.storage.resolvePrivateFile(documentVersion.storageKey);
   }
 }

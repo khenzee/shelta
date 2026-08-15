@@ -2,6 +2,7 @@ import { plainToInstance, Type } from 'class-transformer';
 import {
   IsIn,
   IsInt,
+  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -48,17 +49,64 @@ export class EnvironmentVariables {
   @IsUrl({ require_tld: false })
   FRONTEND_URL = 'http://localhost:3001';
 
-  @IsUrl({ require_tld: false })
-  @IsOptional()
-  SUPABASE_URL?: string;
+  @IsString()
+  @IsNotEmpty()
+  STORAGE_LOCAL_ROOT = './storage';
+
+  @IsString()
+  @IsNotEmpty()
+  SUPERADMIN_NAME = 'Super Admin';
+
+  @IsEmail()
+  SUPERADMIN_EMAIL = 'admin@shelta.local';
 
   @IsString()
   @IsOptional()
-  SUPABASE_SERVICE_ROLE_KEY?: string;
+  SUPERADMIN_PASSWORD?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  ORGANIZATION_NAME = 'Shelta Organization';
+
+  @IsString()
+  @IsNotEmpty()
+  ORGANIZATION_LEGAL_NAME = 'Shelta Real Estate Management';
+
+  @IsString()
+  @IsNotEmpty()
+  ORGANIZATION_PHONE = '+234801234567';
+
+  @IsString()
+  @IsNotEmpty()
+  ORGANIZATION_ADDRESS = '123 Victoria Island, Lagos';
+
+  @IsString()
+  @IsNotEmpty()
+  SMTP_HOST = 'localhost';
+
+  @IsInt()
+  @Type(() => Number)
+  @Min(1)
+  @Max(65535)
+  SMTP_PORT = 1025;
+
+  @IsIn(['true', 'false'])
+  SMTP_SECURE = 'false';
 
   @IsString()
   @IsOptional()
-  SUPABASE_STORAGE_BUCKET = 'documents';
+  SMTP_USER?: string;
+
+  @IsString()
+  @IsOptional()
+  SMTP_PASSWORD?: string;
+
+  @IsEmail()
+  SMTP_FROM_EMAIL = 'no-reply@shelta.local';
+
+  @IsString()
+  @IsNotEmpty()
+  SMTP_FROM_NAME = 'Shelta';
 
   @IsString()
   @IsNotEmpty()
@@ -108,13 +156,16 @@ export function validateEnvironment(config: Record<string, unknown>) {
     throw new Error('JWT_SECRET must be replaced in production');
   }
 
+  if (Boolean(validated.SMTP_USER) !== Boolean(validated.SMTP_PASSWORD)) {
+    throw new Error('SMTP_USER and SMTP_PASSWORD must be configured together');
+  }
+
   if (
     validated.NODE_ENV === 'production' &&
-    Boolean(validated.SUPABASE_URL) !==
-      Boolean(validated.SUPABASE_SERVICE_ROLE_KEY)
+    (!validated.SUPERADMIN_PASSWORD || validated.SUPERADMIN_PASSWORD.length < 12)
   ) {
     throw new Error(
-      'SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be configured together',
+      'SUPERADMIN_PASSWORD must contain at least 12 characters in production',
     );
   }
 

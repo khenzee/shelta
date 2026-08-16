@@ -7,7 +7,6 @@ import {
   ArrowUpRight,
   Bell,
   Building2,
-  ChevronDown,
   CircleAlert,
   Download,
   Plus,
@@ -41,23 +40,38 @@ const headingClass = "flex items-start justify-between gap-[15px]";
 const buttonClass =
   "flex h-[38px] items-center justify-center gap-[7px] rounded-md border px-[13px] font-semibold";
 
-export default function OverviewClient({ metrics, bars, monthLabels, activity, tasks }) {
+export default function OverviewClient({ metrics, finance, unitStatus, monthLabels, notifications, unreadNotifications, activity, tasks }) {
   const [globalSearch, setGlobalSearch] = useState("");
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [period, setPeriod] = useState("This year");
   const [activitySearch, setActivitySearch] = useState("");
   const { activeLandlord } = useWorkspace();
+  const today = new Intl.DateTimeFormat("en", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  }).format(new Date());
   const filteredActivity = activity.filter(
     (item) =>
       item.title.toLowerCase().includes(activitySearch.toLowerCase()) ||
       item.meta.toLowerCase().includes(activitySearch.toLowerCase()),
   );
+  const money = new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 0,
+  });
+  const maxMonthlyValue = finance
+    ? Math.max(1, ...finance.monthly.flatMap((month) => [month.income, month.expenses]))
+    : 1;
+  const occupancyRate = unitStatus.total
+    ? Math.round((unitStatus.occupied / unitStatus.total) * 100)
+    : 0;
 
   return (
     <>
       <header className="sticky top-0 z-20 hidden h-[66px] items-center justify-between gap-6 border-b border-default bg-surface px-8 md:flex">
         <div>
-          <p className="eyebrow">Tuesday, 11 August</p>
+          <p className="eyebrow">{today}</p>
           <h1 className="m-0 leading-tight">
             {activeLandlord ? activeLandlord.name : "Agency overview"}
           </h1>
@@ -83,7 +97,7 @@ export default function OverviewClient({ metrics, bars, monthLabels, activity, t
               aria-label="Notifications"
             >
               <Bell size={20} />
-              <i className="absolute right-[7px] top-[7px] size-1.5 rounded-full border border-inverse bg-danger" />
+              {unreadNotifications > 0 ? <i className="absolute right-[7px] top-[7px] size-1.5 rounded-full border border-inverse bg-danger" /> : null}
             </button>
             {notificationsOpen && (
               <div className="absolute right-0 top-[46px] w-[285px] rounded-[7px] border border-default bg-surface p-[14px] shadow-xl">
@@ -97,21 +111,21 @@ export default function OverviewClient({ metrics, bars, monthLabels, activity, t
                     <X size={16} />
                   </button>
                 </div>
-                {["5 rent payments are overdue", "Palm View inspection is on Friday"].map(
-                  (message) => (
+                {notifications.length ? notifications.map(
+                  (notification) => (
                     <p
                       className="m-0 flex items-center gap-2 border-t border-default py-[10px] text-secondary"
-                      key={message}
+                      key={notification.id}
                     >
                       <span className="size-1.5 rounded-full bg-warning" />
-                      {message}
+                      <span><b className="block text-primary">{notification.title}</b>{notification.body}</span>
                     </p>
                   ),
-                )}
+                ) : <p className="border-t border-default py-3 text-muted">No notifications</p>}
               </div>
             )}
           </div>
-          <button className={`${buttonClass} border-primary bg-primary text-inverse`}>
+          <button className={`${buttonClass} border-primary bg-primary text-inverse opacity-50`} disabled title="Quick add is not available yet">
             <Plus size={18} />
             <span>Quick add</span>
           </button>
@@ -133,6 +147,8 @@ export default function OverviewClient({ metrics, bars, monthLabels, activity, t
           <div className="flex gap-2 max-md:w-full">
             <button
               className={`${buttonClass} border-default bg-surface text-primary max-md:flex-1`}
+              disabled
+              title="Report export is not available yet"
             >
               <Download size={14} /> Export report
             </button>
@@ -174,7 +190,7 @@ export default function OverviewClient({ metrics, bars, monthLabels, activity, t
             <div className={headingClass}>
               <div>
                 <h3 className="mb-1 mt-0">Revenue &amp; Expenses</h3>
-                <p className="m-0 text-muted">Monthly cash flow performance</p>
+                <p className="m-0 text-muted">Year-to-date cash flow performance</p>
               </div>
               <div className="flex gap-[13px] text-secondary max-md:hidden">
                 <span className="flex items-center gap-[5px]">
@@ -184,26 +200,17 @@ export default function OverviewClient({ metrics, bars, monthLabels, activity, t
                   <i className="size-2 rounded-sm bg-secondary" /> Received
                 </span>
               </div>
-              <button
-                className={`${buttonClass} border-default bg-surface text-primary`}
-                onClick={() => setPeriod(period === "This year" ? "Last year" : "This year")}
-              >
-                {period}
-                <ChevronDown size={14} />
-              </button>
+              <span className={`${buttonClass} border-default bg-surface text-primary`}>This year</span>
             </div>
-            <div className="mt-[22px] flex items-end justify-between">
+            {finance ? <><div className="mt-[22px] flex items-end justify-between">
               <div className="flex flex-col gap-[3px]">
-                <span className="text-secondary">Total received</span>
-                <strong>$428,650</strong>
+                <span className="text-secondary">Income recorded</span>
+                <strong>{money.format(finance.income)}</strong>
               </div>
-              <b className="flex items-center gap-[3px] text-secondary">
-                <TrendingUp size={12} /> +12%{" "}
-                <span className="font-normal text-muted">vs last year</span>
-              </b>
+              <div className="text-right"><b className="block text-primary">{money.format(finance.income - finance.expenses)}</b><span className="text-muted">Net after {money.format(finance.expenses)} expenses</span></div>
             </div>
             <div className="mt-[13px] flex h-[172px] justify-around gap-2 border-b border-default pt-[9px] max-[440px]:gap-[3px]">
-              {bars.map((height, i) => (
+              {finance.monthly.map((month, i) => (
                 <div
                   className="flex h-full flex-1 flex-col items-center gap-[7px]"
                   key={monthLabels[i]}
@@ -211,11 +218,11 @@ export default function OverviewClient({ metrics, bars, monthLabels, activity, t
                   <div className="bars">
                     <i
                       className="w-[min(10px,38%)] rounded-t-sm bg-default"
-                      data-height={Math.round(height * 0.7)}
+                      style={{ height: `${Math.max(2, (month.expenses / maxMonthlyValue) * 100)}%` }}
                     />
                     <b
                       className="w-[min(10px,38%)] rounded-t-sm bg-secondary"
-                      data-height={height}
+                      style={{ height: `${Math.max(2, (month.income / maxMonthlyValue) * 100)}%` }}
                     />
                   </div>
                   <span className="translate-y-[18px] text-muted max-[440px]:odd:invisible">
@@ -223,7 +230,7 @@ export default function OverviewClient({ metrics, bars, monthLabels, activity, t
                   </span>
                 </div>
               ))}
-            </div>
+            </div></> : <div className="grid min-h-[210px] place-items-center text-center text-muted"><p>Financial analytics are available to Admins only.</p></div>}
           </div>
 
           <div className={`${panelClass} flex min-h-[260px] flex-col`}>
@@ -236,15 +243,15 @@ export default function OverviewClient({ metrics, bars, monthLabels, activity, t
             <div className="flex flex-1 items-center justify-center gap-[26px] py-[25px] pb-[18px] max-md:gap-[14px] max-[440px]:justify-around">
               <div className="donut">
                 <div>
-                  <strong>92%</strong>
+                  <strong>{occupancyRate}%</strong>
                   <span>Occupied</span>
                 </div>
               </div>
               <div className="min-w-[105px]">
                 {[
-                  ["Occupied", 289],
-                  ["Vacant", 18],
-                  ["Under repair", 5],
+                  ["Occupied", unitStatus.occupied],
+                  ["Vacant", unitStatus.vacant],
+                  ["Under repair", unitStatus.underRepair],
                 ].map(([label, value]) => (
                   <div
                     className="flex justify-between gap-[15px] py-[7px] text-secondary"
@@ -330,7 +337,7 @@ export default function OverviewClient({ metrics, bars, monthLabels, activity, t
                 <h3 className="mb-1 mt-0">Upcoming tasks</h3>
                 <p className="m-0 text-muted">Prioritized items requiring attention</p>
               </div>
-              <button className="flex h-[30px] items-center justify-center gap-[7px] rounded-md border border-primary bg-primary px-[10px] font-semibold text-inverse">
+              <button className="flex h-[30px] items-center justify-center gap-[7px] rounded-md border border-primary bg-primary px-[10px] font-semibold text-inverse opacity-50" disabled title="Task creation is not available yet">
                 <Plus size={14} />
                 <span>Add</span>
               </button>

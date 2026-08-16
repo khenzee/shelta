@@ -1,4 +1,4 @@
-import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 
 export class CreateTenantDto {
   @IsString()
@@ -11,23 +11,22 @@ export class CreateTenantDto {
   @MaxLength(60)
   lastName: string;
 
-  @IsOptional()
-  @IsString()
+  @IsEmail()
   @MaxLength(120)
-  email?: string;
+  email: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(40)
   phone?: string;
 
-  @IsString()
+  @IsUUID()
   landlordId: string;
 
-  @IsString()
+  @IsUUID()
   propertyId: string;
 
   @IsOptional()
-  @IsString()
+  @IsUUID()
   unitId?: string;
 }

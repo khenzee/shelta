@@ -33,6 +33,9 @@ export type TenantMinAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   email: string | null
+  emailVerifiedAt: Date | null
+  emailVerifyHash: string | null
+  emailVerifyExpiry: Date | null
   phone: string | null
   occupation: string | null
   employer: string | null
@@ -54,6 +57,9 @@ export type TenantMaxAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   email: string | null
+  emailVerifiedAt: Date | null
+  emailVerifyHash: string | null
+  emailVerifyExpiry: Date | null
   phone: string | null
   occupation: string | null
   employer: string | null
@@ -75,6 +81,9 @@ export type TenantCountAggregateOutputType = {
   firstName: number
   lastName: number
   email: number
+  emailVerifiedAt: number
+  emailVerifyHash: number
+  emailVerifyExpiry: number
   phone: number
   occupation: number
   employer: number
@@ -100,6 +109,9 @@ export type TenantMinAggregateInputType = {
   firstName?: true
   lastName?: true
   email?: true
+  emailVerifiedAt?: true
+  emailVerifyHash?: true
+  emailVerifyExpiry?: true
   phone?: true
   occupation?: true
   employer?: true
@@ -121,6 +133,9 @@ export type TenantMaxAggregateInputType = {
   firstName?: true
   lastName?: true
   email?: true
+  emailVerifiedAt?: true
+  emailVerifyHash?: true
+  emailVerifyExpiry?: true
   phone?: true
   occupation?: true
   employer?: true
@@ -142,6 +157,9 @@ export type TenantCountAggregateInputType = {
   firstName?: true
   lastName?: true
   email?: true
+  emailVerifiedAt?: true
+  emailVerifyHash?: true
+  emailVerifyExpiry?: true
   phone?: true
   occupation?: true
   employer?: true
@@ -237,7 +255,10 @@ export type TenantGroupByOutputType = {
   unitId: string | null
   firstName: string
   lastName: string
-  email: string | null
+  email: string
+  emailVerifiedAt: Date | null
+  emailVerifyHash: string | null
+  emailVerifyExpiry: Date | null
   phone: string | null
   occupation: string | null
   employer: string | null
@@ -281,7 +302,10 @@ export type TenantWhereInput = {
   unitId?: Prisma.UuidNullableFilter<"Tenant"> | string | null
   firstName?: Prisma.StringFilter<"Tenant"> | string
   lastName?: Prisma.StringFilter<"Tenant"> | string
-  email?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  email?: Prisma.StringFilter<"Tenant"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
+  emailVerifyHash?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  emailVerifyExpiry?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"Tenant"> | string | null
   occupation?: Prisma.StringNullableFilter<"Tenant"> | string | null
   employer?: Prisma.StringNullableFilter<"Tenant"> | string | null
@@ -316,7 +340,10 @@ export type TenantOrderByWithRelationInput = {
   unitId?: Prisma.SortOrderInput | Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
-  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   occupation?: Prisma.SortOrderInput | Prisma.SortOrder
   employer?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -345,6 +372,7 @@ export type TenantOrderByWithRelationInput = {
 
 export type TenantWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  emailVerifyHash?: string
   AND?: Prisma.TenantWhereInput | Prisma.TenantWhereInput[]
   OR?: Prisma.TenantWhereInput[]
   NOT?: Prisma.TenantWhereInput | Prisma.TenantWhereInput[]
@@ -354,7 +382,9 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   unitId?: Prisma.UuidNullableFilter<"Tenant"> | string | null
   firstName?: Prisma.StringFilter<"Tenant"> | string
   lastName?: Prisma.StringFilter<"Tenant"> | string
-  email?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  email?: Prisma.StringFilter<"Tenant"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
+  emailVerifyExpiry?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"Tenant"> | string | null
   occupation?: Prisma.StringNullableFilter<"Tenant"> | string | null
   employer?: Prisma.StringNullableFilter<"Tenant"> | string | null
@@ -379,7 +409,7 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   transactions?: Prisma.TransactionListRelationFilter
   inspections?: Prisma.InspectionListRelationFilter
   complaints?: Prisma.ComplaintListRelationFilter
-}, "id">
+}, "id" | "emailVerifyHash">
 
 export type TenantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -389,7 +419,10 @@ export type TenantOrderByWithAggregationInput = {
   unitId?: Prisma.SortOrderInput | Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
-  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   occupation?: Prisma.SortOrderInput | Prisma.SortOrder
   employer?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -418,7 +451,10 @@ export type TenantScalarWhereWithAggregatesInput = {
   unitId?: Prisma.UuidNullableWithAggregatesFilter<"Tenant"> | string | null
   firstName?: Prisma.StringWithAggregatesFilter<"Tenant"> | string
   lastName?: Prisma.StringWithAggregatesFilter<"Tenant"> | string
-  email?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
+  email?: Prisma.StringWithAggregatesFilter<"Tenant"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tenant"> | Date | string | null
+  emailVerifyHash?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
+  emailVerifyExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"Tenant"> | Date | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
   occupation?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
   employer?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
@@ -437,7 +473,10 @@ export type TenantCreateInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -472,7 +511,10 @@ export type TenantUncheckedCreateInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -499,7 +541,10 @@ export type TenantUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -534,7 +579,10 @@ export type TenantUncheckedUpdateInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -565,7 +613,10 @@ export type TenantCreateManyInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -584,7 +635,10 @@ export type TenantUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -607,7 +661,10 @@ export type TenantUncheckedUpdateManyInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -651,6 +708,9 @@ export type TenantCountOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   occupation?: Prisma.SortOrder
   employer?: Prisma.SortOrder
@@ -674,6 +734,9 @@ export type TenantMaxOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   occupation?: Prisma.SortOrder
   employer?: Prisma.SortOrder
@@ -695,6 +758,9 @@ export type TenantMinOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   occupation?: Prisma.SortOrder
   employer?: Prisma.SortOrder
@@ -1007,7 +1073,10 @@ export type TenantCreateWithoutCommunicationsInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1041,7 +1110,10 @@ export type TenantUncheckedCreateWithoutCommunicationsInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1083,7 +1155,10 @@ export type TenantUpdateWithoutCommunicationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1117,7 +1192,10 @@ export type TenantUncheckedUpdateWithoutCommunicationsInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1143,7 +1221,10 @@ export type TenantCreateWithoutDocumentsInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1177,7 +1258,10 @@ export type TenantUncheckedCreateWithoutDocumentsInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1219,7 +1303,10 @@ export type TenantUpdateWithoutDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1253,7 +1340,10 @@ export type TenantUncheckedUpdateWithoutDocumentsInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1279,7 +1369,10 @@ export type TenantCreateWithoutPaymentsInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1313,7 +1406,10 @@ export type TenantUncheckedCreateWithoutPaymentsInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1355,7 +1451,10 @@ export type TenantUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1389,7 +1488,10 @@ export type TenantUncheckedUpdateWithoutPaymentsInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1415,7 +1517,10 @@ export type TenantCreateWithoutTransactionsInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1449,7 +1554,10 @@ export type TenantUncheckedCreateWithoutTransactionsInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1491,7 +1599,10 @@ export type TenantUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1525,7 +1636,10 @@ export type TenantUncheckedUpdateWithoutTransactionsInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1551,7 +1665,10 @@ export type TenantCreateWithoutOrganizationInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1584,7 +1701,10 @@ export type TenantUncheckedCreateWithoutOrganizationInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1644,7 +1764,10 @@ export type TenantScalarWhereInput = {
   unitId?: Prisma.UuidNullableFilter<"Tenant"> | string | null
   firstName?: Prisma.StringFilter<"Tenant"> | string
   lastName?: Prisma.StringFilter<"Tenant"> | string
-  email?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  email?: Prisma.StringFilter<"Tenant"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
+  emailVerifyHash?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  emailVerifyExpiry?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"Tenant"> | string | null
   occupation?: Prisma.StringNullableFilter<"Tenant"> | string | null
   employer?: Prisma.StringNullableFilter<"Tenant"> | string | null
@@ -1663,7 +1786,10 @@ export type TenantCreateWithoutLeasesInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1697,7 +1823,10 @@ export type TenantUncheckedCreateWithoutLeasesInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1739,7 +1868,10 @@ export type TenantUpdateWithoutLeasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1773,7 +1905,10 @@ export type TenantUncheckedUpdateWithoutLeasesInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1799,7 +1934,10 @@ export type TenantCreateWithoutMaintenanceInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1833,7 +1971,10 @@ export type TenantUncheckedCreateWithoutMaintenanceInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1875,7 +2016,10 @@ export type TenantUpdateWithoutMaintenanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1909,7 +2053,10 @@ export type TenantUncheckedUpdateWithoutMaintenanceInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1935,7 +2082,10 @@ export type TenantCreateWithoutInspectionsInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -1969,7 +2119,10 @@ export type TenantUncheckedCreateWithoutInspectionsInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2011,7 +2164,10 @@ export type TenantUpdateWithoutInspectionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2045,7 +2201,10 @@ export type TenantUncheckedUpdateWithoutInspectionsInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2071,7 +2230,10 @@ export type TenantCreateWithoutComplaintsInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2105,7 +2267,10 @@ export type TenantUncheckedCreateWithoutComplaintsInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2147,7 +2312,10 @@ export type TenantUpdateWithoutComplaintsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2181,7 +2349,10 @@ export type TenantUncheckedUpdateWithoutComplaintsInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2207,7 +2378,10 @@ export type TenantCreateWithoutLandlordInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2240,7 +2414,10 @@ export type TenantUncheckedCreateWithoutLandlordInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2293,7 +2470,10 @@ export type TenantCreateWithoutPropertyInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2326,7 +2506,10 @@ export type TenantUncheckedCreateWithoutPropertyInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2379,7 +2562,10 @@ export type TenantCreateWithoutUnitInput = {
   id?: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2412,7 +2598,10 @@ export type TenantUncheckedCreateWithoutUnitInput = {
   propertyId: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2468,7 +2657,10 @@ export type TenantCreateManyOrganizationInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2487,7 +2679,10 @@ export type TenantUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2520,7 +2715,10 @@ export type TenantUncheckedUpdateWithoutOrganizationInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2550,7 +2748,10 @@ export type TenantUncheckedUpdateManyWithoutOrganizationInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2572,7 +2773,10 @@ export type TenantCreateManyLandlordInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2591,7 +2795,10 @@ export type TenantUpdateWithoutLandlordInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2624,7 +2831,10 @@ export type TenantUncheckedUpdateWithoutLandlordInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2654,7 +2864,10 @@ export type TenantUncheckedUpdateManyWithoutLandlordInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2676,7 +2889,10 @@ export type TenantCreateManyPropertyInput = {
   unitId?: string | null
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2695,7 +2911,10 @@ export type TenantUpdateWithoutPropertyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2728,7 +2947,10 @@ export type TenantUncheckedUpdateWithoutPropertyInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2758,7 +2980,10 @@ export type TenantUncheckedUpdateManyWithoutPropertyInput = {
   unitId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2780,7 +3005,10 @@ export type TenantCreateManyUnitInput = {
   propertyId: string
   firstName: string
   lastName: string
-  email?: string | null
+  email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   occupation?: string | null
   employer?: string | null
@@ -2799,7 +3027,10 @@ export type TenantUpdateWithoutUnitInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2832,7 +3063,10 @@ export type TenantUncheckedUpdateWithoutUnitInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2862,7 +3096,10 @@ export type TenantUncheckedUpdateManyWithoutUnitInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2980,6 +3217,9 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   firstName?: boolean
   lastName?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  emailVerifyHash?: boolean
+  emailVerifyExpiry?: boolean
   phone?: boolean
   occupation?: boolean
   employer?: boolean
@@ -3016,6 +3256,9 @@ export type TenantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   firstName?: boolean
   lastName?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  emailVerifyHash?: boolean
+  emailVerifyExpiry?: boolean
   phone?: boolean
   occupation?: boolean
   employer?: boolean
@@ -3043,6 +3286,9 @@ export type TenantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   firstName?: boolean
   lastName?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  emailVerifyHash?: boolean
+  emailVerifyExpiry?: boolean
   phone?: boolean
   occupation?: boolean
   employer?: boolean
@@ -3070,6 +3316,9 @@ export type TenantSelectScalar = {
   firstName?: boolean
   lastName?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  emailVerifyHash?: boolean
+  emailVerifyExpiry?: boolean
   phone?: boolean
   occupation?: boolean
   employer?: boolean
@@ -3084,7 +3333,7 @@ export type TenantSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TenantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "landlordId" | "propertyId" | "unitId" | "firstName" | "lastName" | "email" | "phone" | "occupation" | "employer" | "emergencyContact" | "guarantorName" | "guarantorContact" | "identification" | "status" | "notes" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
+export type TenantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "landlordId" | "propertyId" | "unitId" | "firstName" | "lastName" | "email" | "emailVerifiedAt" | "emailVerifyHash" | "emailVerifyExpiry" | "phone" | "occupation" | "employer" | "emergencyContact" | "guarantorName" | "guarantorContact" | "identification" | "status" | "notes" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
 export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   landlord?: boolean | Prisma.LandlordDefaultArgs<ExtArgs>
@@ -3137,7 +3386,10 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     unitId: string | null
     firstName: string
     lastName: string
-    email: string | null
+    email: string
+    emailVerifiedAt: Date | null
+    emailVerifyHash: string | null
+    emailVerifyExpiry: Date | null
     phone: string | null
     occupation: string | null
     employer: string | null
@@ -3593,6 +3845,9 @@ export interface TenantFieldRefs {
   readonly firstName: Prisma.FieldRef<"Tenant", 'String'>
   readonly lastName: Prisma.FieldRef<"Tenant", 'String'>
   readonly email: Prisma.FieldRef<"Tenant", 'String'>
+  readonly emailVerifiedAt: Prisma.FieldRef<"Tenant", 'DateTime'>
+  readonly emailVerifyHash: Prisma.FieldRef<"Tenant", 'String'>
+  readonly emailVerifyExpiry: Prisma.FieldRef<"Tenant", 'DateTime'>
   readonly phone: Prisma.FieldRef<"Tenant", 'String'>
   readonly occupation: Prisma.FieldRef<"Tenant", 'String'>
   readonly employer: Prisma.FieldRef<"Tenant", 'String'>

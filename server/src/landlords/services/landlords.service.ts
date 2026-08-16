@@ -8,10 +8,18 @@ import { CreateLandlordDto } from '../dtos/create-landlord.dto';
 import { UpdateLandlordDto } from '../dtos/update-landlord.dto';
 import { LandlordQueryDto } from '../dtos/landlord-query.dto';
 import type { Prisma } from '../../generated/prisma/client';
+import { MailService } from '../../mail/mail.service';
+import { ConfigService } from '@nestjs/config';
+import { EnvironmentVariables } from '../../config/environment';
+import { createHash, randomBytes } from 'node:crypto';
 
 @Injectable()
 export class LandlordsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mail: MailService,
+    private readonly config: ConfigService<EnvironmentVariables, true>,
+  ) {}
 
   async list(
     organizationId: string,
@@ -68,13 +76,28 @@ export class LandlordsService {
     const lastNumber = Number(lastLandlord?.code.match(/(\d+)$/)?.[1] ?? 0);
     const code = `LLD-${String(lastNumber + 1).padStart(5, '0')}`;
 
-    return this.prisma.landlord.create({
+    const rawToken = randomBytes(32).toString('base64url');
+    const emailVerifyHash = createHash('sha256').update(rawToken).digest('hex');
+    const emailVerifyExpiry = new Date(Date.now() + 48 * 60 * 60 * 1000);
+    const landlord = await this.prisma.landlord.create({
       data: {
         organizationId,
         code,
         ...data,
+        email: data.email.toLowerCase(),
+        emailVerifyHash,
+        emailVerifyExpiry,
       },
     });
+
+    let verificationEmailSent = true;
+    const url = `${this.config.get('FRONTEND_URL', { infer: true })}/verify-email?type=landlord&token=${encodeURIComponent(rawToken)}`;
+    try {
+      await this.mail.sendContactVerification(landlord.email, landlord.name, url);
+    } catch {
+      verificationEmailSent = false;
+    }
+    return { landlord, verificationEmailSent };
   }
 
   async update(organizationId: string, id: string, data: UpdateLandlordDto) {

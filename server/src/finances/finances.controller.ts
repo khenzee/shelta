@@ -26,21 +26,21 @@ export class FinancesController {
   constructor(private readonly financesService: FinancesService) {}
 
   @Get()
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'ACCOUNTANT')
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'List transactions' })
   list(@CurrentUser() user: JwtPayload, @Query() query: TransactionQueryDto) {
     return this.financesService.list(user.organizationId, query);
   }
 
   @Post()
-  @Roles('SUPER_ADMIN', 'ACCOUNTANT')
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Create transaction' })
   create(@CurrentUser() user: JwtPayload, @Body() dto: CreateTransactionDto) {
     return this.financesService.create(user.organizationId, dto, user.sub);
   }
 
   @Put(':id/void')
-  @Roles('SUPER_ADMIN', 'ACCOUNTANT')
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Void transaction' })
   void(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.financesService.void(user.organizationId, id, user.sub);

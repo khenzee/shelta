@@ -136,6 +136,39 @@ export class EnvironmentVariables {
 
   @IsIn(['true', 'false'])
   JOBS_ENABLED = 'false';
+
+  @IsIn(['true', 'false'])
+  AI_ENABLED = 'false';
+
+  @IsIn(['OPENAI_COMPATIBLE', 'OPENAI', 'ANTHROPIC', 'GOOGLE'])
+  AI_DEFAULT_PROVIDER_TYPE = 'OPENAI_COMPATIBLE';
+
+  @IsString()
+  AI_DEFAULT_PROVIDER_NAME = 'deployment-gateway';
+
+  @IsUrl({ require_tld: false })
+  @IsOptional()
+  AI_DEFAULT_BASE_URL?: string;
+
+  @IsString()
+  @IsOptional()
+  AI_DEFAULT_API_KEY?: string;
+
+  @IsString()
+  @IsOptional()
+  AI_DEFAULT_MODEL_ID?: string;
+
+  @IsInt()
+  @Type(() => Number)
+  @Min(1)
+  @Max(10)
+  AI_MAX_TOOL_STEPS = 5;
+
+  @IsInt()
+  @Type(() => Number)
+  @Min(100)
+  @Max(8000)
+  AI_MAX_OUTPUT_TOKENS = 400;
 }
 
 export function validateEnvironment(config: Record<string, unknown>) {
@@ -158,6 +191,17 @@ export function validateEnvironment(config: Record<string, unknown>) {
 
   if (Boolean(validated.SMTP_USER) !== Boolean(validated.SMTP_PASSWORD)) {
     throw new Error('SMTP_USER and SMTP_PASSWORD must be configured together');
+  }
+
+  const aiValues = [
+    validated.AI_DEFAULT_BASE_URL,
+    validated.AI_DEFAULT_API_KEY,
+    validated.AI_DEFAULT_MODEL_ID,
+  ];
+  if (aiValues.some(Boolean) && !aiValues.every(Boolean)) {
+    throw new Error(
+      'AI_DEFAULT_BASE_URL, AI_DEFAULT_API_KEY and AI_DEFAULT_MODEL_ID must be configured together',
+    );
   }
 
   if (

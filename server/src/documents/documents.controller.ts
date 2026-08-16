@@ -25,21 +25,21 @@ export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 
   @Get()
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List documents' })
   list(@CurrentUser() user: JwtPayload, @Query() query: DocumentQueryDto) {
     return this.documentsService.list(user.organizationId, query);
   }
 
   @Get(':id')
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'Get document by ID' })
   get(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.documentsService.get(user.organizationId, id);
   }
 
   @Post()
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'Create document metadata' })
   create(@CurrentUser() user: JwtPayload, @Body() dto: CreateDocumentDto) {
     return this.documentsService.create(user.organizationId, dto, user.sub);

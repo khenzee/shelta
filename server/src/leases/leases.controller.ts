@@ -27,14 +27,14 @@ export class LeasesController {
   constructor(private readonly leasesService: LeasesService) {}
 
   @Get()
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List leases' })
   list(@CurrentUser() user: JwtPayload, @Query() query: LeaseQueryDto) {
     return this.leasesService.list(user.organizationId, query);
   }
 
   @Get(':id')
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'Get lease by ID' })
   get(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.leasesService.get(user.organizationId, id);

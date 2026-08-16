@@ -13,14 +13,18 @@ import {
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import PermissionEditor from "./PermissionEditor";
+import InviteEmployeeDialog from "./InviteEmployeeDialog";
 
-export default function TeamClient({ employees, rolePermissions }) {
+export default function TeamClient({ employees, rolePermissions, roles = [] }) {
   const [search, setSearch] = useState("");
   const [role, setRole] = useState("All roles");
   const [status, setStatus] = useState("All statuses");
   const [selected, setSelected] = useState(null);
+  const [inviting, setInviting] = useState(false);
   const deferredSearch = useDeferredValue(search);
-  const filtered = employees.filter(
+  const safeEmployees = employees || [];
+  const safeRolePermissions = rolePermissions || {};
+  const filtered = safeEmployees.filter(
     (employee) =>
       `${employee.name} ${employee.email} ${employee.department} ${employee.role}`
         .toLowerCase()
@@ -28,6 +32,8 @@ export default function TeamClient({ employees, rolePermissions }) {
       (role === "All roles" || employee.role === role) &&
       (status === "All statuses" || employee.status === status),
   );
+  const activeCount = safeEmployees.filter((employee) => employee.status === "Active").length;
+  const pendingCount = safeEmployees.filter((employee) => employee.status !== "Active").length;
 
   return (
     <main className="p-8 max-md:p-4">
@@ -37,7 +43,7 @@ export default function TeamClient({ employees, rolePermissions }) {
           <h1>Team and permissions</h1>
           <p>Control who can access landlord portfolios, finances, documents, and operations.</p>
         </div>
-        <Button>
+        <Button onClick={() => setInviting(true)}>
           <Plus size={16} /> Invite team member
         </Button>
       </section>
@@ -48,8 +54,8 @@ export default function TeamClient({ employees, rolePermissions }) {
           </span>
           <div className="min-w-0 flex flex-col gap-0.5">
             <small className="text-secondary">Team members</small>
-            <strong className="text-primary">6</strong>
-            <b className="text-muted">5 active accounts</b>
+            <strong className="text-primary">{safeEmployees.length}</strong>
+            <b className="text-muted">{activeCount} active accounts</b>
           </div>
         </div>
         <div className="min-w-0 flex items-center gap-2.5 p-3.5 border border-default rounded-md bg-surface">
@@ -58,8 +64,8 @@ export default function TeamClient({ employees, rolePermissions }) {
           </span>
           <div className="min-w-0 flex flex-col gap-0.5">
             <small className="text-secondary">Roles configured</small>
-            <strong className="text-primary">5</strong>
-            <b className="text-muted">Granular access</b>
+            <strong className="text-primary">{roles.length + 1}</strong>
+            <b className="text-muted">Admin, Manager and Agent</b>
           </div>
         </div>
         <div className="min-w-0 flex items-center gap-2.5 p-3.5 border border-default rounded-md bg-surface">
@@ -68,8 +74,8 @@ export default function TeamClient({ employees, rolePermissions }) {
           </span>
           <div className="min-w-0 flex flex-col gap-0.5">
             <small className="text-secondary">Active now</small>
-            <strong className="text-primary">4</strong>
-            <b className="text-muted">Across 3 departments</b>
+            <strong className="text-primary">{activeCount}</strong>
+            <b className="text-muted">Active accounts</b>
           </div>
         </div>
         <div className="min-w-0 flex items-center gap-2.5 p-3.5 border border-default rounded-md bg-surface">
@@ -78,8 +84,8 @@ export default function TeamClient({ employees, rolePermissions }) {
           </span>
           <div className="min-w-0 flex flex-col gap-0.5">
             <small className="text-secondary">Pending action</small>
-            <strong className="text-primary">2</strong>
-            <b className="text-muted">Invite and suspension</b>
+            <strong className="text-primary">{pendingCount}</strong>
+            <b className="text-muted">Invited or suspended</b>
           </div>
         </div>
       </section>
@@ -101,7 +107,7 @@ export default function TeamClient({ employees, rolePermissions }) {
             aria-label="Filter role"
           >
             <option>All roles</option>
-            {Object.keys(rolePermissions).map((item) => (
+            {Object.keys(safeRolePermissions).map((item) => (
               <option key={item}>{item}</option>
             ))}
           </select>
@@ -165,9 +171,9 @@ export default function TeamClient({ employees, rolePermissions }) {
                       <small className="block mt-1 text-muted">{employee.department}</small>
                     </td>
                     <td className="h-15.75 px-3 border-t border-default text-secondary whitespace-nowrap">
-                      <b className="block text-primary">{employee.properties[0]}</b>
+                       <b className="block text-primary">{employee.properties?.[0] || "All properties"}</b>
                       <small className="block mt-1 text-muted">
-                        {employee.properties.length > 1
+                        {employee.properties?.length > 1
                           ? `+${employee.properties.length - 1} more`
                           : ""}
                       </small>
@@ -193,9 +199,10 @@ export default function TeamClient({ employees, rolePermissions }) {
       </section>
       <PermissionEditor
         employee={selected}
-        permissions={selected ? rolePermissions[selected.role] : {}}
+        permissions={selected ? safeRolePermissions[selected.role] || {} : {}}
         onClose={() => setSelected(null)}
       />
+      {inviting ? <InviteEmployeeDialog roles={roles} onClose={() => setInviting(false)} /> : null}
     </main>
   );
 }

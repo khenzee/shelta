@@ -16,14 +16,14 @@ export class ComplaintsController {
   constructor(private readonly complaintsService: ComplaintsService) {}
 
   @Get()
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List complaints' })
   list(@CurrentUser() user: JwtPayload) {
     return this.complaintsService.list(user.organizationId);
   }
 
   @Get(':id')
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'Get complaint by ID' })
   get(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.complaintsService.get(user.organizationId, id);

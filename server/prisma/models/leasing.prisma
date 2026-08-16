@@ -22,7 +22,10 @@ model Tenant {
   unitId           String?      @db.Uuid
   firstName        String
   lastName         String
-  email            String?
+  email             String
+  emailVerifiedAt   DateTime?
+  emailVerifyHash   String?       @unique
+  emailVerifyExpiry DateTime?
   phone            String?
   occupation       String?
   employer         String?

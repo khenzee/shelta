@@ -51,13 +51,7 @@ export default function TransactionForm({ mode, properties, tenants, onClose }) 
             <Button onClick={onClose}>Close</Button>
           </div>
         ) : (
-          <form
-            className="flex flex-col gap-3"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setSaved(true);
-            }}
-          >
+          <form className="flex flex-col gap-3" onSubmit={(event) => event.preventDefault()}>
             <div className="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
               <label className={fieldLabelClass}>
                 <span className={fieldTitleClass}>Amount</span>
@@ -144,14 +138,14 @@ export default function TransactionForm({ mode, properties, tenants, onClose }) 
                 placeholder="Add internal notes"
               />
             </label>
-            <Button variant="secondary" className="w-full" type="button">
+            <Button variant="secondary" className="w-full" type="button" disabled title="Receipt upload is not available yet">
               <FileUp size={14} /> Upload receipt or invoice
             </Button>
             <div className="mt-2 flex justify-end gap-2">
               <Button variant="secondary" type="button" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit">Save transaction</Button>
+              <Button type="submit" disabled title="Transaction creation is not connected yet">Save transaction</Button>
             </div>
           </form>
         )}

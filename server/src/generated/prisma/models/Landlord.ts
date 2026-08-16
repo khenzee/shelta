@@ -31,6 +31,9 @@ export type LandlordMinAggregateOutputType = {
   code: string | null
   name: string | null
   email: string | null
+  emailVerifiedAt: Date | null
+  emailVerifyHash: string | null
+  emailVerifyExpiry: Date | null
   phone: string | null
   address: string | null
   bankDetailsCipher: string | null
@@ -49,6 +52,9 @@ export type LandlordMaxAggregateOutputType = {
   code: string | null
   name: string | null
   email: string | null
+  emailVerifiedAt: Date | null
+  emailVerifyHash: string | null
+  emailVerifyExpiry: Date | null
   phone: string | null
   address: string | null
   bankDetailsCipher: string | null
@@ -67,6 +73,9 @@ export type LandlordCountAggregateOutputType = {
   code: number
   name: number
   email: number
+  emailVerifiedAt: number
+  emailVerifyHash: number
+  emailVerifyExpiry: number
   phone: number
   address: number
   bankDetailsCipher: number
@@ -89,6 +98,9 @@ export type LandlordMinAggregateInputType = {
   code?: true
   name?: true
   email?: true
+  emailVerifiedAt?: true
+  emailVerifyHash?: true
+  emailVerifyExpiry?: true
   phone?: true
   address?: true
   bankDetailsCipher?: true
@@ -107,6 +119,9 @@ export type LandlordMaxAggregateInputType = {
   code?: true
   name?: true
   email?: true
+  emailVerifiedAt?: true
+  emailVerifyHash?: true
+  emailVerifyExpiry?: true
   phone?: true
   address?: true
   bankDetailsCipher?: true
@@ -125,6 +140,9 @@ export type LandlordCountAggregateInputType = {
   code?: true
   name?: true
   email?: true
+  emailVerifiedAt?: true
+  emailVerifyHash?: true
+  emailVerifyExpiry?: true
   phone?: true
   address?: true
   bankDetailsCipher?: true
@@ -218,6 +236,9 @@ export type LandlordGroupByOutputType = {
   code: string
   name: string
   email: string
+  emailVerifiedAt: Date | null
+  emailVerifyHash: string | null
+  emailVerifyExpiry: Date | null
   phone: string | null
   address: string | null
   bankDetailsCipher: string | null
@@ -259,6 +280,9 @@ export type LandlordWhereInput = {
   code?: Prisma.StringFilter<"Landlord"> | string
   name?: Prisma.StringFilter<"Landlord"> | string
   email?: Prisma.StringFilter<"Landlord"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"Landlord"> | Date | string | null
+  emailVerifyHash?: Prisma.StringNullableFilter<"Landlord"> | string | null
+  emailVerifyExpiry?: Prisma.DateTimeNullableFilter<"Landlord"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"Landlord"> | string | null
   address?: Prisma.StringNullableFilter<"Landlord"> | string | null
   bankDetailsCipher?: Prisma.StringNullableFilter<"Landlord"> | string | null
@@ -288,6 +312,9 @@ export type LandlordOrderByWithRelationInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   bankDetailsCipher?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -313,6 +340,7 @@ export type LandlordOrderByWithRelationInput = {
 export type LandlordWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   userId?: string
+  emailVerifyHash?: string
   organizationId_code?: Prisma.LandlordOrganizationIdCodeCompoundUniqueInput
   organizationId_email?: Prisma.LandlordOrganizationIdEmailCompoundUniqueInput
   AND?: Prisma.LandlordWhereInput | Prisma.LandlordWhereInput[]
@@ -322,6 +350,8 @@ export type LandlordWhereUniqueInput = Prisma.AtLeast<{
   code?: Prisma.StringFilter<"Landlord"> | string
   name?: Prisma.StringFilter<"Landlord"> | string
   email?: Prisma.StringFilter<"Landlord"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"Landlord"> | Date | string | null
+  emailVerifyExpiry?: Prisma.DateTimeNullableFilter<"Landlord"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"Landlord"> | string | null
   address?: Prisma.StringNullableFilter<"Landlord"> | string | null
   bankDetailsCipher?: Prisma.StringNullableFilter<"Landlord"> | string | null
@@ -342,7 +372,7 @@ export type LandlordWhereUniqueInput = Prisma.AtLeast<{
   payments?: Prisma.PaymentListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
   communications?: Prisma.CommunicationListRelationFilter
-}, "id" | "userId" | "organizationId_code" | "organizationId_email">
+}, "id" | "userId" | "emailVerifyHash" | "organizationId_code" | "organizationId_email">
 
 export type LandlordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -351,6 +381,9 @@ export type LandlordOrderByWithAggregationInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   bankDetailsCipher?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -377,6 +410,9 @@ export type LandlordScalarWhereWithAggregatesInput = {
   code?: Prisma.StringWithAggregatesFilter<"Landlord"> | string
   name?: Prisma.StringWithAggregatesFilter<"Landlord"> | string
   email?: Prisma.StringWithAggregatesFilter<"Landlord"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Landlord"> | Date | string | null
+  emailVerifyHash?: Prisma.StringNullableWithAggregatesFilter<"Landlord"> | string | null
+  emailVerifyExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"Landlord"> | Date | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"Landlord"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"Landlord"> | string | null
   bankDetailsCipher?: Prisma.StringNullableWithAggregatesFilter<"Landlord"> | string | null
@@ -395,6 +431,9 @@ export type LandlordCreateInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -424,6 +463,9 @@ export type LandlordUncheckedCreateInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -449,6 +491,9 @@ export type LandlordUpdateInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -478,6 +523,9 @@ export type LandlordUncheckedUpdateInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -505,6 +553,9 @@ export type LandlordCreateManyInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -523,6 +574,9 @@ export type LandlordUpdateManyMutationInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -543,6 +597,9 @@ export type LandlordUncheckedUpdateManyInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -593,6 +650,9 @@ export type LandlordCountOrderByAggregateInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   bankDetailsCipher?: Prisma.SortOrder
@@ -613,6 +673,9 @@ export type LandlordMaxOrderByAggregateInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   bankDetailsCipher?: Prisma.SortOrder
@@ -631,6 +694,9 @@ export type LandlordMinOrderByAggregateInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  emailVerifyHash?: Prisma.SortOrder
+  emailVerifyExpiry?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   bankDetailsCipher?: Prisma.SortOrder
@@ -831,6 +897,9 @@ export type LandlordCreateWithoutCommunicationsInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -859,6 +928,9 @@ export type LandlordUncheckedCreateWithoutCommunicationsInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -899,6 +971,9 @@ export type LandlordUpdateWithoutCommunicationsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -927,6 +1002,9 @@ export type LandlordUncheckedUpdateWithoutCommunicationsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -951,6 +1029,9 @@ export type LandlordCreateWithoutDocumentsInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -979,6 +1060,9 @@ export type LandlordUncheckedCreateWithoutDocumentsInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1019,6 +1103,9 @@ export type LandlordUpdateWithoutDocumentsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1047,6 +1134,9 @@ export type LandlordUncheckedUpdateWithoutDocumentsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1071,6 +1161,9 @@ export type LandlordCreateWithoutPaymentsInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1099,6 +1192,9 @@ export type LandlordUncheckedCreateWithoutPaymentsInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1139,6 +1235,9 @@ export type LandlordUpdateWithoutPaymentsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1167,6 +1266,9 @@ export type LandlordUncheckedUpdateWithoutPaymentsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1191,6 +1293,9 @@ export type LandlordCreateWithoutFinancesInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1219,6 +1324,9 @@ export type LandlordUncheckedCreateWithoutFinancesInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1259,6 +1367,9 @@ export type LandlordUpdateWithoutFinancesInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1287,6 +1398,9 @@ export type LandlordUncheckedUpdateWithoutFinancesInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1311,6 +1425,9 @@ export type LandlordCreateWithoutOrganizationInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1338,6 +1455,9 @@ export type LandlordUncheckedCreateWithoutOrganizationInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1394,6 +1514,9 @@ export type LandlordScalarWhereInput = {
   code?: Prisma.StringFilter<"Landlord"> | string
   name?: Prisma.StringFilter<"Landlord"> | string
   email?: Prisma.StringFilter<"Landlord"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"Landlord"> | Date | string | null
+  emailVerifyHash?: Prisma.StringNullableFilter<"Landlord"> | string | null
+  emailVerifyExpiry?: Prisma.DateTimeNullableFilter<"Landlord"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"Landlord"> | string | null
   address?: Prisma.StringNullableFilter<"Landlord"> | string | null
   bankDetailsCipher?: Prisma.StringNullableFilter<"Landlord"> | string | null
@@ -1412,6 +1535,9 @@ export type LandlordCreateWithoutUserInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1439,6 +1565,9 @@ export type LandlordUncheckedCreateWithoutUserInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1480,6 +1609,9 @@ export type LandlordUpdateWithoutUserInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1507,6 +1639,9 @@ export type LandlordUncheckedUpdateWithoutUserInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1532,6 +1667,9 @@ export type LandlordCreateWithoutTenantsInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1560,6 +1698,9 @@ export type LandlordUncheckedCreateWithoutTenantsInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1600,6 +1741,9 @@ export type LandlordUpdateWithoutTenantsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1628,6 +1772,9 @@ export type LandlordUncheckedUpdateWithoutTenantsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1652,6 +1799,9 @@ export type LandlordCreateWithoutLeasesInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1680,6 +1830,9 @@ export type LandlordUncheckedCreateWithoutLeasesInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1720,6 +1873,9 @@ export type LandlordUpdateWithoutLeasesInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1748,6 +1904,9 @@ export type LandlordUncheckedUpdateWithoutLeasesInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1772,6 +1931,9 @@ export type LandlordCreateWithoutPropertiesInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1800,6 +1962,9 @@ export type LandlordUncheckedCreateWithoutPropertiesInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1840,6 +2005,9 @@ export type LandlordUpdateWithoutPropertiesInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1868,6 +2036,9 @@ export type LandlordUncheckedUpdateWithoutPropertiesInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1893,6 +2064,9 @@ export type LandlordCreateManyOrganizationInput = {
   code: string
   name: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  emailVerifyHash?: string | null
+  emailVerifyExpiry?: Date | string | null
   phone?: string | null
   address?: string | null
   bankDetailsCipher?: string | null
@@ -1911,6 +2085,9 @@ export type LandlordUpdateWithoutOrganizationInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1938,6 +2115,9 @@ export type LandlordUncheckedUpdateWithoutOrganizationInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1964,6 +2144,9 @@ export type LandlordUncheckedUpdateManyWithoutOrganizationInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerifyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifyExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankDetailsCipher?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2069,6 +2252,9 @@ export type LandlordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   code?: boolean
   name?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  emailVerifyHash?: boolean
+  emailVerifyExpiry?: boolean
   phone?: boolean
   address?: boolean
   bankDetailsCipher?: boolean
@@ -2099,6 +2285,9 @@ export type LandlordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   code?: boolean
   name?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  emailVerifyHash?: boolean
+  emailVerifyExpiry?: boolean
   phone?: boolean
   address?: boolean
   bankDetailsCipher?: boolean
@@ -2121,6 +2310,9 @@ export type LandlordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   code?: boolean
   name?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  emailVerifyHash?: boolean
+  emailVerifyExpiry?: boolean
   phone?: boolean
   address?: boolean
   bankDetailsCipher?: boolean
@@ -2143,6 +2335,9 @@ export type LandlordSelectScalar = {
   code?: boolean
   name?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  emailVerifyHash?: boolean
+  emailVerifyExpiry?: boolean
   phone?: boolean
   address?: boolean
   bankDetailsCipher?: boolean
@@ -2156,7 +2351,7 @@ export type LandlordSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LandlordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "code" | "name" | "email" | "phone" | "address" | "bankDetailsCipher" | "emergencyContact" | "identification" | "notes" | "status" | "portalStatus" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["landlord"]>
+export type LandlordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "code" | "name" | "email" | "emailVerifiedAt" | "emailVerifyHash" | "emailVerifyExpiry" | "phone" | "address" | "bankDetailsCipher" | "emergencyContact" | "identification" | "notes" | "status" | "portalStatus" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["landlord"]>
 export type LandlordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Landlord$userArgs<ExtArgs>
@@ -2198,6 +2393,9 @@ export type $LandlordPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     code: string
     name: string
     email: string
+    emailVerifiedAt: Date | null
+    emailVerifyHash: string | null
+    emailVerifyExpiry: Date | null
     phone: string | null
     address: string | null
     bankDetailsCipher: string | null
@@ -2647,6 +2845,9 @@ export interface LandlordFieldRefs {
   readonly code: Prisma.FieldRef<"Landlord", 'String'>
   readonly name: Prisma.FieldRef<"Landlord", 'String'>
   readonly email: Prisma.FieldRef<"Landlord", 'String'>
+  readonly emailVerifiedAt: Prisma.FieldRef<"Landlord", 'DateTime'>
+  readonly emailVerifyHash: Prisma.FieldRef<"Landlord", 'String'>
+  readonly emailVerifyExpiry: Prisma.FieldRef<"Landlord", 'DateTime'>
   readonly phone: Prisma.FieldRef<"Landlord", 'String'>
   readonly address: Prisma.FieldRef<"Landlord", 'String'>
   readonly bankDetailsCipher: Prisma.FieldRef<"Landlord", 'String'>

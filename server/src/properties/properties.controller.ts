@@ -28,14 +28,14 @@ export class PropertiesController {
   constructor(private readonly propertiesService: PropertiesService) {}
 
   @Get()
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List properties' })
   list(@CurrentUser() user: JwtPayload, @Query() query: PropertyQueryDto) {
     return this.propertiesService.list(user.organizationId, query);
   }
 
   @Get(':id')
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'Get property by ID' })
   get(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.propertiesService.get(user.organizationId, id);

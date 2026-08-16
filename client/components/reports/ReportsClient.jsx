@@ -91,10 +91,10 @@ export default function ReportsClient({
           <p>Review portfolio performance, identify risk, and export transparent statements.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => setGenerated("Excel")}>
+          <Button variant="secondary" disabled title="Excel export is not available yet">
             <FileSpreadsheet size={15} /> Excel
           </Button>
-          <Button onClick={() => setGenerated("PDF")}>
+          <Button disabled title="PDF export is not available yet">
             <FileText size={15} /> PDF report
           </Button>
         </div>

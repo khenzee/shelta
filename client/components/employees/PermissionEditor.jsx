@@ -5,7 +5,7 @@ import { Building2, Mail, Phone, X } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 export default function PermissionEditor({ employee, permissions, onClose }) {
-  const [activePermissions, setActivePermissions] = useState(permissions);
+  const [activePermissions, setActivePermissions] = useState(permissions || {});
   if (!employee) return null;
 
   function togglePermission(module, permission) {
@@ -64,7 +64,7 @@ export default function PermissionEditor({ employee, permissions, onClose }) {
         </div>
         <h3 className="mb-2 mt-0">Assigned properties</h3>
         <div className="flex flex-wrap gap-1.5 my-2 mb-5.5">
-          {employee.properties.map((property) => (
+          {(employee.properties || []).map((property) => (
             <span
               key={property}
               className="flex items-center gap-1 py-1 px-2 border border-default rounded text-primary bg-sidebar"
@@ -125,7 +125,7 @@ export default function PermissionEditor({ employee, permissions, onClose }) {
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={onClose}>Save permissions</Button>
+          <Button disabled title="Permission editing is not available yet">Save permissions</Button>
         </div>
       </aside>
     </div>

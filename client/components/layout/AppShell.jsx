@@ -6,24 +6,30 @@ import { Menu } from "lucide-react";
 import Button from "@/components/ui/Button";
 import WorkspaceTabs from "./WorkspaceTabs";
 import { WorkspaceProvider } from "./WorkspaceProvider";
-import { landlords } from "@/lib/mock-data";
 import { usePathname } from "next/navigation";
+import { SessionProvider } from "@/components/auth/SessionProvider";
+import AssistantPanel from "@/components/assistant/AssistantPanel";
 
-export default function AppShell({ children }) {
+export default function AppShell({ children, session, landlords, aiEnabled }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
 
-  if (pathname.startsWith("/portal")) return <>{children}</>;
+  if (pathname.startsWith("/login") || pathname.startsWith("/accept-invite") || pathname.startsWith("/verify-email")) return <>{children}</>;
+  if (pathname.startsWith("/portal")) {
+    return <SessionProvider session={session}>{children}</SessionProvider>;
+  }
 
   return (
-    <WorkspaceProvider landlords={landlords}>
+    <SessionProvider session={session}>
+      <WorkspaceProvider landlords={landlords}>
       <div className="flex min-h-screen">
         <Sidebar
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           collapsed={collapsed}
           onToggle={() => setCollapsed((current) => !current)}
+          session={session}
         />
         <div
           className={`min-w-0 flex-1 transition-all duration-300 ease-in-out ${collapsed ? "md:ml-[60px]" : "md:ml-[240px]"}`}
@@ -41,7 +47,9 @@ export default function AppShell({ children }) {
           <WorkspaceTabs />
           {children}
         </div>
+        {aiEnabled ? <AssistantPanel route={pathname} /> : null}
       </div>
-    </WorkspaceProvider>
+      </WorkspaceProvider>
+    </SessionProvider>
   );
 }

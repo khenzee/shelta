@@ -15,6 +15,8 @@ import {
 import Button from "@/components/ui/Button";
 import TenantDetail from "./TenantDetail";
 import { useWorkspace } from "@/components/layout/WorkspaceProvider";
+import { useSession } from "@/components/auth/SessionProvider";
+import CreateTenantDialog from "./CreateTenantDialog";
 
 const summaryClass = "flex items-center gap-3 rounded-md border border-default bg-surface p-4";
 const summaryContentClass = "grid min-w-0 grid-cols-[auto_1fr] items-end";
@@ -25,12 +27,15 @@ const tenantStrongClass = "truncate";
 const tenantSmallClass = "truncate text-muted";
 const pageButtonClass = "rounded border border-default p-2";
 
-export default function TenantsClient({ tenants }) {
+export default function TenantsClient({ tenants, landlords = [], properties = [], units = [] }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All tenants");
   const [payment, setPayment] = useState("All payments");
   const [selected, setSelected] = useState(null);
+  const [creating, setCreating] = useState(false);
   const { activeLandlord } = useWorkspace();
+  const session = useSession();
+  const canCreate = ["ADMIN", "MANAGER"].includes(session?.role);
   const deferredSearch = useDeferredValue(search);
   const scopedTenants = activeLandlord
     ? tenants.filter((tenant) => tenant.landlord === activeLandlord.name)
@@ -43,6 +48,9 @@ export default function TenantsClient({ tenants }) {
       (status === "All tenants" || tenant.status === status) &&
       (payment === "All payments" || tenant.payment === payment),
   );
+  const activeCount = scopedTenants.filter((tenant) => tenant.status === "Active").length;
+  const balanceCount = scopedTenants.filter((tenant) => Number(tenant.balance || 0) > 0).length;
+  const outstanding = scopedTenants.reduce((total, tenant) => total + Number(tenant.balance || 0), 0);
 
   return (
     <main className="px-8 py-6 max-md:px-4 max-md:py-5">
@@ -54,9 +62,9 @@ export default function TenantsClient({ tenants }) {
             Manage tenant profiles, tenancy details, balances and documents.
           </p>
         </div>
-        <Button>
+        {canCreate ? <Button onClick={() => setCreating(true)}>
           <Plus size={17} /> Add tenant
-        </Button>
+        </Button> : null}
       </section>
       <section className="mb-3 grid grid-cols-4 gap-3 max-lg:grid-cols-2">
         <div className={summaryClass}>
@@ -65,8 +73,8 @@ export default function TenantsClient({ tenants }) {
           </span>
           <div className={summaryContentClass}>
             <small className={summaryLabelClass}>Total tenants</small>
-            <strong className={summaryStrongClass}>289</strong>
-            <b className={summaryNoteClass}>Across 24 properties</b>
+            <strong className={summaryStrongClass}>{scopedTenants.length}</strong>
+            <b className={summaryNoteClass}>Visible records</b>
           </div>
         </div>
         <div className={summaryClass}>
@@ -75,8 +83,8 @@ export default function TenantsClient({ tenants }) {
           </span>
           <div className={summaryContentClass}>
             <small className={summaryLabelClass}>Active leases</small>
-            <strong className={summaryStrongClass}>276</strong>
-            <b className={summaryNoteClass}>95.5% of tenants</b>
+            <strong className={summaryStrongClass}>{activeCount}</strong>
+            <b className={summaryNoteClass}>{scopedTenants.length ? ((activeCount / scopedTenants.length) * 100).toFixed(1) : 0}% of tenants</b>
           </div>
         </div>
         <div className={summaryClass}>
@@ -85,7 +93,7 @@ export default function TenantsClient({ tenants }) {
           </span>
           <div className={summaryContentClass}>
             <small className={summaryLabelClass}>Expiring soon</small>
-            <strong className={summaryStrongClass}>7</strong>
+            <strong className={summaryStrongClass}>0</strong>
             <b className={summaryNoteClass}>Within 30 days</b>
           </div>
         </div>
@@ -95,8 +103,8 @@ export default function TenantsClient({ tenants }) {
           </span>
           <div className={summaryContentClass}>
             <small className={summaryLabelClass}>With balance</small>
-            <strong className={summaryStrongClass}>18</strong>
-            <b className={summaryNoteClass}>$53,450 outstanding</b>
+            <strong className={summaryStrongClass}>{balanceCount}</strong>
+            <b className={summaryNoteClass}>${outstanding.toLocaleString()} outstanding</b>
           </div>
         </div>
       </section>
@@ -158,6 +166,7 @@ export default function TenantsClient({ tenants }) {
                 <small className={tenantSmallClass}>
                   {tenant.id} · {tenant.email}
                 </small>
+                <small className={tenant.emailVerified ? "text-success" : "text-warning"}>{tenant.emailVerified ? "Email verified" : "Email unverified"}</small>
               </span>
               <span className="flex min-w-0 flex-col">
                 <strong className={tenantStrongClass}>{tenant.property}</strong>
@@ -194,7 +203,7 @@ export default function TenantsClient({ tenants }) {
           </div>
         ) : null}
         <div className="flex min-h-12 items-center justify-between border-t border-default p-3 text-muted">
-          <span>Showing {filtered.length} sample records from 289 tenants</span>
+          <span>Showing {filtered.length} of {scopedTenants.length} tenants</span>
           <div className="flex gap-1">
             <button className={pageButtonClass} disabled>
               Previous
@@ -207,6 +216,7 @@ export default function TenantsClient({ tenants }) {
         </div>
       </section>
       <TenantDetail tenant={selected} onClose={() => setSelected(null)} />
+      {creating ? <CreateTenantDialog landlords={landlords} properties={properties} units={units} onClose={() => setCreating(false)} /> : null}
     </main>
   );
 }

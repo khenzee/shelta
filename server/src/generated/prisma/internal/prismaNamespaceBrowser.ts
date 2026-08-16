@@ -51,6 +51,10 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  AiProvider: 'AiProvider',
+  AiConversation: 'AiConversation',
+  AiMessage: 'AiMessage',
+  AiToolExecution: 'AiToolExecution',
   Communication: 'Communication',
   CommunicationDocument: 'CommunicationDocument',
   Notification: 'Notification',
@@ -98,6 +102,62 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AiProviderScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  type: 'type',
+  baseUrl: 'baseUrl',
+  modelId: 'modelId',
+  enabled: 'enabled',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiProviderScalarFieldEnum = (typeof AiProviderScalarFieldEnum)[keyof typeof AiProviderScalarFieldEnum]
+
+
+export const AiConversationScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  providerId: 'providerId',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiConversationScalarFieldEnum = (typeof AiConversationScalarFieldEnum)[keyof typeof AiConversationScalarFieldEnum]
+
+
+export const AiMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  role: 'role',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type AiMessageScalarFieldEnum = (typeof AiMessageScalarFieldEnum)[keyof typeof AiMessageScalarFieldEnum]
+
+
+export const AiToolExecutionScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  conversationId: 'conversationId',
+  providerId: 'providerId',
+  toolName: 'toolName',
+  arguments: 'arguments',
+  resultSummary: 'resultSummary',
+  outcome: 'outcome',
+  createdAt: 'createdAt'
+} as const
+
+export type AiToolExecutionScalarFieldEnum = (typeof AiToolExecutionScalarFieldEnum)[keyof typeof AiToolExecutionScalarFieldEnum]
 
 
 export const CommunicationScalarFieldEnum = {
@@ -398,6 +458,9 @@ export const TenantScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   email: 'email',
+  emailVerifiedAt: 'emailVerifiedAt',
+  emailVerifyHash: 'emailVerifyHash',
+  emailVerifyExpiry: 'emailVerifyExpiry',
   phone: 'phone',
   occupation: 'occupation',
   employer: 'employer',
@@ -574,6 +637,9 @@ export const LandlordScalarFieldEnum = {
   code: 'code',
   name: 'name',
   email: 'email',
+  emailVerifiedAt: 'emailVerifiedAt',
+  emailVerifyHash: 'emailVerifyHash',
+  emailVerifyExpiry: 'emailVerifyExpiry',
   phone: 'phone',
   address: 'address',
   bankDetailsCipher: 'bankDetailsCipher',

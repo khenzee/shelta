@@ -13,6 +13,8 @@ import {
 import Button from "@/components/ui/Button";
 import LandlordDetail from "./LandlordDetail";
 import { useWorkspace } from "@/components/layout/WorkspaceProvider";
+import { useSession } from "@/components/auth/SessionProvider";
+import CreateLandlordDialog from "./CreateLandlordDialog";
 
 const summaryClass = "flex min-w-0 flex-col gap-1 border-r border-default p-4";
 const summaryLabelClass = "text-secondary";
@@ -24,8 +26,11 @@ export default function LandlordsClient({ landlords, properties }) {
   const [search, setSearch] = useState("");
   const [portal, setPortal] = useState("All portal statuses");
   const [selected, setSelected] = useState(null);
+  const [creating, setCreating] = useState(false);
   const deferredSearch = useDeferredValue(search);
   const { openLandlord } = useWorkspace();
+  const session = useSession();
+  const canCreate = ["ADMIN", "MANAGER"].includes(session?.role);
   const filtered = landlords.filter(
     (landlord) =>
       `${landlord.name} ${landlord.id} ${landlord.email}`
@@ -33,6 +38,9 @@ export default function LandlordsClient({ landlords, properties }) {
         .includes(deferredSearch.toLowerCase()) &&
       (portal === "All portal statuses" || landlord.portal === portal),
   );
+  const propertyCount = properties.length;
+  const totalUnits = properties.reduce((total, property) => total + Number(property.units || 0), 0);
+  const totalRent = properties.reduce((total, property) => total + Number(property.rent || 0), 0);
 
   return (
     <main className="px-8 py-6 max-md:px-4 max-md:py-5">
@@ -46,31 +54,31 @@ export default function LandlordsClient({ landlords, properties }) {
             Select a landlord to review and manage their complete real estate portfolio.
           </p>
         </div>
-        <Button>
+        {canCreate ? <Button onClick={() => setCreating(true)}>
           <Plus size={16} /> Add landlord
-        </Button>
+        </Button> : null}
       </section>
 
       <section className="mb-3.5 grid grid-cols-4 rounded-md border border-default bg-surface max-lg:grid-cols-2">
         <div className={summaryClass}>
           <span className={summaryLabelClass}>Total landlords</span>
-          <strong>6</strong>
-          <small className={summaryNoteClass}>24 managed properties</small>
+          <strong>{landlords.length}</strong>
+          <small className={summaryNoteClass}>{propertyCount} managed properties</small>
         </div>
         <div className={summaryClass}>
           <span className={summaryLabelClass}>Portfolio units</span>
-          <strong>312</strong>
-          <small className={summaryNoteClass}>289 occupied</small>
+          <strong>{totalUnits}</strong>
+          <small className={summaryNoteClass}>Visible portfolio units</small>
         </div>
         <div className={summaryClass}>
           <span className={summaryLabelClass}>Expected monthly rent</span>
-          <strong>$482,100</strong>
+          <strong>${totalRent.toLocaleString()}</strong>
           <small className={summaryNoteClass}>Across all portfolios</small>
         </div>
         <div className="flex min-w-0 flex-col gap-1 p-4">
           <span className={summaryLabelClass}>Needs attention</span>
-          <strong>12</strong>
-          <small className={summaryNoteClass}>Across 5 landlords</small>
+          <strong>{landlords.filter((landlord) => Number(landlord.attention || 0) > 0).length}</strong>
+          <small className={summaryNoteClass}>Reported by API</small>
         </div>
       </section>
 
@@ -120,6 +128,7 @@ export default function LandlordsClient({ landlords, properties }) {
                   <small className="text-muted">{landlord.id}</small>
                   <strong>{landlord.name}</strong>
                   <b className="truncate font-normal text-muted">{landlord.email}</b>
+                  <small className={landlord.emailVerified ? "text-success" : "text-warning"}>{landlord.emailVerified ? "Email verified" : "Email unverified"}</small>
                 </span>
                 <span
                   className={
@@ -185,6 +194,7 @@ export default function LandlordsClient({ landlords, properties }) {
         properties={properties}
         onClose={() => setSelected(null)}
       />
+      {creating ? <CreateLandlordDialog onClose={() => setCreating(false)} /> : null}
     </main>
   );
 }

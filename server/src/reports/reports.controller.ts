@@ -39,7 +39,7 @@ export class ReportsController {
   }
 
   @Get('financial')
-  @Roles('SUPER_ADMIN', 'ACCOUNTANT')
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Get financial report' })
   getFinancialReport(
     @CurrentUser() user: JwtPayload,

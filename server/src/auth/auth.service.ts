@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../database/prisma.service';
 import { EnvironmentVariables } from '../config/environment';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
 export interface TokenPayload {
   sub: string;
@@ -208,5 +208,90 @@ export class AuthService {
       where: { userId, revokedAt: null },
       data: { revokedAt: new Date() },
     });
+  }
+
+  async validateInvitation(token: string) {
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const invitation = await this.prisma.invitation.findFirst({
+      where: {
+        tokenHash,
+        acceptedAt: null,
+        expiresAt: { gt: new Date() },
+        user: { status: 'INVITED' },
+      },
+      include: { user: { include: { employee: { include: { role: true } } } } },
+    });
+    if (!invitation) throw new UnauthorizedException('Invitation is invalid or expired');
+    return {
+      email: invitation.user.email,
+      name: invitation.user.name,
+      role: invitation.user.employee?.role.name ?? null,
+      expiresAt: invitation.expiresAt,
+    };
+  }
+
+  async acceptInvitation(token: string, password: string) {
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const invitation = await this.prisma.invitation.findFirst({
+      where: {
+        tokenHash,
+        acceptedAt: null,
+        expiresAt: { gt: new Date() },
+        user: { status: 'INVITED' },
+      },
+      include: { user: { include: { employee: true } } },
+    });
+    if (!invitation) throw new UnauthorizedException('Invitation is invalid or expired');
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    await this.prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: invitation.userId },
+        data: {
+          passwordHash,
+          status: 'ACTIVE',
+          emailVerifiedAt: new Date(),
+          passwordChangedAt: new Date(),
+        },
+      });
+      if (invitation.user.employee) {
+        await tx.employee.update({
+          where: { id: invitation.user.employee.id },
+          data: { status: 'ACTIVE' },
+        });
+      }
+      await tx.invitation.updateMany({
+        where: { userId: invitation.userId, acceptedAt: null },
+        data: { acceptedAt: new Date() },
+      });
+    });
+    return { message: 'Invitation accepted' };
+  }
+
+  async verifyContactEmail(type: 'landlord' | 'tenant', token: string) {
+    const emailVerifyHash = createHash('sha256').update(token).digest('hex');
+    const now = new Date();
+
+    if (type === 'landlord') {
+      const landlord = await this.prisma.landlord.findFirst({
+        where: { emailVerifyHash, emailVerifyExpiry: { gt: now }, emailVerifiedAt: null },
+      });
+      if (!landlord) throw new UnauthorizedException('Verification link is invalid or expired');
+      await this.prisma.landlord.update({
+        where: { id: landlord.id },
+        data: { emailVerifiedAt: now, emailVerifyHash: null, emailVerifyExpiry: null },
+      });
+    } else {
+      const tenant = await this.prisma.tenant.findFirst({
+        where: { emailVerifyHash, emailVerifyExpiry: { gt: now }, emailVerifiedAt: null },
+      });
+      if (!tenant) throw new UnauthorizedException('Verification link is invalid or expired');
+      await this.prisma.tenant.update({
+        where: { id: tenant.id },
+        data: { emailVerifiedAt: now, emailVerifyHash: null, emailVerifyExpiry: null },
+      });
+    }
+
+    return { message: 'Email verified' };
   }
 }

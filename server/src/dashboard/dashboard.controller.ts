@@ -15,9 +15,13 @@ export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get('agency')
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'Get agency dashboard' })
   getAgencyDashboard(@CurrentUser() user: JwtPayload) {
-    return this.dashboardService.getAgencyDashboard(user.organizationId);
+    return this.dashboardService.getAgencyDashboard(
+      user.organizationId,
+      user.sub,
+      user.role,
+    );
   }
 }

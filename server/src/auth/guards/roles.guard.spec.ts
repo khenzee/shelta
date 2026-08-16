@@ -15,8 +15,8 @@ describe('RolesGuard', () => {
     } as unknown as ExecutionContext;
   }
 
-  it('allows a matching normalized role', () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['SUPER_ADMIN']);
+  it('allows a matching canonical role', () => {
+    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['ADMIN']);
     expect(
       guard.canActivate(
         context({
@@ -26,7 +26,7 @@ describe('RolesGuard', () => {
           email: 'admin@example.com',
           name: 'Admin',
           sessionId: 'session-1',
-          role: 'SUPER_ADMIN',
+          role: 'ADMIN',
           landlordId: null,
         }),
       ),
@@ -34,7 +34,7 @@ describe('RolesGuard', () => {
   });
 
   it('rejects a missing or non-matching role', () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['ACCOUNTANT']);
+    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['ADMIN']);
     expect(() =>
       guard.canActivate(
         context({

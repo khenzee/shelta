@@ -28,14 +28,14 @@ export class TenantsController {
   constructor(private readonly tenantsService: TenantsService) {}
 
   @Get()
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List tenants' })
   list(@CurrentUser() user: JwtPayload, @Query() query: TenantQueryDto) {
     return this.tenantsService.list(user.organizationId, query);
   }
 
   @Get(':id')
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'Get tenant by ID' })
   get(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.tenantsService.get(user.organizationId, id);
@@ -49,7 +49,7 @@ export class TenantsController {
   }
 
   @Put(':id')
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'Update tenant' })
   update(
     @CurrentUser() user: JwtPayload,

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
   Building2,
@@ -27,9 +27,9 @@ const navGroups = [
     label: "Workspace",
     items: [
       { id: "overview", label: "Overview", icon: Gauge, href: "/" },
-      { id: "properties", label: "Properties", icon: Building2, count: "24", href: "/properties" },
-      { id: "units", label: "Units", icon: Grid3X3, count: "312", href: "/units" },
-      { id: "tenants", label: "Tenants", icon: Users, count: "289", href: "/tenants" },
+      { id: "properties", label: "Properties", icon: Building2, href: "/properties" },
+      { id: "units", label: "Units", icon: Grid3X3, href: "/units" },
+      { id: "tenants", label: "Tenants", icon: Users, href: "/tenants" },
     ],
   },
   {
@@ -37,7 +37,7 @@ const navGroups = [
     items: [
       { id: "landlords", label: "Landlords", icon: House, href: "/landlords" },
       { id: "finances", label: "Finances", icon: CircleDollarSign, href: "/finances" },
-      { id: "maintenance", label: "Maintenance", icon: Wrench, count: "8", href: "/maintenance" },
+      { id: "maintenance", label: "Maintenance", icon: Wrench, href: "/maintenance" },
       { id: "leases", label: "Leases & documents", icon: FileText, href: "/leases" },
       { id: "reports", label: "Reports", icon: BarChart3, href: "/reports" },
     ],
@@ -51,8 +51,27 @@ const navGroups = [
   },
 ];
 
-export default function Sidebar({ open, onClose, collapsed, onToggle }) {
+export default function Sidebar({ open, onClose, collapsed, onToggle, session }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const initials = session?.name?.split(" ").map((part) => part[0]).slice(0, 2).join("").toUpperCase() || "NA";
+  const role = session?.role || "AGENT";
+  const visibleGroups = navGroups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => {
+        if (["finances", "reports"].includes(item.id)) return role === "ADMIN";
+        if (item.id === "employees") return ["ADMIN", "MANAGER"].includes(role);
+        return true;
+      }),
+    }))
+    .filter((group) => group.items.length > 0);
+
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.replace("/login");
+    router.refresh();
+  }
 
   return (
     <>
@@ -88,20 +107,9 @@ export default function Sidebar({ open, onClose, collapsed, onToggle }) {
             <X size={18} />
           </button>
         </div>
-        <button
-          className={`flex w-full items-center gap-2.5 rounded-md border border-default bg-surface p-2 text-left text-primary shadow-sm transition-shadow hover:shadow-md ${collapsed ? "md:justify-center md:px-0" : ""}`}
-        >
-          <span className="grid size-7 shrink-0 place-items-center rounded bg-secondary text-[10px] font-bold text-inverse">
-            NH
-          </span>
-          <span className={`min-w-0 flex-1 flex-col ${collapsed ? "md:hidden" : "flex"}`}>
-            <b className="truncate font-semibold">North & Haven</b>
-            <small className="text-muted">Agency workspace</small>
-          </span>
-          <ChevronDown className={`text-muted ${collapsed ? "md:hidden" : ""}`} size={14} />
-        </button>
+
         <nav className="flex-1 overflow-y-auto pt-4 pb-2 scrollbar-none">
-          {navGroups.map((group) => (
+          {visibleGroups.map((group) => (
             <div className="mb-5" key={group.label}>
               <p
                 className={`mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-wider text-muted ${collapsed ? "md:hidden" : ""}`}
@@ -142,15 +150,16 @@ export default function Sidebar({ open, onClose, collapsed, onToggle }) {
             className={`mt-1 flex items-center gap-2.5 rounded-md px-2 pb-1 pt-2 ${collapsed ? "md:justify-center md:px-0" : ""}`}
           >
             <div className="grid size-7 shrink-0 place-items-center rounded-full bg-secondary text-[10px] font-bold text-inverse">
-              NA
+              {initials}
             </div>
             <span className={`min-w-0 flex-1 flex-col ${collapsed ? "md:hidden" : "flex"}`}>
-              <b className="truncate font-semibold text-primary">Nathan Adebayo</b>
-              <small className="text-muted">Super Admin</small>
+               <b className="truncate font-semibold text-primary">{session?.name || "Agency user"}</b>
+                <small className="text-muted">{session?.type === "LANDLORD" ? "Landlord" : role}</small>
             </span>
             <button
               className={`grid size-7 place-items-center rounded border-0 bg-transparent text-muted transition-colors hover:bg-hover hover:text-primary ${collapsed ? "md:hidden" : ""}`}
-              aria-label="Log out"
+               aria-label="Log out"
+               onClick={logout}
             >
               <LogOut size={15} />
             </button>

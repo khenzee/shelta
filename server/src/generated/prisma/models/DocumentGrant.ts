@@ -434,10 +434,6 @@ export type DocumentGrantUncheckedUpdateManyWithoutDocumentNestedInput = {
   deleteMany?: Prisma.DocumentGrantScalarWhereInput | Prisma.DocumentGrantScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type DocumentGrantCreateNestedManyWithoutGrantedByInput = {
   create?: Prisma.XOR<Prisma.DocumentGrantCreateWithoutGrantedByInput, Prisma.DocumentGrantUncheckedCreateWithoutGrantedByInput> | Prisma.DocumentGrantCreateWithoutGrantedByInput[] | Prisma.DocumentGrantUncheckedCreateWithoutGrantedByInput[]
   connectOrCreate?: Prisma.DocumentGrantCreateOrConnectWithoutGrantedByInput | Prisma.DocumentGrantCreateOrConnectWithoutGrantedByInput[]

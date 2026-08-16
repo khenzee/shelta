@@ -268,6 +268,8 @@ export type UserWhereInput = {
   complaintsAssigned?: Prisma.ComplaintListRelationFilter
   complaintMessages?: Prisma.ComplaintMessageListRelationFilter
   auditEvents?: Prisma.AuditEventListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
+  aiToolExecutions?: Prisma.AiToolExecutionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -306,6 +308,8 @@ export type UserOrderByWithRelationInput = {
   complaintsAssigned?: Prisma.ComplaintOrderByRelationAggregateInput
   complaintMessages?: Prisma.ComplaintMessageOrderByRelationAggregateInput
   auditEvents?: Prisma.AuditEventOrderByRelationAggregateInput
+  aiConversations?: Prisma.AiConversationOrderByRelationAggregateInput
+  aiToolExecutions?: Prisma.AiToolExecutionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -348,6 +352,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   complaintsAssigned?: Prisma.ComplaintListRelationFilter
   complaintMessages?: Prisma.ComplaintMessageListRelationFilter
   auditEvents?: Prisma.AuditEventListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
+  aiToolExecutions?: Prisma.AiToolExecutionListRelationFilter
 }, "id" | "organizationId_email">
 
 export type UserOrderByWithAggregationInput = {
@@ -423,6 +429,8 @@ export type UserCreateInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -460,6 +468,8 @@ export type UserUncheckedCreateInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -497,6 +507,8 @@ export type UserUpdateInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -534,6 +546,8 @@ export type UserUncheckedUpdateInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -654,6 +668,34 @@ export type UserMinOrderByAggregateInput = {
   passwordChangedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserCreateNestedOneWithoutAiConversationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiConversationsInput, Prisma.UserUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiConversationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAiConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiConversationsInput, Prisma.UserUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiConversationsInput
+  upsert?: Prisma.UserUpsertWithoutAiConversationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiConversationsInput, Prisma.UserUpdateWithoutAiConversationsInput>, Prisma.UserUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type UserCreateNestedOneWithoutAiToolExecutionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiToolExecutionsInput, Prisma.UserUncheckedCreateWithoutAiToolExecutionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiToolExecutionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAiToolExecutionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiToolExecutionsInput, Prisma.UserUncheckedCreateWithoutAiToolExecutionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiToolExecutionsInput
+  upsert?: Prisma.UserUpsertWithoutAiToolExecutionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiToolExecutionsInput, Prisma.UserUpdateWithoutAiToolExecutionsInput>, Prisma.UserUncheckedUpdateWithoutAiToolExecutionsInput>
 }
 
 export type UserCreateNestedOneWithoutCommunicationsInput = {
@@ -1024,6 +1066,342 @@ export type UserUpdateOneWithoutLandlordNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLandlordInput, Prisma.UserUpdateWithoutLandlordInput>, Prisma.UserUncheckedUpdateWithoutLandlordInput>
 }
 
+export type UserCreateWithoutAiConversationsInput = {
+  id?: string
+  email: string
+  passwordHash?: string | null
+  name: string
+  phone?: string | null
+  type: $Enums.UserType
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  passwordChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  landlord?: Prisma.LandlordCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutUserInput
+  invitedUsers?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
+  paymentsCreated?: Prisma.PaymentCreateNestedManyWithoutCreatedByInput
+  paymentsVoided?: Prisma.PaymentCreateNestedManyWithoutVoidedByInput
+  transactionsCreated?: Prisma.TransactionCreateNestedManyWithoutCreatedByInput
+  transactionsVoided?: Prisma.TransactionCreateNestedManyWithoutVoidedByInput
+  createdDocuments?: Prisma.DocumentCreateNestedManyWithoutCreatedByInput
+  documentVersions?: Prisma.DocumentVersionCreateNestedManyWithoutUploadedByInput
+  documentGrants?: Prisma.DocumentGrantCreateNestedManyWithoutGrantedByInput
+  communications?: Prisma.CommunicationCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  maintenanceAssigned?: Prisma.MaintenanceRequestCreateNestedManyWithoutAssignedToInput
+  maintenanceCompleted?: Prisma.MaintenanceRequestCreateNestedManyWithoutCompletedByInput
+  maintenanceVerified?: Prisma.MaintenanceRequestCreateNestedManyWithoutVerifiedByInput
+  inspections?: Prisma.InspectionCreateNestedManyWithoutInspectorInput
+  complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
+  complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
+  auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAiConversationsInput = {
+  id?: string
+  organizationId: string
+  email: string
+  passwordHash?: string | null
+  name: string
+  phone?: string | null
+  type: $Enums.UserType
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  passwordChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  landlord?: Prisma.LandlordUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutUserInput
+  invitedUsers?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+  paymentsCreated?: Prisma.PaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentsVoided?: Prisma.PaymentUncheckedCreateNestedManyWithoutVoidedByInput
+  transactionsCreated?: Prisma.TransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  transactionsVoided?: Prisma.TransactionUncheckedCreateNestedManyWithoutVoidedByInput
+  createdDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutCreatedByInput
+  documentVersions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUploadedByInput
+  documentGrants?: Prisma.DocumentGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  maintenanceAssigned?: Prisma.MaintenanceRequestUncheckedCreateNestedManyWithoutAssignedToInput
+  maintenanceCompleted?: Prisma.MaintenanceRequestUncheckedCreateNestedManyWithoutCompletedByInput
+  maintenanceVerified?: Prisma.MaintenanceRequestUncheckedCreateNestedManyWithoutVerifiedByInput
+  inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutInspectorInput
+  complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
+  complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
+  auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAiConversationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiConversationsInput, Prisma.UserUncheckedCreateWithoutAiConversationsInput>
+}
+
+export type UserUpsertWithoutAiConversationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAiConversationsInput, Prisma.UserUncheckedUpdateWithoutAiConversationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiConversationsInput, Prisma.UserUncheckedCreateWithoutAiConversationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiConversationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAiConversationsInput, Prisma.UserUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type UserUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutUsersNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  landlord?: Prisma.LandlordUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutUserNestedInput
+  invitedUsers?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
+  paymentsCreated?: Prisma.PaymentUpdateManyWithoutCreatedByNestedInput
+  paymentsVoided?: Prisma.PaymentUpdateManyWithoutVoidedByNestedInput
+  transactionsCreated?: Prisma.TransactionUpdateManyWithoutCreatedByNestedInput
+  transactionsVoided?: Prisma.TransactionUpdateManyWithoutVoidedByNestedInput
+  createdDocuments?: Prisma.DocumentUpdateManyWithoutCreatedByNestedInput
+  documentVersions?: Prisma.DocumentVersionUpdateManyWithoutUploadedByNestedInput
+  documentGrants?: Prisma.DocumentGrantUpdateManyWithoutGrantedByNestedInput
+  communications?: Prisma.CommunicationUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  maintenanceAssigned?: Prisma.MaintenanceRequestUpdateManyWithoutAssignedToNestedInput
+  maintenanceCompleted?: Prisma.MaintenanceRequestUpdateManyWithoutCompletedByNestedInput
+  maintenanceVerified?: Prisma.MaintenanceRequestUpdateManyWithoutVerifiedByNestedInput
+  inspections?: Prisma.InspectionUpdateManyWithoutInspectorNestedInput
+  complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
+  complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
+  auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  landlord?: Prisma.LandlordUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutUserNestedInput
+  invitedUsers?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+  paymentsCreated?: Prisma.PaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentsVoided?: Prisma.PaymentUncheckedUpdateManyWithoutVoidedByNestedInput
+  transactionsCreated?: Prisma.TransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  transactionsVoided?: Prisma.TransactionUncheckedUpdateManyWithoutVoidedByNestedInput
+  createdDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutCreatedByNestedInput
+  documentVersions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUploadedByNestedInput
+  documentGrants?: Prisma.DocumentGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  communications?: Prisma.CommunicationUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  maintenanceAssigned?: Prisma.MaintenanceRequestUncheckedUpdateManyWithoutAssignedToNestedInput
+  maintenanceCompleted?: Prisma.MaintenanceRequestUncheckedUpdateManyWithoutCompletedByNestedInput
+  maintenanceVerified?: Prisma.MaintenanceRequestUncheckedUpdateManyWithoutVerifiedByNestedInput
+  inspections?: Prisma.InspectionUncheckedUpdateManyWithoutInspectorNestedInput
+  complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
+  complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
+  auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAiToolExecutionsInput = {
+  id?: string
+  email: string
+  passwordHash?: string | null
+  name: string
+  phone?: string | null
+  type: $Enums.UserType
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  passwordChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  landlord?: Prisma.LandlordCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutUserInput
+  invitedUsers?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
+  paymentsCreated?: Prisma.PaymentCreateNestedManyWithoutCreatedByInput
+  paymentsVoided?: Prisma.PaymentCreateNestedManyWithoutVoidedByInput
+  transactionsCreated?: Prisma.TransactionCreateNestedManyWithoutCreatedByInput
+  transactionsVoided?: Prisma.TransactionCreateNestedManyWithoutVoidedByInput
+  createdDocuments?: Prisma.DocumentCreateNestedManyWithoutCreatedByInput
+  documentVersions?: Prisma.DocumentVersionCreateNestedManyWithoutUploadedByInput
+  documentGrants?: Prisma.DocumentGrantCreateNestedManyWithoutGrantedByInput
+  communications?: Prisma.CommunicationCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  maintenanceAssigned?: Prisma.MaintenanceRequestCreateNestedManyWithoutAssignedToInput
+  maintenanceCompleted?: Prisma.MaintenanceRequestCreateNestedManyWithoutCompletedByInput
+  maintenanceVerified?: Prisma.MaintenanceRequestCreateNestedManyWithoutVerifiedByInput
+  inspections?: Prisma.InspectionCreateNestedManyWithoutInspectorInput
+  complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
+  complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
+  auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAiToolExecutionsInput = {
+  id?: string
+  organizationId: string
+  email: string
+  passwordHash?: string | null
+  name: string
+  phone?: string | null
+  type: $Enums.UserType
+  status?: $Enums.UserStatus
+  emailVerifiedAt?: Date | string | null
+  lastLoginAt?: Date | string | null
+  passwordChangedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  landlord?: Prisma.LandlordUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutUserInput
+  invitedUsers?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
+  paymentsCreated?: Prisma.PaymentUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentsVoided?: Prisma.PaymentUncheckedCreateNestedManyWithoutVoidedByInput
+  transactionsCreated?: Prisma.TransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  transactionsVoided?: Prisma.TransactionUncheckedCreateNestedManyWithoutVoidedByInput
+  createdDocuments?: Prisma.DocumentUncheckedCreateNestedManyWithoutCreatedByInput
+  documentVersions?: Prisma.DocumentVersionUncheckedCreateNestedManyWithoutUploadedByInput
+  documentGrants?: Prisma.DocumentGrantUncheckedCreateNestedManyWithoutGrantedByInput
+  communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  maintenanceAssigned?: Prisma.MaintenanceRequestUncheckedCreateNestedManyWithoutAssignedToInput
+  maintenanceCompleted?: Prisma.MaintenanceRequestUncheckedCreateNestedManyWithoutCompletedByInput
+  maintenanceVerified?: Prisma.MaintenanceRequestUncheckedCreateNestedManyWithoutVerifiedByInput
+  inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutInspectorInput
+  complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
+  complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
+  auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAiToolExecutionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiToolExecutionsInput, Prisma.UserUncheckedCreateWithoutAiToolExecutionsInput>
+}
+
+export type UserUpsertWithoutAiToolExecutionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAiToolExecutionsInput, Prisma.UserUncheckedUpdateWithoutAiToolExecutionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiToolExecutionsInput, Prisma.UserUncheckedCreateWithoutAiToolExecutionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiToolExecutionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAiToolExecutionsInput, Prisma.UserUncheckedUpdateWithoutAiToolExecutionsInput>
+}
+
+export type UserUpdateWithoutAiToolExecutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutUsersNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  landlord?: Prisma.LandlordUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutUserNestedInput
+  invitedUsers?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
+  paymentsCreated?: Prisma.PaymentUpdateManyWithoutCreatedByNestedInput
+  paymentsVoided?: Prisma.PaymentUpdateManyWithoutVoidedByNestedInput
+  transactionsCreated?: Prisma.TransactionUpdateManyWithoutCreatedByNestedInput
+  transactionsVoided?: Prisma.TransactionUpdateManyWithoutVoidedByNestedInput
+  createdDocuments?: Prisma.DocumentUpdateManyWithoutCreatedByNestedInput
+  documentVersions?: Prisma.DocumentVersionUpdateManyWithoutUploadedByNestedInput
+  documentGrants?: Prisma.DocumentGrantUpdateManyWithoutGrantedByNestedInput
+  communications?: Prisma.CommunicationUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  maintenanceAssigned?: Prisma.MaintenanceRequestUpdateManyWithoutAssignedToNestedInput
+  maintenanceCompleted?: Prisma.MaintenanceRequestUpdateManyWithoutCompletedByNestedInput
+  maintenanceVerified?: Prisma.MaintenanceRequestUpdateManyWithoutVerifiedByNestedInput
+  inspections?: Prisma.InspectionUpdateManyWithoutInspectorNestedInput
+  complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
+  complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
+  auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiToolExecutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordChangedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  landlord?: Prisma.LandlordUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutUserNestedInput
+  invitedUsers?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+  paymentsCreated?: Prisma.PaymentUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentsVoided?: Prisma.PaymentUncheckedUpdateManyWithoutVoidedByNestedInput
+  transactionsCreated?: Prisma.TransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  transactionsVoided?: Prisma.TransactionUncheckedUpdateManyWithoutVoidedByNestedInput
+  createdDocuments?: Prisma.DocumentUncheckedUpdateManyWithoutCreatedByNestedInput
+  documentVersions?: Prisma.DocumentVersionUncheckedUpdateManyWithoutUploadedByNestedInput
+  documentGrants?: Prisma.DocumentGrantUncheckedUpdateManyWithoutGrantedByNestedInput
+  communications?: Prisma.CommunicationUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  maintenanceAssigned?: Prisma.MaintenanceRequestUncheckedUpdateManyWithoutAssignedToNestedInput
+  maintenanceCompleted?: Prisma.MaintenanceRequestUncheckedUpdateManyWithoutCompletedByNestedInput
+  maintenanceVerified?: Prisma.MaintenanceRequestUncheckedUpdateManyWithoutVerifiedByNestedInput
+  inspections?: Prisma.InspectionUncheckedUpdateManyWithoutInspectorNestedInput
+  complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
+  complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
+  auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutCommunicationsInput = {
   id?: string
   email: string
@@ -1058,6 +1436,8 @@ export type UserCreateWithoutCommunicationsInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommunicationsInput = {
@@ -1094,6 +1474,8 @@ export type UserUncheckedCreateWithoutCommunicationsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommunicationsInput = {
@@ -1146,6 +1528,8 @@ export type UserUpdateWithoutCommunicationsInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommunicationsInput = {
@@ -1182,6 +1566,8 @@ export type UserUncheckedUpdateWithoutCommunicationsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1218,6 +1604,8 @@ export type UserCreateWithoutNotificationsInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1254,6 +1642,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1306,6 +1696,8 @@ export type UserUpdateWithoutNotificationsInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1342,6 +1734,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedDocumentsInput = {
@@ -1378,6 +1772,8 @@ export type UserCreateWithoutCreatedDocumentsInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedDocumentsInput = {
@@ -1414,6 +1810,8 @@ export type UserUncheckedCreateWithoutCreatedDocumentsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedDocumentsInput = {
@@ -1466,6 +1864,8 @@ export type UserUpdateWithoutCreatedDocumentsInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedDocumentsInput = {
@@ -1502,6 +1902,8 @@ export type UserUncheckedUpdateWithoutCreatedDocumentsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDocumentVersionsInput = {
@@ -1538,6 +1940,8 @@ export type UserCreateWithoutDocumentVersionsInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDocumentVersionsInput = {
@@ -1574,6 +1978,8 @@ export type UserUncheckedCreateWithoutDocumentVersionsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDocumentVersionsInput = {
@@ -1626,6 +2032,8 @@ export type UserUpdateWithoutDocumentVersionsInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDocumentVersionsInput = {
@@ -1662,6 +2070,8 @@ export type UserUncheckedUpdateWithoutDocumentVersionsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDocumentGrantsInput = {
@@ -1698,6 +2108,8 @@ export type UserCreateWithoutDocumentGrantsInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDocumentGrantsInput = {
@@ -1734,6 +2146,8 @@ export type UserUncheckedCreateWithoutDocumentGrantsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDocumentGrantsInput = {
@@ -1786,6 +2200,8 @@ export type UserUpdateWithoutDocumentGrantsInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDocumentGrantsInput = {
@@ -1822,6 +2238,8 @@ export type UserUncheckedUpdateWithoutDocumentGrantsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentsCreatedInput = {
@@ -1858,6 +2276,8 @@ export type UserCreateWithoutPaymentsCreatedInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsCreatedInput = {
@@ -1894,6 +2314,8 @@ export type UserUncheckedCreateWithoutPaymentsCreatedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsCreatedInput = {
@@ -1935,6 +2357,8 @@ export type UserCreateWithoutPaymentsVoidedInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsVoidedInput = {
@@ -1971,6 +2395,8 @@ export type UserUncheckedCreateWithoutPaymentsVoidedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsVoidedInput = {
@@ -2023,6 +2449,8 @@ export type UserUpdateWithoutPaymentsCreatedInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsCreatedInput = {
@@ -2059,6 +2487,8 @@ export type UserUncheckedUpdateWithoutPaymentsCreatedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutPaymentsVoidedInput = {
@@ -2106,6 +2536,8 @@ export type UserUpdateWithoutPaymentsVoidedInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsVoidedInput = {
@@ -2142,6 +2574,8 @@ export type UserUncheckedUpdateWithoutPaymentsVoidedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsCreatedInput = {
@@ -2178,6 +2612,8 @@ export type UserCreateWithoutTransactionsCreatedInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsCreatedInput = {
@@ -2214,6 +2650,8 @@ export type UserUncheckedCreateWithoutTransactionsCreatedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsCreatedInput = {
@@ -2255,6 +2693,8 @@ export type UserCreateWithoutTransactionsVoidedInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsVoidedInput = {
@@ -2291,6 +2731,8 @@ export type UserUncheckedCreateWithoutTransactionsVoidedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsVoidedInput = {
@@ -2343,6 +2785,8 @@ export type UserUpdateWithoutTransactionsCreatedInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsCreatedInput = {
@@ -2379,6 +2823,8 @@ export type UserUncheckedUpdateWithoutTransactionsCreatedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutTransactionsVoidedInput = {
@@ -2426,6 +2872,8 @@ export type UserUpdateWithoutTransactionsVoidedInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsVoidedInput = {
@@ -2462,6 +2910,8 @@ export type UserUncheckedUpdateWithoutTransactionsVoidedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrganizationInput = {
@@ -2498,6 +2948,8 @@ export type UserCreateWithoutOrganizationInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizationInput = {
@@ -2534,6 +2986,8 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizationInput = {
@@ -2615,6 +3069,8 @@ export type UserCreateWithoutSessionsInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -2651,6 +3107,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -2703,6 +3161,8 @@ export type UserUpdateWithoutSessionsInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -2739,6 +3199,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInvitationsInput = {
@@ -2775,6 +3237,8 @@ export type UserCreateWithoutInvitationsInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -2811,6 +3275,8 @@ export type UserUncheckedCreateWithoutInvitationsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -2852,6 +3318,8 @@ export type UserCreateWithoutInvitedUsersInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInvitedUsersInput = {
@@ -2888,6 +3356,8 @@ export type UserUncheckedCreateWithoutInvitedUsersInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInvitedUsersInput = {
@@ -2940,6 +3410,8 @@ export type UserUpdateWithoutInvitationsInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -2976,6 +3448,8 @@ export type UserUncheckedUpdateWithoutInvitationsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutInvitedUsersInput = {
@@ -3023,6 +3497,8 @@ export type UserUpdateWithoutInvitedUsersInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInvitedUsersInput = {
@@ -3059,6 +3535,8 @@ export type UserUncheckedUpdateWithoutInvitedUsersInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmployeeInput = {
@@ -3095,6 +3573,8 @@ export type UserCreateWithoutEmployeeInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmployeeInput = {
@@ -3131,6 +3611,8 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmployeeInput = {
@@ -3183,6 +3665,8 @@ export type UserUpdateWithoutEmployeeInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmployeeInput = {
@@ -3219,6 +3703,8 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMaintenanceAssignedInput = {
@@ -3255,6 +3741,8 @@ export type UserCreateWithoutMaintenanceAssignedInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMaintenanceAssignedInput = {
@@ -3291,6 +3779,8 @@ export type UserUncheckedCreateWithoutMaintenanceAssignedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMaintenanceAssignedInput = {
@@ -3332,6 +3822,8 @@ export type UserCreateWithoutMaintenanceCompletedInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMaintenanceCompletedInput = {
@@ -3368,6 +3860,8 @@ export type UserUncheckedCreateWithoutMaintenanceCompletedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMaintenanceCompletedInput = {
@@ -3409,6 +3903,8 @@ export type UserCreateWithoutMaintenanceVerifiedInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMaintenanceVerifiedInput = {
@@ -3445,6 +3941,8 @@ export type UserUncheckedCreateWithoutMaintenanceVerifiedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMaintenanceVerifiedInput = {
@@ -3497,6 +3995,8 @@ export type UserUpdateWithoutMaintenanceAssignedInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMaintenanceAssignedInput = {
@@ -3533,6 +4033,8 @@ export type UserUncheckedUpdateWithoutMaintenanceAssignedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutMaintenanceCompletedInput = {
@@ -3580,6 +4082,8 @@ export type UserUpdateWithoutMaintenanceCompletedInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMaintenanceCompletedInput = {
@@ -3616,6 +4120,8 @@ export type UserUncheckedUpdateWithoutMaintenanceCompletedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutMaintenanceVerifiedInput = {
@@ -3663,6 +4169,8 @@ export type UserUpdateWithoutMaintenanceVerifiedInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMaintenanceVerifiedInput = {
@@ -3699,6 +4207,8 @@ export type UserUncheckedUpdateWithoutMaintenanceVerifiedInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInspectionsInput = {
@@ -3735,6 +4245,8 @@ export type UserCreateWithoutInspectionsInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInspectionsInput = {
@@ -3771,6 +4283,8 @@ export type UserUncheckedCreateWithoutInspectionsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInspectionsInput = {
@@ -3823,6 +4337,8 @@ export type UserUpdateWithoutInspectionsInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInspectionsInput = {
@@ -3859,6 +4375,8 @@ export type UserUncheckedUpdateWithoutInspectionsInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutComplaintsAssignedInput = {
@@ -3895,6 +4413,8 @@ export type UserCreateWithoutComplaintsAssignedInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutInspectorInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutComplaintsAssignedInput = {
@@ -3931,6 +4451,8 @@ export type UserUncheckedCreateWithoutComplaintsAssignedInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutInspectorInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutComplaintsAssignedInput = {
@@ -3983,6 +4505,8 @@ export type UserUpdateWithoutComplaintsAssignedInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutInspectorNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutComplaintsAssignedInput = {
@@ -4019,6 +4543,8 @@ export type UserUncheckedUpdateWithoutComplaintsAssignedInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutInspectorNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutComplaintMessagesInput = {
@@ -4055,6 +4581,8 @@ export type UserCreateWithoutComplaintMessagesInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutInspectorInput
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutComplaintMessagesInput = {
@@ -4091,6 +4619,8 @@ export type UserUncheckedCreateWithoutComplaintMessagesInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutInspectorInput
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutComplaintMessagesInput = {
@@ -4143,6 +4673,8 @@ export type UserUpdateWithoutComplaintMessagesInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutInspectorNestedInput
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutComplaintMessagesInput = {
@@ -4179,6 +4711,8 @@ export type UserUncheckedUpdateWithoutComplaintMessagesInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutInspectorNestedInput
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditEventsInput = {
@@ -4215,6 +4749,8 @@ export type UserCreateWithoutAuditEventsInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutInspectorInput
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditEventsInput = {
@@ -4251,6 +4787,8 @@ export type UserUncheckedCreateWithoutAuditEventsInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutInspectorInput
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditEventsInput = {
@@ -4303,6 +4841,8 @@ export type UserUpdateWithoutAuditEventsInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutInspectorNestedInput
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditEventsInput = {
@@ -4339,6 +4879,8 @@ export type UserUncheckedUpdateWithoutAuditEventsInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutInspectorNestedInput
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLandlordInput = {
@@ -4375,6 +4917,8 @@ export type UserCreateWithoutLandlordInput = {
   complaintsAssigned?: Prisma.ComplaintCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLandlordInput = {
@@ -4411,6 +4955,8 @@ export type UserUncheckedCreateWithoutLandlordInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedCreateNestedManyWithoutAssignedToInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedCreateNestedManyWithoutSenderInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutUserInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLandlordInput = {
@@ -4463,6 +5009,8 @@ export type UserUpdateWithoutLandlordInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLandlordInput = {
@@ -4499,6 +5047,8 @@ export type UserUncheckedUpdateWithoutLandlordInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyOrganizationInput = {
@@ -4550,6 +5100,8 @@ export type UserUpdateWithoutOrganizationInput = {
   complaintsAssigned?: Prisma.ComplaintUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizationInput = {
@@ -4586,6 +5138,8 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   complaintsAssigned?: Prisma.ComplaintUncheckedUpdateManyWithoutAssignedToNestedInput
   complaintMessages?: Prisma.ComplaintMessageUncheckedUpdateManyWithoutSenderNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutUserNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutOrganizationInput = {
@@ -4628,6 +5182,8 @@ export type UserCountOutputType = {
   complaintsAssigned: number
   complaintMessages: number
   auditEvents: number
+  aiConversations: number
+  aiToolExecutions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4650,6 +5206,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   complaintsAssigned?: boolean | UserCountOutputTypeCountComplaintsAssignedArgs
   complaintMessages?: boolean | UserCountOutputTypeCountComplaintMessagesArgs
   auditEvents?: boolean | UserCountOutputTypeCountAuditEventsArgs
+  aiConversations?: boolean | UserCountOutputTypeCountAiConversationsArgs
+  aiToolExecutions?: boolean | UserCountOutputTypeCountAiToolExecutionsArgs
 }
 
 /**
@@ -4795,6 +5353,20 @@ export type UserCountOutputTypeCountAuditEventsArgs<ExtArgs extends runtime.Type
   where?: Prisma.AuditEventWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiConversationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAiToolExecutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiToolExecutionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4832,6 +5404,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   complaintsAssigned?: boolean | Prisma.User$complaintsAssignedArgs<ExtArgs>
   complaintMessages?: boolean | Prisma.User$complaintMessagesArgs<ExtArgs>
   auditEvents?: boolean | Prisma.User$auditEventsArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.User$aiConversationsArgs<ExtArgs>
+  aiToolExecutions?: boolean | Prisma.User$aiToolExecutionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -4909,6 +5483,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   complaintsAssigned?: boolean | Prisma.User$complaintsAssignedArgs<ExtArgs>
   complaintMessages?: boolean | Prisma.User$complaintMessagesArgs<ExtArgs>
   auditEvents?: boolean | Prisma.User$auditEventsArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.User$aiConversationsArgs<ExtArgs>
+  aiToolExecutions?: boolean | Prisma.User$aiToolExecutionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4943,6 +5519,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     complaintsAssigned: Prisma.$ComplaintPayload<ExtArgs>[]
     complaintMessages: Prisma.$ComplaintMessagePayload<ExtArgs>[]
     auditEvents: Prisma.$AuditEventPayload<ExtArgs>[]
+    aiConversations: Prisma.$AiConversationPayload<ExtArgs>[]
+    aiToolExecutions: Prisma.$AiToolExecutionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5374,6 +5952,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   complaintsAssigned<T extends Prisma.User$complaintsAssignedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$complaintsAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ComplaintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   complaintMessages<T extends Prisma.User$complaintMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$complaintMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ComplaintMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditEvents<T extends Prisma.User$auditEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiConversations<T extends Prisma.User$aiConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiToolExecutions<T extends Prisma.User$aiToolExecutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiToolExecutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiToolExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6308,6 +6888,54 @@ export type User$auditEventsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.AuditEventScalarFieldEnum | Prisma.AuditEventScalarFieldEnum[]
+}
+
+/**
+ * User.aiConversations
+ */
+export type User$aiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiConversation
+   */
+  select?: Prisma.AiConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiConversation
+   */
+  omit?: Prisma.AiConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiConversationInclude<ExtArgs> | null
+  where?: Prisma.AiConversationWhereInput
+  orderBy?: Prisma.AiConversationOrderByWithRelationInput | Prisma.AiConversationOrderByWithRelationInput[]
+  cursor?: Prisma.AiConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiConversationScalarFieldEnum | Prisma.AiConversationScalarFieldEnum[]
+}
+
+/**
+ * User.aiToolExecutions
+ */
+export type User$aiToolExecutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiToolExecution
+   */
+  select?: Prisma.AiToolExecutionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiToolExecution
+   */
+  omit?: Prisma.AiToolExecutionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiToolExecutionInclude<ExtArgs> | null
+  where?: Prisma.AiToolExecutionWhereInput
+  orderBy?: Prisma.AiToolExecutionOrderByWithRelationInput | Prisma.AiToolExecutionOrderByWithRelationInput[]
+  cursor?: Prisma.AiToolExecutionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiToolExecutionScalarFieldEnum | Prisma.AiToolExecutionScalarFieldEnum[]
 }
 
 /**

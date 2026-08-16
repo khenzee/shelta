@@ -1,16 +1,9 @@
-import { metrics, bars, monthLabels, activity, tasks } from "@/lib/mock-data";
 import OverviewClient from "@/components/overview/OverviewClient";
+import { authenticatedFetch } from "@/lib/server/auth";
+import { adaptDashboard } from "@/lib/adapters/dashboard";
 
-export default function OverviewPage() {
-  // In a real app, you would fetch data here from your API
-
-  return (
-    <OverviewClient
-      metrics={metrics}
-      bars={bars}
-      monthLabels={monthLabels}
-      activity={activity}
-      tasks={tasks}
-    />
-  );
+export default async function OverviewPage() {
+  const response = await authenticatedFetch("dashboard/agency");
+  const dashboard = response.ok ? adaptDashboard(await response.json()) : adaptDashboard();
+  return <OverviewClient {...dashboard} />;
 }

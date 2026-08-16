@@ -164,13 +164,13 @@ export default function MaintenanceDetail({ request, employees, onClose }) {
               {request.invoice ? "Attached to maintenance history" : "Upload when work is invoiced"}
             </small>
           </span>
-          <Button variant="secondary">{request.invoice ? "View" : "Upload"}</Button>
+          <Button variant="secondary" disabled title="Invoice uploads are not available yet">{request.invoice ? "View" : "Upload"}</Button>
         </div>
         <div className="flex justify-end gap-2">
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={onClose}>Save update</Button>
+          <Button disabled title="Maintenance updates are not connected yet">Save update</Button>
         </div>
       </aside>
     </div>

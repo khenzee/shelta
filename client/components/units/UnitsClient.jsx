@@ -4,13 +4,18 @@ import { useState, useDeferredValue } from "react";
 import { Building2, ChevronRight, Download, Home, Plus, Search, Users, Wrench } from "lucide-react";
 import UnitDetail from "./UnitDetail";
 import { useWorkspace } from "@/components/layout/WorkspaceProvider";
+import { useSession } from "@/components/auth/SessionProvider";
+import CreateUnitDialog from "./CreateUnitDialog";
 
 export default function UnitsClient({ units, properties }) {
   const [globalSearch, setGlobalSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [property, setProperty] = useState("All properties");
   const [selected, setSelected] = useState(null);
+  const [creating, setCreating] = useState(false);
   const { activeLandlord } = useWorkspace();
+  const session = useSession();
+  const canCreate = ["ADMIN", "MANAGER"].includes(session?.role);
 
   const deferredSearch = useDeferredValue(globalSearch);
   const scopedUnits = activeLandlord
@@ -26,6 +31,9 @@ export default function UnitsClient({ units, properties }) {
       (property === "All properties" || unit.property === property)
     );
   });
+  const occupiedCount = scopedUnits.filter((unit) => unit.status === "Occupied").length;
+  const vacantCount = scopedUnits.filter((unit) => ["Vacant", "VACANT"].includes(unit.status)).length;
+  const repairCount = scopedUnits.filter((unit) => ["Under Repair", "UNDER_REPAIR", "MAINTENANCE"].includes(unit.status)).length;
 
   return (
     <main className="px-8 py-6 max-md:px-4 max-md:py-5">
@@ -35,9 +43,9 @@ export default function UnitsClient({ units, properties }) {
           <h2>Unit inventory</h2>
           <p>Track availability, rent, deposits and tenancy across every property.</p>
         </div>
-        <button className="flex h-10 items-center gap-2 rounded-md border border-primary bg-primary px-3 font-semibold text-inverse">
+        {canCreate ? <button onClick={() => setCreating(true)} className="flex h-10 items-center gap-2 rounded-md border border-primary bg-primary px-3 font-semibold text-inverse">
           <Plus size={17} /> Add unit
-        </button>
+        </button> : null}
       </section>
 
       <section className="mb-3 grid grid-cols-4 gap-3 max-lg:grid-cols-2 max-sm:gap-2">
@@ -54,7 +62,7 @@ export default function UnitsClient({ units, properties }) {
           </span>
           <span>
             <small>{activeLandlord ? "Landlord units" : "Total units"}</small>
-            <strong>{activeLandlord ? activeLandlord.units : 312}</strong>
+            <strong>{scopedUnits.length}</strong>
           </span>
           <b>View all</b>
         </button>
@@ -71,9 +79,9 @@ export default function UnitsClient({ units, properties }) {
           </span>
           <span>
             <small>Occupied</small>
-            <strong>289</strong>
+            <strong>{occupiedCount}</strong>
           </span>
-          <b>92.6%</b>
+          <b>{scopedUnits.length ? ((occupiedCount / scopedUnits.length) * 100).toFixed(1) : 0}%</b>
         </button>
         <button
           className={
@@ -88,9 +96,9 @@ export default function UnitsClient({ units, properties }) {
           </span>
           <span>
             <small>Vacant</small>
-            <strong>18</strong>
+            <strong>{vacantCount}</strong>
           </span>
-          <b>5.8%</b>
+          <b>{scopedUnits.length ? ((vacantCount / scopedUnits.length) * 100).toFixed(1) : 0}%</b>
         </button>
         <button
           className={
@@ -105,9 +113,9 @@ export default function UnitsClient({ units, properties }) {
           </span>
           <span>
             <small>Under repair</small>
-            <strong>5</strong>
+            <strong>{repairCount}</strong>
           </span>
-          <b>1.6%</b>
+          <b>{scopedUnits.length ? ((repairCount / scopedUnits.length) * 100).toFixed(1) : 0}%</b>
         </button>
       </section>
 
@@ -246,6 +254,7 @@ export default function UnitsClient({ units, properties }) {
       ) : null}
 
       <UnitDetail unit={selected} onClose={() => setSelected(null)} />
+      {creating ? <CreateUnitDialog properties={properties} onClose={() => setCreating(false)} /> : null}
     </main>
   );
 }

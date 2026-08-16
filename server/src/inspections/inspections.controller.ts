@@ -25,14 +25,14 @@ export class InspectionsController {
   constructor(private readonly inspectionsService: InspectionsService) {}
 
   @Get()
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List inspections' })
   list(@CurrentUser() user: JwtPayload, @Query() query: InspectionQueryDto) {
     return this.inspectionsService.list(user.organizationId, query);
   }
 
   @Get(':id')
-  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'Get inspection by ID' })
   get(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.inspectionsService.get(user.organizationId, id);

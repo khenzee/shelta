@@ -1,27 +1,35 @@
 import LandlordPortal from "@/components/portal/LandlordPortal";
-import {
-  documents,
-  landlords,
-  maintenanceRequests,
-  properties,
-  rentSchedule,
-  tenants,
-  transactions,
-} from "@/lib/mock-data";
+import { authenticatedFetch } from "@/lib/server/auth";
+import { adaptProperties } from "@/lib/adapters/properties";
+import { adaptTenants } from "@/lib/adapters/tenants";
 
-export default function PortalPage() {
-  const landlord = landlords.find((item) => item.id === "LL-001");
-  const belongsToLandlord = (item) => item.landlord === landlord.name;
+export default async function PortalPage() {
+  const [propertiesResponse, tenantsResponse, leasesResponse, financesResponse, maintenanceResponse] = await Promise.all([
+    authenticatedFetch("landlord-portal/properties"),
+    authenticatedFetch("landlord-portal/tenants"),
+    authenticatedFetch("landlord-portal/leases"),
+    authenticatedFetch("landlord-portal/finances"),
+    authenticatedFetch("landlord-portal/maintenance"),
+  ]);
+  const properties = propertiesResponse.ok ? adaptProperties((await propertiesResponse.json()).items || []) : [];
+  const tenants = tenantsResponse.ok ? adaptTenants((await tenantsResponse.json()).items || []) : [];
+  const leases = leasesResponse.ok ? (await leasesResponse.json()).items || [] : [];
+  const transactions = financesResponse.ok ? (await financesResponse.json()).items || [] : [];
+  const maintenance = maintenanceResponse.ok ? (await maintenanceResponse.json()).items || [] : [];
+  const landlord = properties[0]?.landlord
+    ? { name: properties[0].landlord, id: properties[0].landlordId }
+    : { name: "Landlord portal", id: null };
 
   return (
     <LandlordPortal
       landlord={landlord}
-      properties={properties.filter(belongsToLandlord)}
-      tenants={tenants.filter(belongsToLandlord)}
-      transactions={transactions.filter(belongsToLandlord)}
-      rentSchedule={rentSchedule.filter(belongsToLandlord)}
-      maintenance={maintenanceRequests.filter(belongsToLandlord)}
-      documents={documents.filter(belongsToLandlord)}
+      properties={properties}
+      tenants={tenants}
+      leases={leases}
+      transactions={transactions}
+      rentSchedule={[]}
+      maintenance={maintenance}
+      documents={[]}
     />
   );
 }

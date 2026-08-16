@@ -33,6 +33,9 @@ model Landlord {
   code              String
   name              String
   email             String
+  emailVerifiedAt   DateTime?
+  emailVerifyHash   String?        @unique
+  emailVerifyExpiry DateTime?
   phone             String?
   address           String?
   bankDetailsCipher String?

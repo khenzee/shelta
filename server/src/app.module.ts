@@ -24,6 +24,8 @@ import { InspectionsModule } from './inspections/inspections.module';
 import { ComplaintsModule } from './complaints/complaints.module';
 import { JobsModule } from './jobs/jobs.module';
 import { LandlordPortalModule } from './landlord-portal/landlord-portal.module';
+import { MailModule } from './mail/mail.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -33,6 +35,7 @@ import { LandlordPortalModule } from './landlord-portal/landlord-portal.module';
     }),
     DatabaseModule,
     StorageModule,
+    MailModule,
     AuthModule,
     LandlordsModule,
     PropertiesModule,
@@ -51,6 +54,7 @@ import { LandlordPortalModule } from './landlord-portal/landlord-portal.module';
     ComplaintsModule,
     ...(process.env.JOBS_ENABLED === 'true' ? [JobsModule] : []),
     LandlordPortalModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

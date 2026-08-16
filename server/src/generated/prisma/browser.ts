@@ -18,6 +18,26 @@ export { Prisma }
 export * as $Enums from './enums.js'
 export * from './enums.js';
 /**
+ * Model AiProvider
+ * 
+ */
+export type AiProvider = Prisma.AiProviderModel
+/**
+ * Model AiConversation
+ * 
+ */
+export type AiConversation = Prisma.AiConversationModel
+/**
+ * Model AiMessage
+ * 
+ */
+export type AiMessage = Prisma.AiMessageModel
+/**
+ * Model AiToolExecution
+ * 
+ */
+export type AiToolExecution = Prisma.AiToolExecutionModel
+/**
  * Model Communication
  * 
  */

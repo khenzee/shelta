@@ -9,6 +9,24 @@
 * 🟢 You can import this file directly.
 */
 
+export const AiProviderType = {
+  OPENAI_COMPATIBLE: 'OPENAI_COMPATIBLE',
+  OPENAI: 'OPENAI',
+  ANTHROPIC: 'ANTHROPIC',
+  GOOGLE: 'GOOGLE'
+} as const
+
+export type AiProviderType = (typeof AiProviderType)[keyof typeof AiProviderType]
+
+
+export const AiMessageRole = {
+  USER: 'USER',
+  ASSISTANT: 'ASSISTANT'
+} as const
+
+export type AiMessageRole = (typeof AiMessageRole)[keyof typeof AiMessageRole]
+
+
 export const CommunicationStatus = {
   QUEUED: 'QUEUED',
   SENDING: 'SENDING',

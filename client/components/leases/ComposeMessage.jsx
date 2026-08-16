@@ -117,7 +117,7 @@ export default function ComposeMessage({ tenants, documents, initialRecipient, o
               <Button variant="secondary">
                 <Paperclip size={14} /> Upload file
               </Button>
-              <Button onClick={() => setSent(true)} disabled={!recipient || !subject}>
+              <Button disabled title="Email sending is not available yet">
                 <Send size={14} /> Send email
               </Button>
             </div>

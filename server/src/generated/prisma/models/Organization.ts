@@ -246,6 +246,9 @@ export type OrganizationWhereInput = {
   inspections?: Prisma.InspectionListRelationFilter
   complaints?: Prisma.ComplaintListRelationFilter
   auditEvents?: Prisma.AuditEventListRelationFilter
+  aiProviders?: Prisma.AiProviderListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
+  aiToolExecutions?: Prisma.AiToolExecutionListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -276,6 +279,9 @@ export type OrganizationOrderByWithRelationInput = {
   inspections?: Prisma.InspectionOrderByRelationAggregateInput
   complaints?: Prisma.ComplaintOrderByRelationAggregateInput
   auditEvents?: Prisma.AuditEventOrderByRelationAggregateInput
+  aiProviders?: Prisma.AiProviderOrderByRelationAggregateInput
+  aiConversations?: Prisma.AiConversationOrderByRelationAggregateInput
+  aiToolExecutions?: Prisma.AiToolExecutionOrderByRelationAggregateInput
 }
 
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -309,6 +315,9 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   inspections?: Prisma.InspectionListRelationFilter
   complaints?: Prisma.ComplaintListRelationFilter
   auditEvents?: Prisma.AuditEventListRelationFilter
+  aiProviders?: Prisma.AiProviderListRelationFilter
+  aiConversations?: Prisma.AiConversationListRelationFilter
+  aiToolExecutions?: Prisma.AiToolExecutionListRelationFilter
 }, "id">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -373,6 +382,9 @@ export type OrganizationCreateInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -403,6 +415,9 @@ export type OrganizationUncheckedCreateInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -433,6 +448,9 @@ export type OrganizationUpdateInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -463,6 +481,9 @@ export type OrganizationUncheckedUpdateInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -505,6 +526,11 @@ export type OrganizationUncheckedUpdateManyInput = {
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrganizationNullableScalarRelationFilter = {
+  is?: Prisma.OrganizationWhereInput | null
+  isNot?: Prisma.OrganizationWhereInput | null
 }
 
 export type OrganizationScalarRelationFilter = {
@@ -552,6 +578,50 @@ export type OrganizationMinOrderByAggregateInput = {
   locale?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type OrganizationCreateNestedOneWithoutAiProvidersInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAiProvidersInput, Prisma.OrganizationUncheckedCreateWithoutAiProvidersInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAiProvidersInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneWithoutAiProvidersNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAiProvidersInput, Prisma.OrganizationUncheckedCreateWithoutAiProvidersInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAiProvidersInput
+  upsert?: Prisma.OrganizationUpsertWithoutAiProvidersInput
+  disconnect?: Prisma.OrganizationWhereInput | boolean
+  delete?: Prisma.OrganizationWhereInput | boolean
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutAiProvidersInput, Prisma.OrganizationUpdateWithoutAiProvidersInput>, Prisma.OrganizationUncheckedUpdateWithoutAiProvidersInput>
+}
+
+export type OrganizationCreateNestedOneWithoutAiConversationsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAiConversationsInput, Prisma.OrganizationUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAiConversationsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutAiConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAiConversationsInput, Prisma.OrganizationUncheckedCreateWithoutAiConversationsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAiConversationsInput
+  upsert?: Prisma.OrganizationUpsertWithoutAiConversationsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutAiConversationsInput, Prisma.OrganizationUpdateWithoutAiConversationsInput>, Prisma.OrganizationUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type OrganizationCreateNestedOneWithoutAiToolExecutionsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAiToolExecutionsInput, Prisma.OrganizationUncheckedCreateWithoutAiToolExecutionsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAiToolExecutionsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutAiToolExecutionsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutAiToolExecutionsInput, Prisma.OrganizationUncheckedCreateWithoutAiToolExecutionsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutAiToolExecutionsInput
+  upsert?: Prisma.OrganizationUpsertWithoutAiToolExecutionsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutAiToolExecutionsInput, Prisma.OrganizationUpdateWithoutAiToolExecutionsInput>, Prisma.OrganizationUncheckedUpdateWithoutAiToolExecutionsInput>
 }
 
 export type OrganizationCreateNestedOneWithoutCommunicationsInput = {
@@ -778,6 +848,438 @@ export type OrganizationUpdateOneRequiredWithoutPropertiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutPropertiesInput, Prisma.OrganizationUpdateWithoutPropertiesInput>, Prisma.OrganizationUncheckedUpdateWithoutPropertiesInput>
 }
 
+export type OrganizationCreateWithoutAiProvidersInput = {
+  id?: string
+  name: string
+  legalName?: string | null
+  email: string
+  phone?: string | null
+  address?: string | null
+  timezone?: string
+  currency?: string
+  locale?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleCreateNestedManyWithoutOrganizationInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutOrganizationInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutOrganizationInput
+  landlords?: Prisma.LandlordCreateNestedManyWithoutOrganizationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutOrganizationInput
+  tenants?: Prisma.TenantCreateNestedManyWithoutOrganizationInput
+  leases?: Prisma.LeaseCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutOrganizationInput
+  maintenanceRequests?: Prisma.MaintenanceRequestCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  communications?: Prisma.CommunicationCreateNestedManyWithoutOrganizationInput
+  inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
+  complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
+  auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutAiProvidersInput = {
+  id?: string
+  name: string
+  legalName?: string | null
+  email: string
+  phone?: string | null
+  address?: string | null
+  timezone?: string
+  currency?: string
+  locale?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutOrganizationInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutOrganizationInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOrganizationInput
+  landlords?: Prisma.LandlordUncheckedCreateNestedManyWithoutOrganizationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutOrganizationInput
+  tenants?: Prisma.TenantUncheckedCreateNestedManyWithoutOrganizationInput
+  leases?: Prisma.LeaseUncheckedCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutOrganizationInput
+  maintenanceRequests?: Prisma.MaintenanceRequestUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutOrganizationInput
+  inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
+  complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
+  auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutAiProvidersInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAiProvidersInput, Prisma.OrganizationUncheckedCreateWithoutAiProvidersInput>
+}
+
+export type OrganizationUpsertWithoutAiProvidersInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutAiProvidersInput, Prisma.OrganizationUncheckedUpdateWithoutAiProvidersInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAiProvidersInput, Prisma.OrganizationUncheckedCreateWithoutAiProvidersInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutAiProvidersInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutAiProvidersInput, Prisma.OrganizationUncheckedUpdateWithoutAiProvidersInput>
+}
+
+export type OrganizationUpdateWithoutAiProvidersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  locale?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutOrganizationNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutOrganizationNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutOrganizationNestedInput
+  landlords?: Prisma.LandlordUpdateManyWithoutOrganizationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutOrganizationNestedInput
+  tenants?: Prisma.TenantUpdateManyWithoutOrganizationNestedInput
+  leases?: Prisma.LeaseUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutOrganizationNestedInput
+  maintenanceRequests?: Prisma.MaintenanceRequestUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  communications?: Prisma.CommunicationUpdateManyWithoutOrganizationNestedInput
+  inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
+  complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
+  auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutAiProvidersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  locale?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutOrganizationNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutOrganizationNestedInput
+  landlords?: Prisma.LandlordUncheckedUpdateManyWithoutOrganizationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutOrganizationNestedInput
+  tenants?: Prisma.TenantUncheckedUpdateManyWithoutOrganizationNestedInput
+  leases?: Prisma.LeaseUncheckedUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutOrganizationNestedInput
+  maintenanceRequests?: Prisma.MaintenanceRequestUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  communications?: Prisma.CommunicationUncheckedUpdateManyWithoutOrganizationNestedInput
+  inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
+  complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutAiConversationsInput = {
+  id?: string
+  name: string
+  legalName?: string | null
+  email: string
+  phone?: string | null
+  address?: string | null
+  timezone?: string
+  currency?: string
+  locale?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleCreateNestedManyWithoutOrganizationInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutOrganizationInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutOrganizationInput
+  landlords?: Prisma.LandlordCreateNestedManyWithoutOrganizationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutOrganizationInput
+  tenants?: Prisma.TenantCreateNestedManyWithoutOrganizationInput
+  leases?: Prisma.LeaseCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutOrganizationInput
+  maintenanceRequests?: Prisma.MaintenanceRequestCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  communications?: Prisma.CommunicationCreateNestedManyWithoutOrganizationInput
+  inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
+  complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
+  auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutAiConversationsInput = {
+  id?: string
+  name: string
+  legalName?: string | null
+  email: string
+  phone?: string | null
+  address?: string | null
+  timezone?: string
+  currency?: string
+  locale?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutOrganizationInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutOrganizationInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOrganizationInput
+  landlords?: Prisma.LandlordUncheckedCreateNestedManyWithoutOrganizationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutOrganizationInput
+  tenants?: Prisma.TenantUncheckedCreateNestedManyWithoutOrganizationInput
+  leases?: Prisma.LeaseUncheckedCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutOrganizationInput
+  maintenanceRequests?: Prisma.MaintenanceRequestUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutOrganizationInput
+  inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
+  complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
+  auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutAiConversationsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAiConversationsInput, Prisma.OrganizationUncheckedCreateWithoutAiConversationsInput>
+}
+
+export type OrganizationUpsertWithoutAiConversationsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutAiConversationsInput, Prisma.OrganizationUncheckedUpdateWithoutAiConversationsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAiConversationsInput, Prisma.OrganizationUncheckedCreateWithoutAiConversationsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutAiConversationsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutAiConversationsInput, Prisma.OrganizationUncheckedUpdateWithoutAiConversationsInput>
+}
+
+export type OrganizationUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  locale?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutOrganizationNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutOrganizationNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutOrganizationNestedInput
+  landlords?: Prisma.LandlordUpdateManyWithoutOrganizationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutOrganizationNestedInput
+  tenants?: Prisma.TenantUpdateManyWithoutOrganizationNestedInput
+  leases?: Prisma.LeaseUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutOrganizationNestedInput
+  maintenanceRequests?: Prisma.MaintenanceRequestUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  communications?: Prisma.CommunicationUpdateManyWithoutOrganizationNestedInput
+  inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
+  complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
+  auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutAiConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  locale?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutOrganizationNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutOrganizationNestedInput
+  landlords?: Prisma.LandlordUncheckedUpdateManyWithoutOrganizationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutOrganizationNestedInput
+  tenants?: Prisma.TenantUncheckedUpdateManyWithoutOrganizationNestedInput
+  leases?: Prisma.LeaseUncheckedUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutOrganizationNestedInput
+  maintenanceRequests?: Prisma.MaintenanceRequestUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  communications?: Prisma.CommunicationUncheckedUpdateManyWithoutOrganizationNestedInput
+  inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
+  complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutAiToolExecutionsInput = {
+  id?: string
+  name: string
+  legalName?: string | null
+  email: string
+  phone?: string | null
+  address?: string | null
+  timezone?: string
+  currency?: string
+  locale?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleCreateNestedManyWithoutOrganizationInput
+  permissions?: Prisma.PermissionCreateNestedManyWithoutOrganizationInput
+  employees?: Prisma.EmployeeCreateNestedManyWithoutOrganizationInput
+  landlords?: Prisma.LandlordCreateNestedManyWithoutOrganizationInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutOrganizationInput
+  tenants?: Prisma.TenantCreateNestedManyWithoutOrganizationInput
+  leases?: Prisma.LeaseCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutOrganizationInput
+  maintenanceRequests?: Prisma.MaintenanceRequestCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
+  communications?: Prisma.CommunicationCreateNestedManyWithoutOrganizationInput
+  inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
+  complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
+  auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutAiToolExecutionsInput = {
+  id?: string
+  name: string
+  legalName?: string | null
+  email: string
+  phone?: string | null
+  address?: string | null
+  timezone?: string
+  currency?: string
+  locale?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutOrganizationInput
+  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutOrganizationInput
+  employees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutOrganizationInput
+  landlords?: Prisma.LandlordUncheckedCreateNestedManyWithoutOrganizationInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutOrganizationInput
+  tenants?: Prisma.TenantUncheckedCreateNestedManyWithoutOrganizationInput
+  leases?: Prisma.LeaseUncheckedCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutOrganizationInput
+  maintenanceRequests?: Prisma.MaintenanceRequestUncheckedCreateNestedManyWithoutOrganizationInput
+  documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutOrganizationInput
+  inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
+  complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
+  auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutAiToolExecutionsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAiToolExecutionsInput, Prisma.OrganizationUncheckedCreateWithoutAiToolExecutionsInput>
+}
+
+export type OrganizationUpsertWithoutAiToolExecutionsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutAiToolExecutionsInput, Prisma.OrganizationUncheckedUpdateWithoutAiToolExecutionsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutAiToolExecutionsInput, Prisma.OrganizationUncheckedCreateWithoutAiToolExecutionsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutAiToolExecutionsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutAiToolExecutionsInput, Prisma.OrganizationUncheckedUpdateWithoutAiToolExecutionsInput>
+}
+
+export type OrganizationUpdateWithoutAiToolExecutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  locale?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutOrganizationNestedInput
+  permissions?: Prisma.PermissionUpdateManyWithoutOrganizationNestedInput
+  employees?: Prisma.EmployeeUpdateManyWithoutOrganizationNestedInput
+  landlords?: Prisma.LandlordUpdateManyWithoutOrganizationNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutOrganizationNestedInput
+  tenants?: Prisma.TenantUpdateManyWithoutOrganizationNestedInput
+  leases?: Prisma.LeaseUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutOrganizationNestedInput
+  maintenanceRequests?: Prisma.MaintenanceRequestUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
+  communications?: Prisma.CommunicationUpdateManyWithoutOrganizationNestedInput
+  inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
+  complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
+  auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutAiToolExecutionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  legalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  locale?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  permissions?: Prisma.PermissionUncheckedUpdateManyWithoutOrganizationNestedInput
+  employees?: Prisma.EmployeeUncheckedUpdateManyWithoutOrganizationNestedInput
+  landlords?: Prisma.LandlordUncheckedUpdateManyWithoutOrganizationNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutOrganizationNestedInput
+  tenants?: Prisma.TenantUncheckedUpdateManyWithoutOrganizationNestedInput
+  leases?: Prisma.LeaseUncheckedUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutOrganizationNestedInput
+  maintenanceRequests?: Prisma.MaintenanceRequestUncheckedUpdateManyWithoutOrganizationNestedInput
+  documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  communications?: Prisma.CommunicationUncheckedUpdateManyWithoutOrganizationNestedInput
+  inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
+  complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
+  auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
 export type OrganizationCreateWithoutCommunicationsInput = {
   id?: string
   name: string
@@ -805,6 +1307,9 @@ export type OrganizationCreateWithoutCommunicationsInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCommunicationsInput = {
@@ -834,6 +1339,9 @@ export type OrganizationUncheckedCreateWithoutCommunicationsInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCommunicationsInput = {
@@ -879,6 +1387,9 @@ export type OrganizationUpdateWithoutCommunicationsInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCommunicationsInput = {
@@ -908,6 +1419,9 @@ export type OrganizationUncheckedUpdateWithoutCommunicationsInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutDocumentsInput = {
@@ -937,6 +1451,9 @@ export type OrganizationCreateWithoutDocumentsInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutDocumentsInput = {
@@ -966,6 +1483,9 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutDocumentsInput = {
@@ -1011,6 +1531,9 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
@@ -1040,6 +1563,9 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutPaymentsInput = {
@@ -1069,6 +1595,9 @@ export type OrganizationCreateWithoutPaymentsInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutPaymentsInput = {
@@ -1098,6 +1627,9 @@ export type OrganizationUncheckedCreateWithoutPaymentsInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutPaymentsInput = {
@@ -1143,6 +1675,9 @@ export type OrganizationUpdateWithoutPaymentsInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
@@ -1172,6 +1707,9 @@ export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTransactionsInput = {
@@ -1201,6 +1739,9 @@ export type OrganizationCreateWithoutTransactionsInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTransactionsInput = {
@@ -1230,6 +1771,9 @@ export type OrganizationUncheckedCreateWithoutTransactionsInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTransactionsInput = {
@@ -1275,6 +1819,9 @@ export type OrganizationUpdateWithoutTransactionsInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTransactionsInput = {
@@ -1304,6 +1851,9 @@ export type OrganizationUncheckedUpdateWithoutTransactionsInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutUsersInput = {
@@ -1333,6 +1883,9 @@ export type OrganizationCreateWithoutUsersInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUsersInput = {
@@ -1362,6 +1915,9 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUsersInput = {
@@ -1407,6 +1963,9 @@ export type OrganizationUpdateWithoutUsersInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUsersInput = {
@@ -1436,6 +1995,9 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutRolesInput = {
@@ -1465,6 +2027,9 @@ export type OrganizationCreateWithoutRolesInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutRolesInput = {
@@ -1494,6 +2059,9 @@ export type OrganizationUncheckedCreateWithoutRolesInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutRolesInput = {
@@ -1539,6 +2107,9 @@ export type OrganizationUpdateWithoutRolesInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutRolesInput = {
@@ -1568,6 +2139,9 @@ export type OrganizationUncheckedUpdateWithoutRolesInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutPermissionsInput = {
@@ -1597,6 +2171,9 @@ export type OrganizationCreateWithoutPermissionsInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutPermissionsInput = {
@@ -1626,6 +2203,9 @@ export type OrganizationUncheckedCreateWithoutPermissionsInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutPermissionsInput = {
@@ -1671,6 +2251,9 @@ export type OrganizationUpdateWithoutPermissionsInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutPermissionsInput = {
@@ -1700,6 +2283,9 @@ export type OrganizationUncheckedUpdateWithoutPermissionsInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutEmployeesInput = {
@@ -1729,6 +2315,9 @@ export type OrganizationCreateWithoutEmployeesInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutEmployeesInput = {
@@ -1758,6 +2347,9 @@ export type OrganizationUncheckedCreateWithoutEmployeesInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutEmployeesInput = {
@@ -1803,6 +2395,9 @@ export type OrganizationUpdateWithoutEmployeesInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutEmployeesInput = {
@@ -1832,6 +2427,9 @@ export type OrganizationUncheckedUpdateWithoutEmployeesInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTenantsInput = {
@@ -1861,6 +2459,9 @@ export type OrganizationCreateWithoutTenantsInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTenantsInput = {
@@ -1890,6 +2491,9 @@ export type OrganizationUncheckedCreateWithoutTenantsInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTenantsInput = {
@@ -1935,6 +2539,9 @@ export type OrganizationUpdateWithoutTenantsInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTenantsInput = {
@@ -1964,6 +2571,9 @@ export type OrganizationUncheckedUpdateWithoutTenantsInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutLeasesInput = {
@@ -1993,6 +2603,9 @@ export type OrganizationCreateWithoutLeasesInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutLeasesInput = {
@@ -2022,6 +2635,9 @@ export type OrganizationUncheckedCreateWithoutLeasesInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutLeasesInput = {
@@ -2067,6 +2683,9 @@ export type OrganizationUpdateWithoutLeasesInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutLeasesInput = {
@@ -2096,6 +2715,9 @@ export type OrganizationUncheckedUpdateWithoutLeasesInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutMaintenanceRequestsInput = {
@@ -2125,6 +2747,9 @@ export type OrganizationCreateWithoutMaintenanceRequestsInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutMaintenanceRequestsInput = {
@@ -2154,6 +2779,9 @@ export type OrganizationUncheckedCreateWithoutMaintenanceRequestsInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutMaintenanceRequestsInput = {
@@ -2199,6 +2827,9 @@ export type OrganizationUpdateWithoutMaintenanceRequestsInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutMaintenanceRequestsInput = {
@@ -2228,6 +2859,9 @@ export type OrganizationUncheckedUpdateWithoutMaintenanceRequestsInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInspectionsInput = {
@@ -2257,6 +2891,9 @@ export type OrganizationCreateWithoutInspectionsInput = {
   communications?: Prisma.CommunicationCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInspectionsInput = {
@@ -2286,6 +2923,9 @@ export type OrganizationUncheckedCreateWithoutInspectionsInput = {
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInspectionsInput = {
@@ -2331,6 +2971,9 @@ export type OrganizationUpdateWithoutInspectionsInput = {
   communications?: Prisma.CommunicationUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInspectionsInput = {
@@ -2360,6 +3003,9 @@ export type OrganizationUncheckedUpdateWithoutInspectionsInput = {
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutComplaintsInput = {
@@ -2389,6 +3035,9 @@ export type OrganizationCreateWithoutComplaintsInput = {
   communications?: Prisma.CommunicationCreateNestedManyWithoutOrganizationInput
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutComplaintsInput = {
@@ -2418,6 +3067,9 @@ export type OrganizationUncheckedCreateWithoutComplaintsInput = {
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutOrganizationInput
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutComplaintsInput = {
@@ -2463,6 +3115,9 @@ export type OrganizationUpdateWithoutComplaintsInput = {
   communications?: Prisma.CommunicationUpdateManyWithoutOrganizationNestedInput
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutComplaintsInput = {
@@ -2492,6 +3147,9 @@ export type OrganizationUncheckedUpdateWithoutComplaintsInput = {
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutOrganizationNestedInput
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAuditEventsInput = {
@@ -2521,6 +3179,9 @@ export type OrganizationCreateWithoutAuditEventsInput = {
   communications?: Prisma.CommunicationCreateNestedManyWithoutOrganizationInput
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAuditEventsInput = {
@@ -2550,6 +3211,9 @@ export type OrganizationUncheckedCreateWithoutAuditEventsInput = {
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutOrganizationInput
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAuditEventsInput = {
@@ -2595,6 +3259,9 @@ export type OrganizationUpdateWithoutAuditEventsInput = {
   communications?: Prisma.CommunicationUpdateManyWithoutOrganizationNestedInput
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAuditEventsInput = {
@@ -2624,6 +3291,9 @@ export type OrganizationUncheckedUpdateWithoutAuditEventsInput = {
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutOrganizationNestedInput
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutLandlordsInput = {
@@ -2653,6 +3323,9 @@ export type OrganizationCreateWithoutLandlordsInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutLandlordsInput = {
@@ -2682,6 +3355,9 @@ export type OrganizationUncheckedCreateWithoutLandlordsInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutLandlordsInput = {
@@ -2727,6 +3403,9 @@ export type OrganizationUpdateWithoutLandlordsInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutLandlordsInput = {
@@ -2756,6 +3435,9 @@ export type OrganizationUncheckedUpdateWithoutLandlordsInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutPropertiesInput = {
@@ -2785,6 +3467,9 @@ export type OrganizationCreateWithoutPropertiesInput = {
   inspections?: Prisma.InspectionCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutPropertiesInput = {
@@ -2814,6 +3499,9 @@ export type OrganizationUncheckedCreateWithoutPropertiesInput = {
   inspections?: Prisma.InspectionUncheckedCreateNestedManyWithoutOrganizationInput
   complaints?: Prisma.ComplaintUncheckedCreateNestedManyWithoutOrganizationInput
   auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutOrganizationInput
+  aiProviders?: Prisma.AiProviderUncheckedCreateNestedManyWithoutOrganizationInput
+  aiConversations?: Prisma.AiConversationUncheckedCreateNestedManyWithoutOrganizationInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutPropertiesInput = {
@@ -2859,6 +3547,9 @@ export type OrganizationUpdateWithoutPropertiesInput = {
   inspections?: Prisma.InspectionUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutPropertiesInput = {
@@ -2888,6 +3579,9 @@ export type OrganizationUncheckedUpdateWithoutPropertiesInput = {
   inspections?: Prisma.InspectionUncheckedUpdateManyWithoutOrganizationNestedInput
   complaints?: Prisma.ComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
   auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiProviders?: Prisma.AiProviderUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiConversations?: Prisma.AiConversationUncheckedUpdateManyWithoutOrganizationNestedInput
+  aiToolExecutions?: Prisma.AiToolExecutionUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 
@@ -2912,6 +3606,9 @@ export type OrganizationCountOutputType = {
   inspections: number
   complaints: number
   auditEvents: number
+  aiProviders: number
+  aiConversations: number
+  aiToolExecutions: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2931,6 +3628,9 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   inspections?: boolean | OrganizationCountOutputTypeCountInspectionsArgs
   complaints?: boolean | OrganizationCountOutputTypeCountComplaintsArgs
   auditEvents?: boolean | OrganizationCountOutputTypeCountAuditEventsArgs
+  aiProviders?: boolean | OrganizationCountOutputTypeCountAiProvidersArgs
+  aiConversations?: boolean | OrganizationCountOutputTypeCountAiConversationsArgs
+  aiToolExecutions?: boolean | OrganizationCountOutputTypeCountAiToolExecutionsArgs
 }
 
 /**
@@ -3055,6 +3755,27 @@ export type OrganizationCountOutputTypeCountAuditEventsArgs<ExtArgs extends runt
   where?: Prisma.AuditEventWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountAiProvidersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiProviderWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountAiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiConversationWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountAiToolExecutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiToolExecutionWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3084,6 +3805,9 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   inspections?: boolean | Prisma.Organization$inspectionsArgs<ExtArgs>
   complaints?: boolean | Prisma.Organization$complaintsArgs<ExtArgs>
   auditEvents?: boolean | Prisma.Organization$auditEventsArgs<ExtArgs>
+  aiProviders?: boolean | Prisma.Organization$aiProvidersArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.Organization$aiConversationsArgs<ExtArgs>
+  aiToolExecutions?: boolean | Prisma.Organization$aiToolExecutionsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -3147,6 +3871,9 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   inspections?: boolean | Prisma.Organization$inspectionsArgs<ExtArgs>
   complaints?: boolean | Prisma.Organization$complaintsArgs<ExtArgs>
   auditEvents?: boolean | Prisma.Organization$auditEventsArgs<ExtArgs>
+  aiProviders?: boolean | Prisma.Organization$aiProvidersArgs<ExtArgs>
+  aiConversations?: boolean | Prisma.Organization$aiConversationsArgs<ExtArgs>
+  aiToolExecutions?: boolean | Prisma.Organization$aiToolExecutionsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3171,6 +3898,9 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     inspections: Prisma.$InspectionPayload<ExtArgs>[]
     complaints: Prisma.$ComplaintPayload<ExtArgs>[]
     auditEvents: Prisma.$AuditEventPayload<ExtArgs>[]
+    aiProviders: Prisma.$AiProviderPayload<ExtArgs>[]
+    aiConversations: Prisma.$AiConversationPayload<ExtArgs>[]
+    aiToolExecutions: Prisma.$AiToolExecutionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3594,6 +4324,9 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   inspections<T extends Prisma.Organization$inspectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$inspectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   complaints<T extends Prisma.Organization$complaintsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$complaintsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ComplaintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditEvents<T extends Prisma.Organization$auditEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$auditEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiProviders<T extends Prisma.Organization$aiProvidersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$aiProvidersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiProviderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiConversations<T extends Prisma.Organization$aiConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$aiConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiToolExecutions<T extends Prisma.Organization$aiToolExecutionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$aiToolExecutionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiToolExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4408,6 +5141,78 @@ export type Organization$auditEventsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.AuditEventScalarFieldEnum | Prisma.AuditEventScalarFieldEnum[]
+}
+
+/**
+ * Organization.aiProviders
+ */
+export type Organization$aiProvidersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiProvider
+   */
+  select?: Prisma.AiProviderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiProvider
+   */
+  omit?: Prisma.AiProviderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiProviderInclude<ExtArgs> | null
+  where?: Prisma.AiProviderWhereInput
+  orderBy?: Prisma.AiProviderOrderByWithRelationInput | Prisma.AiProviderOrderByWithRelationInput[]
+  cursor?: Prisma.AiProviderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiProviderScalarFieldEnum | Prisma.AiProviderScalarFieldEnum[]
+}
+
+/**
+ * Organization.aiConversations
+ */
+export type Organization$aiConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiConversation
+   */
+  select?: Prisma.AiConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiConversation
+   */
+  omit?: Prisma.AiConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiConversationInclude<ExtArgs> | null
+  where?: Prisma.AiConversationWhereInput
+  orderBy?: Prisma.AiConversationOrderByWithRelationInput | Prisma.AiConversationOrderByWithRelationInput[]
+  cursor?: Prisma.AiConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiConversationScalarFieldEnum | Prisma.AiConversationScalarFieldEnum[]
+}
+
+/**
+ * Organization.aiToolExecutions
+ */
+export type Organization$aiToolExecutionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiToolExecution
+   */
+  select?: Prisma.AiToolExecutionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiToolExecution
+   */
+  omit?: Prisma.AiToolExecutionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiToolExecutionInclude<ExtArgs> | null
+  where?: Prisma.AiToolExecutionWhereInput
+  orderBy?: Prisma.AiToolExecutionOrderByWithRelationInput | Prisma.AiToolExecutionOrderByWithRelationInput[]
+  cursor?: Prisma.AiToolExecutionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiToolExecutionScalarFieldEnum | Prisma.AiToolExecutionScalarFieldEnum[]
 }
 
 /**

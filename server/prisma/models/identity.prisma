@@ -51,6 +51,9 @@ model Organization {
   inspections         Inspection[]
   complaints          Complaint[]
   auditEvents         AuditEvent[]
+  aiProviders         AiProvider[]
+  aiConversations     AiConversation[]
+  aiToolExecutions    AiToolExecution[]
 
   @@map("organizations")
 }
@@ -92,6 +95,8 @@ model User {
   complaintsAssigned   Complaint[]
   complaintMessages    ComplaintMessage[]
   auditEvents          AuditEvent[]
+  aiConversations      AiConversation[]
+  aiToolExecutions     AiToolExecution[]
 
   @@unique([organizationId, email])
   @@index([organizationId, type, status])

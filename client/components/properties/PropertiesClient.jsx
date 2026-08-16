@@ -14,13 +14,18 @@ import {
 } from "lucide-react";
 import PropertyDetail from "./PropertyDetail";
 import { useWorkspace } from "@/components/layout/WorkspaceProvider";
+import { useSession } from "@/components/auth/SessionProvider";
+import CreatePropertyDialog from "./CreatePropertyDialog";
 
-export default function PropertiesClient({ properties }) {
+export default function PropertiesClient({ properties, landlords = [] }) {
   const [globalSearch, setGlobalSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [layout, setLayout] = useState("grid");
   const [selected, setSelected] = useState(null);
+  const [creating, setCreating] = useState(false);
   const { activeLandlord } = useWorkspace();
+  const session = useSession();
+  const canCreate = ["ADMIN", "MANAGER"].includes(session?.role);
 
   const deferredSearch = useDeferredValue(globalSearch);
   const scopedProperties = activeLandlord
@@ -32,6 +37,9 @@ export default function PropertiesClient({ properties }) {
       .includes(deferredSearch.toLowerCase());
     return matchesSearch && (status === "All" || property.status === status);
   });
+  const totalUnits = scopedProperties.reduce((total, item) => total + Number(item.units || 0), 0);
+  const occupiedUnits = scopedProperties.reduce((total, item) => total + Number(item.occupied || 0), 0);
+  const monthlyRent = scopedProperties.reduce((total, item) => total + Number(item.rent || 0), 0);
 
   return (
     <main className="px-8 py-6 max-md:px-4 max-md:pb-8 max-md:pt-5">
@@ -45,9 +53,9 @@ export default function PropertiesClient({ properties }) {
             Manage buildings, units, occupancy and ownership records.
           </p>
         </div>
-        <button className="flex h-10 items-center justify-center gap-2 rounded-md border border-primary bg-primary px-3 font-semibold text-inverse">
+        {canCreate ? <button onClick={() => setCreating(true)} className="flex h-10 items-center justify-center gap-2 rounded-md border border-primary bg-primary px-3 font-semibold text-inverse">
           <Plus size={17} /> Add property
-        </button>
+        </button> : null}
       </section>
 
       <section className="mb-3.5 grid grid-cols-4 rounded-md border border-default bg-surface max-lg:grid-cols-2">
@@ -55,22 +63,22 @@ export default function PropertiesClient({ properties }) {
           <span className="col-span-full text-secondary">
             {activeLandlord ? "Landlord portfolio" : "Total portfolio"}
           </span>
-          <strong>{activeLandlord ? activeLandlord.properties : 24}</strong>
+          <strong>{scopedProperties.length}</strong>
           <small className="text-muted">properties</small>
         </div>
         <div className="grid grid-cols-[auto_1fr] items-end gap-x-2 border-r border-default p-4">
           <span className="col-span-full text-secondary">Total units</span>
-          <strong>312</strong>
-          <small className="text-muted">across 5 cities</small>
+          <strong>{totalUnits}</strong>
+          <small className="text-muted">across visible properties</small>
         </div>
         <div className="grid grid-cols-[auto_1fr] items-end gap-x-2 border-r border-default p-4 max-md:border-t">
           <span className="col-span-full text-secondary">Occupied</span>
-          <strong>289</strong>
-          <small className="text-muted">92.6% occupancy</small>
+          <strong>{occupiedUnits}</strong>
+          <small className="text-muted">{totalUnits ? ((occupiedUnits / totalUnits) * 100).toFixed(1) : 0}% occupancy</small>
         </div>
         <div className="grid grid-cols-[auto_1fr] items-end gap-x-2 p-4 max-md:border-t">
           <span className="col-span-full text-secondary">Monthly rent</span>
-          <strong>$482.1k</strong>
+          <strong>${monthlyRent.toLocaleString()}</strong>
           <small className="text-muted">expected</small>
         </div>
       </section>
@@ -246,6 +254,7 @@ export default function PropertiesClient({ properties }) {
       ) : null}
 
       <PropertyDetail property={selected} onClose={() => setSelected(null)} />
+      {creating ? <CreatePropertyDialog landlords={landlords} onClose={() => setCreating(false)} /> : null}
     </main>
   );
 }

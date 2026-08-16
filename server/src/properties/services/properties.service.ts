@@ -46,7 +46,10 @@ export class PropertiesService {
         where,
         skip: (page - 1) * limit,
         take: limit,
-        include: { landlord: true },
+        include: {
+          landlord: true,
+          units: { select: { status: true, monthlyRent: true } },
+        },
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.property.count({ where }),

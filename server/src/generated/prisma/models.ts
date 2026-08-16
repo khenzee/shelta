@@ -8,6 +8,10 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/AiProvider.js'
+export type * from './models/AiConversation.js'
+export type * from './models/AiMessage.js'
+export type * from './models/AiToolExecution.js'
 export type * from './models/Communication.js'
 export type * from './models/CommunicationDocument.js'
 export type * from './models/Notification.js'

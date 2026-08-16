@@ -4,10 +4,18 @@ import { CreateTenantDto } from '../dtos/create-tenant.dto';
 import { UpdateTenantDto } from '../dtos/update-tenant.dto';
 import { TenantQueryDto } from '../dtos/tenant-query.dto';
 import type { Prisma } from '../../generated/prisma/client';
+import { MailService } from '../../mail/mail.service';
+import { ConfigService } from '@nestjs/config';
+import { EnvironmentVariables } from '../../config/environment';
+import { createHash, randomBytes } from 'node:crypto';
 
 @Injectable()
 export class TenantsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mail: MailService,
+    private readonly config: ConfigService<EnvironmentVariables, true>,
+  ) {}
 
   async list(
     organizationId: string,
@@ -81,12 +89,27 @@ export class TenantsService {
       if (!unit) throw new NotFoundException('Unit not found');
     }
 
-    return this.prisma.tenant.create({
+    const rawToken = randomBytes(32).toString('base64url');
+    const emailVerifyHash = createHash('sha256').update(rawToken).digest('hex');
+    const emailVerifyExpiry = new Date(Date.now() + 48 * 60 * 60 * 1000);
+    const tenant = await this.prisma.tenant.create({
       data: {
         organizationId,
         ...data,
+        email: data.email.toLowerCase(),
+        emailVerifyHash,
+        emailVerifyExpiry,
       },
     });
+    let verificationEmailSent = true;
+    const name = `${tenant.firstName} ${tenant.lastName}`;
+    const url = `${this.config.get('FRONTEND_URL', { infer: true })}/verify-email?type=tenant&token=${encodeURIComponent(rawToken)}`;
+    try {
+      await this.mail.sendContactVerification(tenant.email, name, url);
+    } catch {
+      verificationEmailSent = false;
+    }
+    return { tenant, verificationEmailSent };
   }
 
   async update(organizationId: string, id: string, data: UpdateTenantDto) {

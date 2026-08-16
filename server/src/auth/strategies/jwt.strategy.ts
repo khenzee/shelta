@@ -35,9 +35,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         userId: payload.sub,
         revokedAt: null,
         expiresAt: { gt: new Date() },
+      user: {
+        organizationId: payload.organizationId,
+        status: 'ACTIVE',
+      },
+      },
+      include: {
         user: {
-          organizationId: payload.organizationId,
-          status: 'ACTIVE',
+          include: {
+            employee: { include: { role: true } },
+          },
         },
       },
     });
@@ -46,6 +53,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Session is no longer active');
     }
 
-    return payload;
+    const role = session.user.employee?.role.name
+      ?.trim()
+      .toUpperCase()
+      .replace(/[^A-Z0-9]+/g, '_');
+
+    return { ...payload, role: role || null };
   }
 }

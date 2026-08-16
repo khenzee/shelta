@@ -4,6 +4,8 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { AcceptInvitationDto } from './dto/accept-invitation.dto';
+import { VerifyContactEmailDto } from './dto/verify-contact-email.dto';
 import type { Request } from 'express';
 import type { JwtPayload } from './decorators/current-user.decorator';
 
@@ -14,6 +16,22 @@ interface LocalUser {
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('invitations')
+  validateInvitation(@Req() req: Request) {
+    const token = String(req.query.token || '');
+    return this.authService.validateInvitation(token);
+  }
+
+  @Post('invitations/accept')
+  acceptInvitation(@Body() dto: AcceptInvitationDto) {
+    return this.authService.acceptInvitation(dto.token, dto.password);
+  }
+
+  @Post('contacts/verify-email')
+  verifyContactEmail(@Body() dto: VerifyContactEmailDto) {
+    return this.authService.verifyContactEmail(dto.type, dto.token);
+  }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -50,6 +68,7 @@ export class AuthController {
       email: user.email,
       name: user.name,
       type: user.type,
+      role: user.role,
     };
   }
 }

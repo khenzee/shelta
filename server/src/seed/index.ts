@@ -44,7 +44,13 @@ async function main() {
         email: superAdminEmail,
       },
     },
-    update: {},
+    update: {
+      name: process.env.SUPERADMIN_NAME ?? 'Super Admin',
+      passwordHash,
+      status: 'ACTIVE',
+      emailVerifiedAt: new Date(),
+      passwordChangedAt: new Date(),
+    },
     create: {
       organizationId: org.id,
       email: 'admin@shelta.local',
@@ -56,18 +62,38 @@ async function main() {
     },
   });
 
-  const superAdminRole = await prisma.role.upsert({
+  const adminRole = await prisma.role.upsert({
     where: {
-      organizationId_name: { organizationId: org.id, name: 'Super Admin' },
+      organizationId_name: { organizationId: org.id, name: 'ADMIN' },
     },
-    update: {},
+    update: { description: 'Full agency administration access' },
     create: {
       organizationId: org.id,
-      name: 'Super Admin',
-      description: 'Full system access',
+      name: 'ADMIN',
+      description: 'Full agency administration access',
       isSystem: true,
     },
   });
+
+  const staffRoles = [
+    { name: 'MANAGER', description: 'Manages agency operations and team access' },
+    { name: 'AGENT', description: 'Handles routine property and tenant operations' },
+  ];
+
+  for (const role of staffRoles) {
+    await prisma.role.upsert({
+      where: {
+        organizationId_name: { organizationId: org.id, name: role.name },
+      },
+      update: { description: role.description },
+      create: {
+        organizationId: org.id,
+        name: role.name,
+        description: role.description,
+        isSystem: true,
+      },
+    });
+  }
 
   const permissions = [
     { resource: 'properties', action: 'view' },
@@ -127,25 +153,25 @@ async function main() {
       create: { organizationId: org.id, ...perm },
     });
 
-    await prisma.rolePermission.upsert({
+      await prisma.rolePermission.upsert({
       where: {
         roleId_permissionId: {
-          roleId: superAdminRole.id,
+          roleId: adminRole.id,
           permissionId: permission.id,
         },
       },
       update: {},
-      create: { roleId: superAdminRole.id, permissionId: permission.id },
+        create: { roleId: adminRole.id, permissionId: permission.id },
     });
   }
 
   await prisma.employee.upsert({
     where: { userId: superAdmin.id },
-    update: { roleId: superAdminRole.id },
+    update: { roleId: adminRole.id },
     create: {
       organizationId: org.id,
       userId: superAdmin.id,
-      roleId: superAdminRole.id,
+      roleId: adminRole.id,
       status: 'ACTIVE',
     },
   });

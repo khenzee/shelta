@@ -1,11 +1,11 @@
 export function adaptDashboard(data = {}) {
-  const metric = (label, value, icon, tone = "green") => ({
+  const metric = (label, value, icon, href, note, tone = "green") => ({
     label,
     value,
     icon,
+    href,
     tone,
-    note: "Current total",
-    change: "+0%",
+    note,
   });
 
   const finance = data.finance
@@ -27,15 +27,42 @@ export function adaptDashboard(data = {}) {
 
   return {
     metrics: [
-      metric("Landlords", data.totalLandlords ?? 0, "Building2"),
-      metric("Properties", data.totalProperties ?? 0, "Building2", "blue"),
-      metric("Tenants", data.totalTenants ?? 0, "Users", "blue"),
-      metric("Active leases", data.activeLeases ?? 0, "TrendingUp"),
-      metric("Pending maintenance", data.pendingMaintenance ?? 0, "Wrench", "orange"),
+      metric("Landlords", data.totalLandlords ?? 0, "Building2", "/landlords", "Registered landlords"),
+      metric(
+        "Properties",
+        data.totalProperties ?? 0,
+        "Building2",
+        "/properties",
+        "Managed properties",
+        "blue",
+      ),
+      metric("Tenants", data.totalTenants ?? 0, "Users", "/tenants", "Active tenants", "blue"),
+      metric("Active leases", data.activeLeases ?? 0, "TrendingUp", "/leases", "Active agreements"),
+      metric(
+        "Pending maintenance",
+        data.pendingMaintenance ?? 0,
+        "Wrench",
+        "/maintenance",
+        "Open requests",
+        "orange",
+      ),
     ],
     finance,
     unitStatus,
-    monthLabels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    monthLabels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
     notifications: data.notifications || [],
     unreadNotifications: Number(data.unreadNotifications || 0),
     activity: (data.recentTransactions ?? []).map((item) => ({
@@ -53,6 +80,7 @@ export function adaptDashboard(data = {}) {
         date: date.getDate(),
         month: date.toLocaleDateString("en", { month: "short" }).toUpperCase(),
         tone: task.type === "MAINTENANCE" ? "orange" : "blue",
+        href: task.type === "MAINTENANCE" ? "/maintenance" : "/leases",
       };
     }),
   };

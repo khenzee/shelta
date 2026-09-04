@@ -8,6 +8,7 @@ import { CreateMaintenanceDto } from '../dtos/create-maintenance.dto';
 import { UpdateMaintenanceStatusDto } from '../dtos/update-maintenance-status.dto';
 import { MaintenanceQueryDto } from '../dtos/maintenance-query.dto';
 import type { MaintenanceStatus } from '../dtos/update-maintenance-status.dto';
+import { UpdateMaintenanceDto } from '../dtos/update-maintenance.dto';
 import type { Prisma } from '../../generated/prisma/client';
 
 @Injectable()
@@ -39,7 +40,12 @@ export class MaintenanceService {
         where,
         skip: (page - 1) * limit,
         take: limit,
-        include: { property: true, unit: true },
+        include: {
+          property: { include: { landlord: true } },
+          unit: true,
+          tenant: true,
+          assignedTo: true,
+        },
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.maintenanceRequest.count({ where }),
@@ -152,6 +158,25 @@ export class MaintenanceService {
       });
 
       return updated;
+    });
+  }
+
+  async update(organizationId: string, id: string, data: UpdateMaintenanceDto) {
+    const request = await this.prisma.maintenanceRequest.findFirst({ where: { id, organizationId } });
+    if (!request) throw new NotFoundException('Maintenance request not found');
+    if (data.assignedToId) {
+      const employee = await this.prisma.employee.findFirst({ where: { userId: data.assignedToId, organizationId } });
+      if (!employee) throw new BadRequestException('Assignee is not an agency employee');
+    }
+    return this.prisma.maintenanceRequest.update({
+      where: { id },
+      data: {
+        assignedToId: data.assignedToId,
+        priority: data.priority as never,
+        estimatedCost: data.estimatedCost,
+        actualCost: data.actualCost,
+        description: data.description,
+      },
     });
   }
 }

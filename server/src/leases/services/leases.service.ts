@@ -38,7 +38,7 @@ export class LeasesService {
         where,
         skip: (page - 1) * limit,
         take: limit,
-        include: { tenant: true, unit: true, property: true },
+        include: { tenant: true, unit: true, property: true, landlord: true },
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.lease.count({ where }),

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PrismaService } from '../database/prisma.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -8,6 +8,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { JwtPayload } from '../auth/decorators/current-user.decorator';
 import { UnitQueryDto } from './dtos/unit-query.dto';
 import { CreateUnitDto } from './dtos/create-unit.dto';
+import { UpdateUnitDto } from './dtos/update-unit.dto';
 
 @ApiTags('units')
 @Controller('units')
@@ -20,6 +21,8 @@ export class UnitsController {
   @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List units' })
   async list(@CurrentUser() user: JwtPayload, @Query() query: UnitQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 100;
     const where = {
       property: { organizationId: user.organizationId },
       ...(query.propertyId ? { propertyId: query.propertyId } : {}),
@@ -32,10 +35,37 @@ export class UnitsController {
         where,
         include: { property: { include: { landlord: true } }, tenants: true },
         orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
       }),
       this.prisma.unit.count({ where }),
     ]);
-    return { items, total, page: 1, limit: total };
+    return { items, total, page, limit };
+  }
+
+  @Get(':id')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
+  async get(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
+    const unit = await this.prisma.unit.findFirst({
+      where: { id, property: { organizationId: user.organizationId } },
+      include: { property: { include: { landlord: true } }, tenants: true, leases: true },
+    });
+    if (!unit) throw new NotFoundException('Unit not found');
+    return unit;
+  }
+
+  @Put(':id')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  async update(@CurrentUser() user: JwtPayload, @Param('id') id: string, @Body() dto: UpdateUnitDto) {
+    await this.get(user, id);
+    return this.prisma.unit.update({ where: { id }, data: dto });
+  }
+
+  @Delete(':id')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
+  async archive(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
+    await this.get(user, id);
+    return this.prisma.unit.update({ where: { id }, data: { status: 'ARCHIVED' } });
   }
 
   @Post()

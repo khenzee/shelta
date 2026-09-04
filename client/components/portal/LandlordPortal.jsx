@@ -51,15 +51,15 @@ export default function LandlordPortal({
   return (
     <div className="flex min-h-screen bg-canvas text-primary">
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-[220px] flex-col border-r border-default bg-sidebar px-3 pb-[14px] pt-5 transition-transform max-md:w-[240px] ${mobileNav ? "max-md:translate-x-0" : "max-md:-translate-x-full"}`}
+        className={`app-sidebar fixed inset-y-0 left-0 z-40 flex w-[220px] flex-col border-r px-3 pb-[14px] pt-5 transition-transform max-md:w-[240px] ${mobileNav ? "max-md:translate-x-0" : "max-md:-translate-x-full"}`}
       >
         <div className="flex items-center gap-[9px] px-2 pb-[22px]">
-          <span className="grid size-7 place-items-center rounded-[5px] bg-primary text-inverse">
+          <span className="sidebar-accent grid size-7 place-items-center rounded-[5px]">
             <Home size={17} />
           </span>
-          <b className="flex-1">North &amp; Haven</b>
+          <b className="sidebar-brand flex-1">Shelta</b>
           <button
-            className="hidden border-0 bg-transparent text-primary max-md:block"
+            className="sidebar-link hidden border-0 bg-transparent max-md:block"
             onClick={() => setMobileNav(false)}
             aria-label="Close navigation"
           >
@@ -67,19 +67,19 @@ export default function LandlordPortal({
           </button>
         </div>
         <div className={`mb-[18px] flex items-center gap-[9px] p-[9px] ${cardClass}`}>
-          <span className="grid size-[29px] place-items-center rounded-full bg-secondary font-bold text-inverse">
+          <span className="sidebar-accent grid size-[29px] place-items-center rounded-full font-bold">
             {landlord.initials}
           </span>
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <b className="truncate">{landlord.name}</b>
-            <small className="text-muted">Landlord portal</small>
+             <b className="sidebar-user truncate">{landlord.name}</b>
+             <small className="sidebar-muted">Landlord portal</small>
           </div>
           <ChevronDown size={14} />
         </div>
         <nav className="flex flex-col gap-0.5">
           {navItems.map((item) => (
             <button
-              className={`flex min-h-[34px] items-center gap-[9px] rounded-[5px] border-0 px-[10px] text-left hover:bg-hover hover:text-primary ${active === item.id ? "bg-hover font-semibold text-primary" : "bg-transparent text-secondary"}`}
+              className={`sidebar-link flex min-h-[34px] items-center gap-[9px] rounded-[5px] border-0 px-[10px] text-left ${active === item.id ? "sidebar-link-active font-semibold" : ""}`}
               key={item.id}
               onClick={() => {
                 setActive(item.id);
@@ -91,16 +91,16 @@ export default function LandlordPortal({
             </button>
           ))}
         </nav>
-        <div className={`mt-auto p-3 ${cardClass}`}>
-          <p className="mb-1 mt-0 font-semibold text-primary">Need help?</p>
-          <span className="block leading-normal text-muted">
+         <div className={`mt-auto border border-white/15 bg-white/5 p-3`}>
+           <p className="sidebar-user mb-1 mt-0 font-semibold">Need help?</p>
+           <span className="sidebar-muted block leading-normal">
             Contact your property manager for support with your portfolio.
           </span>
-          <button className="mt-2 border-0 bg-transparent p-0 font-semibold text-primary">
+           <button className="sidebar-link mt-2 border-0 bg-transparent p-0 font-semibold">
             Contact agency
           </button>
         </div>
-        <button className="mt-2 flex min-h-[34px] items-center gap-[9px] rounded-[5px] border-0 bg-transparent px-[10px] text-left text-secondary">
+       <button className="sidebar-link mt-2 flex min-h-[34px] items-center gap-[9px] rounded-[5px] border-0 bg-transparent px-[10px] text-left">
           <LogOut size={15} /> Sign out
         </button>
       </aside>

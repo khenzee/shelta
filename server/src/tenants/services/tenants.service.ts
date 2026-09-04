@@ -50,7 +50,16 @@ export class TenantsService {
         where,
         skip: (page - 1) * limit,
         take: limit,
-        include: { property: true, unit: true },
+        include: {
+          property: true,
+          unit: true,
+          landlord: true,
+          leases: {
+            where: { status: { in: ['ACTIVE', 'EXPIRING'] } },
+            orderBy: { endDate: 'desc' },
+            take: 1,
+          },
+        },
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.tenant.count({ where }),

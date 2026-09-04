@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, ForbiddenException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  ForbiddenException,
+} from '@nestjs/common';
 import { tool } from 'ai';
 import { z } from 'zod';
 import { PrismaService } from '../database/prisma.service';
@@ -8,11 +12,36 @@ import type { JwtPayload } from '../auth/decorators/current-user.decorator';
 export class AiToolsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private async record(user: JwtPayload, conversationId: string, toolName: string, args: object, result: unknown) {
+  private async record(
+    user: JwtPayload,
+    conversationId: string,
+    toolName: string,
+    args: object,
+    result: unknown,
+  ) {
     const summary = JSON.stringify(result).slice(0, 1000);
     await Promise.all([
-      this.prisma.aiToolExecution.create({ data: { organizationId: user.organizationId, userId: user.sub, conversationId, toolName, arguments: args, resultSummary: summary, outcome: 'SUCCESS' } }),
-      this.prisma.auditEvent.create({ data: { organizationId: user.organizationId, actorUserId: user.sub, action: `ai.tool.${toolName}`, resourceType: 'AI_ASSISTANT', resourceId: conversationId, newValue: { arguments: args, summary } } }),
+      this.prisma.aiToolExecution.create({
+        data: {
+          organizationId: user.organizationId,
+          userId: user.sub,
+          conversationId,
+          toolName,
+          arguments: args,
+          resultSummary: summary,
+          outcome: 'SUCCESS',
+        },
+      }),
+      this.prisma.auditEvent.create({
+        data: {
+          organizationId: user.organizationId,
+          actorUserId: user.sub,
+          action: `ai.tool.${toolName}`,
+          resourceType: 'AI_ASSISTANT',
+          resourceId: conversationId,
+          newValue: { arguments: args, summary },
+        },
+      }),
     ]);
     return result;
   }

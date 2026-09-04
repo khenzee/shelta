@@ -274,7 +274,11 @@ export class AuthService {
 
     if (type === 'landlord') {
       const landlord = await this.prisma.landlord.findFirst({
-        where: { emailVerifyHash, emailVerifyExpiry: { gt: now }, emailVerifiedAt: null },
+        where: {
+          emailVerifyHash,
+          emailVerifyExpiry: { gt: now },
+          emailVerifiedAt: null,
+        },
       });
       if (!landlord) throw new UnauthorizedException('Verification link is invalid or expired');
       await this.prisma.landlord.update({

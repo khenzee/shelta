@@ -18,6 +18,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { JwtPayload } from '../auth/decorators/current-user.decorator';
+import { UpdateMaintenanceDto } from './dtos/update-maintenance.dto';
 
 @ApiTags('maintenance')
 @Controller('maintenance')
@@ -30,7 +31,7 @@ export class MaintenanceController {
   @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List maintenance requests' })
   list(@CurrentUser() user: JwtPayload, @Query() query: MaintenanceQueryDto) {
-    return this.maintenanceService.list(user.organizationId, query);
+    return this.maintenanceService.list(user.organizationId, query, query.page, query.limit);
   }
 
   @Get(':id')
@@ -61,5 +62,16 @@ export class MaintenanceController {
       dto,
       user.sub,
     );
+  }
+
+  @Put(':id')
+  @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
+  @ApiOperation({ summary: 'Update maintenance request details' })
+  update(
+    @CurrentUser() user: JwtPayload,
+    @Param('id') id: string,
+    @Body() dto: UpdateMaintenanceDto,
+  ) {
+    return this.maintenanceService.update(user.organizationId, id, dto);
   }
 }

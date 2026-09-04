@@ -1,4 +1,5 @@
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 import type {
   MaintenancePriority,
   MaintenanceStatus,
@@ -16,4 +17,17 @@ export class MaintenanceQueryDto {
   @IsOptional()
   @IsIn(['LOW', 'MEDIUM', 'HIGH', 'URGENT'])
   priority?: MaintenancePriority;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  limit?: number;
 }

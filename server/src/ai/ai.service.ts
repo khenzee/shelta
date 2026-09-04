@@ -46,42 +46,89 @@ export class AiService {
       apiKeyConfigured: Boolean(config.apiKey),
     };
     if (!config.baseURL || !config.apiKey || !config.modelId) {
-      return { ...report, success: false, stage: 'configuration', error: 'Provider URL, API key, and model ID are required' };
+      return {
+        ...report,
+        success: false,
+        stage: 'configuration',
+        error: 'Provider URL, API key, and model ID are required',
+      };
     }
 
-    const headers: Record<string, string> = { 'content-type': 'application/json' };
+    const headers: Record<string, string> = {
+      'content-type': 'application/json',
+    };
     if (config.providerName.toLowerCase() === 'openrouter') {
-      headers['HTTP-Referer'] = this.config.get('FRONTEND_URL', { infer: true });
+      headers['HTTP-Referer'] = this.config.get('FRONTEND_URL', {
+        infer: true,
+      });
       headers['X-Title'] = 'Shelta CRM';
     }
     if (config.providerType === 'ANTHROPIC') {
       headers['x-api-key'] = config.apiKey;
       headers['anthropic-version'] = '2023-06-01';
       const response = await fetch(`${config.baseURL}/v1/messages`, {
-        method: 'POST', headers,
-        body: JSON.stringify({ model: config.modelId, max_tokens: 32, messages: [{ role: 'user', content: 'Reply with exactly connected' }] }),
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          model: config.modelId,
+          max_tokens: 32,
+          messages: [{ role: 'user', content: 'Reply with exactly connected' }],
+        }),
       });
       const body = await response.text();
-      return { ...report, success: response.ok, stage: 'anthropic-message', status: response.status, response: body.slice(0, 500) };
+      return {
+        ...report,
+        success: response.ok,
+        stage: 'anthropic-message',
+        status: response.status,
+        response: body.slice(0, 500),
+      };
     }
 
     headers.authorization = `Bearer ${config.apiKey}`;
     const modelsResponse = await fetch(`${config.baseURL}/models`, { headers });
     const modelsBody = await modelsResponse.text();
     const chatResponse = await fetch(`${config.baseURL}/chat/completions`, {
-      method: 'POST', headers,
-      body: JSON.stringify({ model: config.modelId, messages: [{ role: 'user', content: 'Reply with exactly connected' }], stream: false, max_tokens: 500 }),
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: config.modelId,
+        messages: [{ role: 'user', content: 'Reply with exactly connected' }],
+        stream: false,
+        max_tokens: 500,
+      }),
     });
     const chatBody = await chatResponse.text();
     const toolResponse = chatResponse.ok
       ? await fetch(`${config.baseURL}/chat/completions`, {
-          method: 'POST', headers,
+          method: 'POST',
+          headers,
           body: JSON.stringify({
             model: config.modelId,
-            messages: [{ role: 'user', content: 'Call the diagnostic tool with value connected.' }],
+            messages: [
+              {
+                role: 'user',
+                content: 'Call the diagnostic tool with value connected.',
+              },
+            ],
             stream: false,
             max_tokens: 500,
-            tools: [{ type: 'function', function: { name: 'diagnostic', description: 'Provider tool support test', parameters: { type: 'object', properties: { value: { type: 'string' } }, required: ['value'] } } }],
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: 'diagnostic',
+                  description: 'Provider tool support test',
+                  parameters: {
+                    type: 'object',
+                    properties: {
+                      value: { type: 'string' },
+                    },
+                    required: ['value'],
+                  },
+                },
+              },
+            ],
             tool_choice: 'auto',
           }),
         })
@@ -91,15 +138,34 @@ export class AiService {
       ...report,
       success: chatResponse.ok,
       stage: chatResponse.ok ? 'complete' : 'chat-completion',
-      models: { status: modelsResponse.status, response: modelsBody.slice(0, 500) },
-      chat: { status: chatResponse.status, response: chatBody.slice(0, 500) },
-      tools: toolResponse ? { status: toolResponse.status, response: toolBody.slice(0, 500) } : { status: null, response: 'Skipped because chat completion failed' },
+      models: {
+        status: modelsResponse.status,
+        response: modelsBody.slice(0, 500),
+      },
+      chat: {
+        status: chatResponse.status,
+        response: chatBody.slice(0, 500),
+      },
+      tools: toolResponse
+        ? {
+            status: toolResponse.status,
+            response: toolBody.slice(0, 500),
+          }
+        : {
+            status: null,
+            response: 'Skipped because chat completion failed',
+          },
     };
   }
 
   private async context(user: JwtPayload) {
     const [landlords, properties, tenants, leases, maintenance] = await Promise.all([
-      this.prisma.landlord.count({ where: { organizationId: user.organizationId, status: { not: 'ARCHIVED' } } }),
+      this.prisma.landlord.count({
+        where: {
+          organizationId: user.organizationId,
+          status: { not: 'ARCHIVED' },
+        }
+      }),
       this.prisma.property.count({ where: { organizationId: user.organizationId, status: { not: 'ARCHIVED' } } }),
       this.prisma.tenant.count({ where: { organizationId: user.organizationId, status: 'ACTIVE' } }),
       this.prisma.lease.count({ where: { organizationId: user.organizationId, status: { in: ['ACTIVE', 'EXPIRING'] } } }),

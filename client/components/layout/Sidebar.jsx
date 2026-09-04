@@ -81,26 +81,26 @@ export default function Sidebar({ open, onClose, collapsed, onToggle, session })
         aria-label="Close navigation"
       />
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r border-default bg-sidebar px-3 py-4 transition-all duration-300 ease-in-out ${collapsed ? "md:w-15 md:px-2" : "md:w-60 w-60"} ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+        className={`app-sidebar fixed inset-y-0 left-0 z-40 flex flex-col border-r px-3 py-4 transition-all duration-300 ease-in-out ${collapsed ? "md:w-15 md:px-2" : "md:w-60 w-60"} ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         <div
           className={`mb-5 flex min-h-8 items-center ${collapsed ? "md:flex-col md:justify-center md:gap-2 md:px-0" : "px-2"}`}
         >
-          <div className="grid size-7 shrink-0 place-items-center rounded bg-primary text-inverse">
+          <div className="sidebar-accent grid size-7 shrink-0 place-items-center rounded">
             <Building2 size={16} />
           </div>
-          <span className={`ml-2.5 font-semibold text-primary ${collapsed ? "md:hidden" : ""}`}>
+          <span className={`sidebar-brand ml-2.5 font-semibold ${collapsed ? "md:hidden" : ""}`}>
             Shelta
           </span>
           <button
-            className={`ml-auto hidden size-6 place-items-center rounded border-0 bg-transparent text-muted hover:bg-hover md:grid ${collapsed ? "md:ml-0" : ""}`}
+            className={`sidebar-link ml-auto hidden size-6 place-items-center rounded border-0 bg-transparent md:grid ${collapsed ? "md:ml-0" : ""}`}
             onClick={onToggle}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? <ChevronsRight size={15} /> : <ChevronsLeft size={15} />}
           </button>
           <button
-            className="ml-auto grid place-items-center border-0 bg-transparent text-secondary md:hidden"
+            className="sidebar-link ml-auto grid place-items-center border-0 bg-transparent md:hidden"
             onClick={onClose}
             aria-label="Close navigation"
           >
@@ -112,7 +112,7 @@ export default function Sidebar({ open, onClose, collapsed, onToggle, session })
           {visibleGroups.map((group) => (
             <div className="mb-5" key={group.label}>
               <p
-                className={`mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-wider text-muted ${collapsed ? "md:hidden" : ""}`}
+                 className={`sidebar-label mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-wider ${collapsed ? "md:hidden" : ""}`}
               >
                 {group.label}
               </p>
@@ -122,7 +122,7 @@ export default function Sidebar({ open, onClose, collapsed, onToggle, session })
                     key={item.id}
                     href={item.href}
                     onClick={onClose}
-                    className={`flex min-h-8 w-full items-center gap-2.5 rounded-md px-2 text-secondary no-underline transition-colors hover:bg-hover hover:text-primary ${collapsed ? "md:justify-center md:px-0" : ""} ${pathname === item.href ? "bg-hover font-medium text-primary" : ""}`}
+                    className={`sidebar-link flex min-h-8 w-full items-center gap-2.5 rounded-md px-2 no-underline transition-colors ${collapsed ? "md:justify-center md:px-0" : ""} ${pathname === item.href ? "sidebar-link-active font-medium" : ""}`}
                   >
                     <item.icon size={16} />
                     <span className={`flex-1 ${collapsed ? "md:hidden" : ""}`}>{item.label}</span>
@@ -139,25 +139,19 @@ export default function Sidebar({ open, onClose, collapsed, onToggle, session })
             </div>
           ))}
         </nav>
-        <div className="border-t border-default pt-3">
-          <button
-            className={`flex min-h-8 w-full items-center gap-2.5 rounded-md border-0 bg-transparent px-2 text-secondary transition-colors hover:bg-hover hover:text-primary ${collapsed ? "md:justify-center md:px-0" : ""}`}
-          >
-            <LifeBuoy size={16} />
-            <span className={collapsed ? "md:hidden" : ""}>Help & support</span>
-          </button>
+        <div className="border-t border-white/15 pt-3">
           <div
             className={`mt-1 flex items-center gap-2.5 rounded-md px-2 pb-1 pt-2 ${collapsed ? "md:justify-center md:px-0" : ""}`}
           >
-            <div className="grid size-7 shrink-0 place-items-center rounded-full bg-secondary text-[10px] font-bold text-inverse">
+            <div className="sidebar-accent grid size-7 shrink-0 place-items-center rounded-full text-[10px] font-bold">
               {initials}
             </div>
             <span className={`min-w-0 flex-1 flex-col ${collapsed ? "md:hidden" : "flex"}`}>
-               <b className="truncate font-semibold text-primary">{session?.name || "Agency user"}</b>
-                <small className="text-muted">{session?.type === "LANDLORD" ? "Landlord" : role}</small>
+               <b className="sidebar-user truncate font-semibold">{session?.name || "Agency user"}</b>
+                <small className="sidebar-muted">{session?.type === "LANDLORD" ? "Landlord" : role}</small>
             </span>
             <button
-              className={`grid size-7 place-items-center rounded border-0 bg-transparent text-muted transition-colors hover:bg-hover hover:text-primary ${collapsed ? "md:hidden" : ""}`}
+              className={`sidebar-link grid size-7 place-items-center rounded border-0 bg-transparent transition-colors ${collapsed ? "md:hidden" : ""}`}
                aria-label="Log out"
                onClick={logout}
             >

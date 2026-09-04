@@ -30,7 +30,7 @@ export class LeasesController {
   @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List leases' })
   list(@CurrentUser() user: JwtPayload, @Query() query: LeaseQueryDto) {
-    return this.leasesService.list(user.organizationId, query);
+    return this.leasesService.list(user.organizationId, query, query.page, query.limit);
   }
 
   @Get(':id')

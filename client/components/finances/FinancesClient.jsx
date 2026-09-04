@@ -1,13 +1,12 @@
 "use client";
 
 import { useDeferredValue, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ArrowDownLeft,
   ArrowUpRight,
   Banknote,
-  ChevronDown,
   Download,
-  FileText,
   Plus,
   ReceiptText,
   Search,
@@ -16,39 +15,79 @@ import Button from "@/components/ui/Button";
 import { useWorkspace } from "@/components/layout/WorkspaceProvider";
 import TransactionForm from "./TransactionForm";
 
+const money = new Intl.NumberFormat("en-NG", {
+  style: "currency",
+  currency: "NGN",
+  maximumFractionDigits: 0,
+});
+
+const TYPE_TABS = ["All types", "Income", "Expense"];
+const RENT_TABS = ["All statuses", "Paid", "Partial", "Pending", "Overdue"];
+
 const summaryCardClass =
-  "flex items-center gap-2.5 rounded-md border border-default bg-surface p-3.5";
-const summaryIconClass = "grid h-[34px] w-[34px] place-items-center rounded bg-subtle text-primary";
-const summaryBodyClass = "flex min-w-0 flex-col gap-0.5";
-const tableHeaderClass = "h-[37px] bg-sidebar px-3 font-semibold uppercase text-muted";
-const tableCellClass = "h-[62px] border-t border-default px-3 py-2 text-secondary";
-const tablePrimaryClass = "block text-primary";
+  "flex h-20 min-w-0 items-center gap-2.5 rounded-md border border-default bg-surface p-3";
+const summaryIconClass = "grid size-9 flex-none place-items-center rounded bg-subtle text-primary";
+
+const statusPillClass = (status) =>
+  status === "Completed" || status === "Paid"
+    ? "inline-flex rounded bg-success-subtle px-2 py-1 font-bold text-success"
+    : status === "Pending"
+      ? "inline-flex rounded bg-info-subtle px-2 py-1 font-bold text-info"
+      : status === "Partial"
+        ? "inline-flex rounded bg-warning-subtle px-2 py-1 font-bold text-warning"
+        : "inline-flex rounded bg-danger-subtle px-2 py-1 font-bold text-danger";
+
+const tableHeaderClass = "h-[37px] bg-sidebar px-3 text-left font-semibold uppercase text-muted";
+const tableCellClass =
+  "h-[62px] whitespace-nowrap border-t border-default px-3 py-2 text-secondary";
+const tablePrimaryClass = "block max-w-[190px] truncate text-primary";
 const tableSecondaryClass = "mt-1 block text-muted";
 
-export default function FinancesClient({ transactions, rentSchedule, tenants, properties }) {
+export default function FinancesClient({
+  transactions,
+  rentSchedule,
+  tenants,
+  properties,
+  units,
+  landlords,
+}) {
+  const router = useRouter();
   const [view, setView] = useState("ledger");
   const [search, setSearch] = useState("");
   const [type, setType] = useState("All types");
   const [status, setStatus] = useState("All statuses");
   const [formMode, setFormMode] = useState(null);
-  const [generated, setGenerated] = useState(null);
+  const [voiding, setVoiding] = useState(null);
   const deferredSearch = useDeferredValue(search);
   const { activeLandlord } = useWorkspace();
+
   const scopedTransactions = activeLandlord
-    ? transactions.filter((item) => item.landlord === activeLandlord.name)
+    ? transactions.filter(
+        (item) => item.landlordId === activeLandlord.id || item.landlord === activeLandlord.name,
+      )
     : transactions;
   const scopedRent = activeLandlord
-    ? rentSchedule.filter((item) => item.landlord === activeLandlord.name)
+    ? rentSchedule.filter(
+        (item) => item.landlordId === activeLandlord.id || item.landlord === activeLandlord.name,
+      )
     : rentSchedule;
   const scopedProperties = activeLandlord
-    ? properties.filter((item) => item.landlord === activeLandlord.name)
+    ? properties.filter(
+        (item) => item.landlordId === activeLandlord.id || item.landlord === activeLandlord.name,
+      )
     : properties;
   const scopedTenants = activeLandlord
-    ? tenants.filter((item) => item.landlord === activeLandlord.name)
+    ? tenants.filter(
+        (item) => item.landlordId === activeLandlord.id || item.landlord === activeLandlord.name,
+      )
     : tenants;
+  const scopedUnits = activeLandlord
+    ? units.filter((unit) => scopedProperties.some((property) => property.id === unit.propertyId))
+    : units;
+
   const filteredTransactions = scopedTransactions.filter(
     (item) =>
-      `${item.id} ${item.category} ${item.property} ${item.tenant || ""} ${item.reference}`
+      `${item.category} ${item.property} ${item.reference} ${item.tenant || ""} ${item.notes}`
         .toLowerCase()
         .includes(deferredSearch.toLowerCase()) &&
       (type === "All types" || item.type === type),
@@ -60,104 +99,168 @@ export default function FinancesClient({ transactions, rentSchedule, tenants, pr
         .includes(deferredSearch.toLowerCase()) &&
       (status === "All statuses" || item.status === status),
   );
+
   const income = scopedTransactions
-    .filter((item) => item.type === "Income")
+    .filter((item) => item.typeCode === "INCOME" && item.status !== "Voided")
     .reduce((sum, item) => sum + item.amount, 0);
   const expenses = scopedTransactions
-    .filter((item) => item.type === "Expense")
+    .filter((item) => item.typeCode === "EXPENSE" && item.status !== "Voided")
     .reduce((sum, item) => sum + item.amount, 0);
   const rentDue = scopedRent.reduce((sum, item) => sum + item.due, 0);
   const rentPaid = scopedRent.reduce((sum, item) => sum + item.paid, 0);
   const collectionRate = rentDue ? Math.round((rentPaid / rentDue) * 100) : 0;
 
+  async function confirmVoid() {
+    const response = await fetch(`/api/finances/${voiding.id}/void`, { method: "PUT" });
+    setVoiding(null);
+    if (response.ok) router.refresh();
+  }
+
+  function exportCsv() {
+    if (view === "ledger") {
+      const rows = [
+        [
+          "Type",
+          "Category",
+          "Date",
+          "Property",
+          "Landlord",
+          "Method",
+          "Reference",
+          "Amount",
+          "Status",
+        ],
+        ...filteredTransactions.map((item) => [
+          item.type,
+          item.category,
+          item.date,
+          item.property,
+          item.landlord,
+          item.method,
+          item.reference,
+          item.amount,
+          item.status,
+        ]),
+      ];
+      downloadCsv(rows, "shelta-transactions");
+      return;
+    }
+    const rows = [
+      [
+        "Tenant",
+        "Property",
+        "Unit",
+        "Due date",
+        "Schedule",
+        "Due",
+        "Paid",
+        "Outstanding",
+        "Status",
+      ],
+      ...filteredRent.map((item) => [
+        item.tenant,
+        item.property,
+        item.unit,
+        item.dueDate,
+        item.frequency,
+        item.due,
+        item.paid,
+        item.outstanding,
+        item.status,
+      ]),
+    ];
+    downloadCsv(rows, "shelta-rent-schedule");
+  }
+
+  function downloadCsv(rows, name) {
+    const csv = rows
+      .map((row) => row.map((cell) => `"${String(cell ?? "").replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${name}-${new Date().toISOString().slice(0, 10)}.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
-    <main className="p-8 max-md:p-4">
-      <section className="mb-6 flex items-center justify-between gap-5 max-md:flex-col max-md:items-start">
+    <main className="px-8 py-6 max-md:px-4 max-md:pb-8 max-md:pt-5">
+      <section className="mb-6 flex items-center justify-between gap-5 max-md:items-start">
         <div>
-          <p className="section-kicker">Operations / Finances</p>
-          <h1>{activeLandlord ? `${activeLandlord.name}'s finances` : "Financial operations"}</h1>
-          <p>
-            Track every financial movement, reconcile rent, and prepare transparent landlord
-            statements.
+          <p className="mb-2 font-bold uppercase tracking-wider text-accent">
+            Operations / Finances
+          </p>
+          <h1 className="mb-1 font-medium">
+            {activeLandlord ? `${activeLandlord.name}'s finances` : "Financial operations"}
+          </h1>
+          <p className="m-0 text-muted">
+            Track every financial movement and reconcile rent collection.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => setFormMode("Expense")}>
+        <div className="flex gap-2 max-md:w-full max-md:flex-1">
+          <Button variant="secondary" onClick={() => setFormMode("EXPENSE")}>
             <Plus size={15} /> Expense
           </Button>
-          <Button onClick={() => setFormMode("Income")}>
+          <Button onClick={() => setFormMode("INCOME")}>
             <Plus size={15} /> Payment
           </Button>
         </div>
       </section>
+
       <section className="mb-3.5 grid grid-cols-4 gap-3 max-lg:grid-cols-2 max-sm:grid-cols-1">
         <div className={summaryCardClass}>
           <span className={summaryIconClass}>
-            <ArrowDownLeft size={17} />
+            <ArrowDownLeft size={18} />
           </span>
-          <div className={summaryBodyClass}>
+          <span className="flex min-w-0 flex-col">
             <small className="text-secondary">Income recorded</small>
-            <strong className="text-primary">${income.toLocaleString()}</strong>
-            <b className="font-normal text-muted">Current sample period</b>
-          </div>
+            <strong>{money.format(income)}</strong>
+            <small className="truncate text-muted">All completed income</small>
+          </span>
         </div>
         <div className={summaryCardClass}>
           <span className={summaryIconClass}>
-            <ArrowUpRight size={17} />
+            <ArrowUpRight size={18} />
           </span>
-          <div className={summaryBodyClass}>
+          <span className="flex min-w-0 flex-col">
             <small className="text-secondary">Expenses</small>
-            <strong className="text-primary">${expenses.toLocaleString()}</strong>
-            <b className="font-normal text-muted">Current sample period</b>
-          </div>
+            <strong>{money.format(expenses)}</strong>
+            <small className="truncate text-muted">All completed expenses</small>
+          </span>
         </div>
         <div className={summaryCardClass}>
           <span className={summaryIconClass}>
-            <Banknote size={17} />
+            <Banknote size={18} />
           </span>
-          <div className={summaryBodyClass}>
+          <span className="flex min-w-0 flex-col">
             <small className="text-secondary">Net income</small>
-            <strong className="text-primary">${(income - expenses).toLocaleString()}</strong>
-            <b className="font-normal text-muted">Before agency fees</b>
-          </div>
+            <strong>{money.format(income - expenses)}</strong>
+            <small className="truncate text-muted">Income minus expenses</small>
+          </span>
         </div>
         <div className={summaryCardClass}>
           <span className={summaryIconClass}>
-            <ReceiptText size={17} />
+            <ReceiptText size={18} />
           </span>
-          <div className={summaryBodyClass}>
+          <span className="flex min-w-0 flex-col">
             <small className="text-secondary">Collection rate</small>
-            <strong className="text-primary">{collectionRate}%</strong>
-            <b className="font-normal text-muted">
-              ${(rentDue - rentPaid).toLocaleString()} outstanding
-            </b>
-          </div>
-        </div>
-      </section>
-      {generated ? (
-        <div className="mb-3.5 flex items-center gap-2 rounded border border-default bg-sidebar p-3 text-secondary">
-          <Download size={15} />
-          <span className="flex flex-1 flex-col gap-0.5">
-            <b>{generated} prepared</b>
-            <small className="text-muted">
-              The requested document uses the current workspace and filters.
+            <strong>{collectionRate}%</strong>
+            <small className="truncate text-muted">
+              {money.format(Math.max(0, rentDue - rentPaid))} outstanding
             </small>
           </span>
-          <button
-            className="border-0 bg-transparent text-secondary"
-            onClick={() => setGenerated(null)}
-          >
-            Dismiss
-          </button>
         </div>
-      ) : null}
+      </section>
+
       <section className="overflow-hidden rounded-md border border-default bg-surface">
         <div className="flex h-10 items-end gap-1 border-b border-default px-3">
           <button
             className={
               view === "ledger"
-                ? "h-8.75 border-0 border-b-2 border-primary bg-transparent px-2.5 font-semibold text-primary"
-                : "h-8.75 border-0 border-b-2 border-transparent bg-transparent px-2.5 text-secondary"
+                ? "h-[35px] border-0 border-b-2 border-primary bg-transparent px-2.5 font-semibold text-primary"
+                : "h-[35px] border-0 border-b-2 border-transparent bg-transparent px-2.5 text-secondary"
             }
             onClick={() => setView("ledger")}
           >
@@ -166,8 +269,8 @@ export default function FinancesClient({ transactions, rentSchedule, tenants, pr
           <button
             className={
               view === "rent"
-                ? "h-8.75 border-0 border-b-2 border-primary bg-transparent px-2.5 font-semibold text-primary"
-                : "h-8.75 border-0 border-b-2 border-transparent bg-transparent px-2.5 text-secondary"
+                ? "h-[35px] border-0 border-b-2 border-primary bg-transparent px-2.5 font-semibold text-primary"
+                : "h-[35px] border-0 border-b-2 border-transparent bg-transparent px-2.5 text-secondary"
             }
             onClick={() => setView("rent")}
           >
@@ -175,61 +278,70 @@ export default function FinancesClient({ transactions, rentSchedule, tenants, pr
           </button>
         </div>
         <div className="flex items-center gap-2 border-b border-default p-3 max-md:flex-wrap">
-          <label className="flex h-9 w-75 items-center gap-1.75 rounded border border-default bg-sidebar px-2.5 text-muted max-md:w-full">
+          <label className="flex h-9 w-[280px] items-center gap-2 rounded border border-default bg-subtle px-2.5 text-muted max-md:flex-1">
             <Search size={16} />
             <input
-              className="min-w-0 flex-1 border-0 bg-transparent outline-none"
+              className="min-w-0 flex-1 border-0 bg-transparent text-primary outline-none"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={
                 view === "ledger"
-                  ? "Search transaction, reference or property"
+                  ? "Search category, reference or property"
                   : "Search tenant, property or unit"
               }
             />
           </label>
           {view === "ledger" ? (
-            <select
-              className="h-9 min-w-33.75 rounded border border-default bg-surface px-2.5 text-primary outline-none"
-              value={type}
-              onChange={(event) => setType(event.target.value)}
-            >
-              <option>All types</option>
-              <option>Income</option>
-              <option>Expense</option>
-            </select>
+            <div className="flex flex-1 items-center gap-1 overflow-x-auto max-md:order-3 max-md:basis-full">
+              {TYPE_TABS.map((item) => (
+                <button
+                  className={
+                    type === item
+                      ? "h-8 whitespace-nowrap rounded border-0 bg-hover px-2.5 font-bold text-primary"
+                      : "h-8 whitespace-nowrap rounded border-0 bg-transparent px-2.5 text-secondary hover:bg-hover"
+                  }
+                  onClick={() => setType(item)}
+                  key={item}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
           ) : (
-            <select
-              className="h-9 min-w-33.75 rounded border border-default bg-surface px-2.5 text-primary outline-none"
-              value={status}
-              onChange={(event) => setStatus(event.target.value)}
-            >
-              <option>All statuses</option>
-              <option>Paid</option>
-              <option>Partial</option>
-              <option>Overdue</option>
-            </select>
+            <div className="flex flex-1 items-center gap-1 overflow-x-auto max-md:order-3 max-md:basis-full">
+              {RENT_TABS.map((item) => (
+                <button
+                  className={
+                    status === item
+                      ? "h-8 whitespace-nowrap rounded border-0 bg-hover px-2.5 font-bold text-primary"
+                      : "h-8 whitespace-nowrap rounded border-0 bg-transparent px-2.5 text-secondary hover:bg-hover"
+                  }
+                  onClick={() => setStatus(item)}
+                  key={item}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
           )}
-          <Button variant="secondary" onClick={() => setGenerated("Export")}>
+          <Button variant="secondary" onClick={exportCsv}>
             <Download size={14} /> Export
-          </Button>
-          <Button variant="secondary" onClick={() => setGenerated("Statement")}>
-            <FileText size={14} /> {activeLandlord ? "Landlord statement" : "Agency statement"}
           </Button>
         </div>
         {view === "ledger" ? (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-195 border-collapse text-left">
+            <table className="w-full min-w-[980px] border-collapse text-left">
               <thead>
                 <tr>
                   {[
                     "Transaction",
                     "Date",
-                    "Property and unit",
+                    "Property",
                     "Tenant / Payee",
                     "Method",
                     "Amount",
                     "Status",
+                    "",
                   ].map((heading) => (
                     <th className={tableHeaderClass} key={heading}>
                       {heading}
@@ -239,69 +351,85 @@ export default function FinancesClient({ transactions, rentSchedule, tenants, pr
               </thead>
               <tbody>
                 {filteredTransactions.map((item) => (
-                  <tr key={item.id}>
+                  <tr key={item.id} className="hover:bg-hover">
                     <td className={tableCellClass}>
-                      <div
-                        className={
-                          item.type === "Income"
-                            ? "grid h-8.5 w-8.5 place-items-center rounded-full bg-subtle text-primary"
-                            : "grid h-8.5 w-8.5 place-items-center rounded-full bg-danger-subtle text-danger"
-                        }
-                      >
-                        {item.type === "Income" ? (
-                          <ArrowDownLeft size={14} />
-                        ) : (
-                          <ArrowUpRight size={14} />
-                        )}
-                      </div>
-                      <span>
-                        <b className={tablePrimaryClass}>{item.category}</b>
-                        <small className={tableSecondaryClass}>
-                          {item.id} · {item.reference}
-                        </small>
+                      <span className="flex items-center gap-2.5">
+                        <span
+                          className={
+                            item.typeCode === "INCOME"
+                              ? "grid size-8 flex-none place-items-center rounded-full bg-subtle text-primary"
+                              : "grid size-8 flex-none place-items-center rounded-full bg-danger-subtle text-danger"
+                          }
+                        >
+                          {item.typeCode === "INCOME" ? (
+                            <ArrowDownLeft size={14} />
+                          ) : (
+                            <ArrowUpRight size={14} />
+                          )}
+                        </span>
+                        <span className="min-w-0">
+                          <b className={tablePrimaryClass}>{item.category}</b>
+                          <small className={tableSecondaryClass}>{item.reference}</small>
+                        </span>
                       </span>
                     </td>
                     <td className={tableCellClass}>{item.date}</td>
                     <td className={tableCellClass}>
                       <b className={tablePrimaryClass}>{item.property}</b>
-                      <small className={tableSecondaryClass}>Unit {item.unit}</small>
-                    </td>
-                    <td className={tableCellClass}>
-                      <b className={tablePrimaryClass}>{item.tenant || item.notes}</b>
                       <small className={tableSecondaryClass}>{item.landlord}</small>
                     </td>
                     <td className={tableCellClass}>
+                      <b className={tablePrimaryClass}>
+                        {item.tenant
+                          ? scopedTenants.find((tenant) => tenant.id === item.tenant)?.name ||
+                            "Tenant"
+                          : item.notes || "—"}
+                      </b>
+                      {item.tenant ? (
+                        <small className={tableSecondaryClass}>Tenant payment</small>
+                      ) : null}
+                    </td>
+                    <td className={tableCellClass}>
                       <b className={tablePrimaryClass}>{item.method}</b>
-                      <small className={tableSecondaryClass}>{item.receipt}</small>
                     </td>
                     <td className={tableCellClass}>
                       <strong
-                        className={item.type === "Income" ? "text-primary" : "text-secondary"}
+                        className={item.typeCode === "INCOME" ? "text-primary" : "text-secondary"}
                       >
-                        {item.type === "Income" ? "+" : "-"}${item.amount.toLocaleString()}
+                        {item.typeCode === "INCOME" ? "+" : "-"}
+                        {money.format(item.amount)}
                       </strong>
                     </td>
                     <td className={tableCellClass}>
-                      <span
-                        className={
-                          item.status === "Overdue"
-                            ? "inline-flex rounded bg-danger-subtle px-1.75 py-1 font-bold text-danger"
-                            : item.status === "Partial"
-                              ? "inline-flex rounded bg-warning-subtle px-1.75 py-1 font-bold text-warning"
-                              : "inline-flex rounded bg-success-subtle px-1.75 py-1 font-bold text-success"
-                        }
-                      >
-                        {item.status}
-                      </span>
+                      <span className={statusPillClass(item.status)}>{item.status}</span>
+                    </td>
+                    <td className={tableCellClass}>
+                      {item.status === "Pending" ? (
+                        <button
+                          className="rounded border border-default bg-surface px-2 py-1 font-semibold text-danger"
+                          onClick={() => setVoiding(item)}
+                        >
+                          Void
+                        </button>
+                      ) : null}
                     </td>
                   </tr>
                 ))}
+                {filteredTransactions.length === 0 ? (
+                  <tr>
+                    <td className="border-t border-default p-10 text-center text-muted" colSpan={8}>
+                      <Banknote className="mx-auto mb-2" size={30} />
+                      <b className="block text-secondary">No transactions found</b>
+                      Adjust the search or type filter.
+                    </td>
+                  </tr>
+                ) : null}
               </tbody>
             </table>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-175 border-collapse text-left">
+            <table className="w-full min-w-[980px] border-collapse text-left">
               <thead>
                 <tr>
                   {[
@@ -322,63 +450,86 @@ export default function FinancesClient({ transactions, rentSchedule, tenants, pr
               </thead>
               <tbody>
                 {filteredRent.map((item) => (
-                  <tr key={item.id}>
+                  <tr key={item.id} className="hover:bg-hover">
                     <td className={tableCellClass}>
                       <b className={tablePrimaryClass}>{item.tenant}</b>
-                      <small className={tableSecondaryClass}>{item.id}</small>
+                      <small className={tableSecondaryClass}>{item.landlord}</small>
                     </td>
                     <td className={tableCellClass}>
                       <b className={tablePrimaryClass}>{item.property}</b>
-                      <small className={tableSecondaryClass}>
-                        Unit {item.unit} · {item.landlord}
-                      </small>
+                      <small className={tableSecondaryClass}>Unit {item.unit}</small>
                     </td>
                     <td className={tableCellClass}>{item.dueDate}</td>
                     <td className={tableCellClass}>{item.frequency}</td>
-                    <td className={tableCellClass}>${item.due.toLocaleString()}</td>
-                    <td className={tableCellClass}>${item.paid.toLocaleString()}</td>
+                    <td className={tableCellClass}>{money.format(item.due)}</td>
+                    <td className={tableCellClass}>{money.format(item.paid)}</td>
                     <td className={tableCellClass}>
-                      <strong className="text-primary">
-                        ${(item.due - item.paid).toLocaleString()}
+                      <strong className={item.outstanding > 0 ? "text-danger" : "text-primary"}>
+                        {money.format(item.outstanding)}
                       </strong>
                     </td>
                     <td className={tableCellClass}>
-                      <span
-                        className={
-                          item.status === "Overdue"
-                            ? "inline-flex rounded bg-danger-subtle px-1.75 py-1 font-bold text-danger"
-                            : item.status === "Partial"
-                              ? "inline-flex rounded bg-warning-subtle px-1.75 py-1 font-bold text-warning"
-                              : "inline-flex rounded bg-success-subtle px-1.75 py-1 font-bold text-success"
-                        }
-                      >
-                        {item.status}
-                      </span>
+                      <span className={statusPillClass(item.status)}>{item.status}</span>
                     </td>
                   </tr>
                 ))}
+                {filteredRent.length === 0 ? (
+                  <tr>
+                    <td className="border-t border-default p-10 text-center text-muted" colSpan={8}>
+                      <ReceiptText className="mx-auto mb-2" size={30} />
+                      <b className="block text-secondary">No rent charges found</b>
+                      Adjust the search or status filter.
+                    </td>
+                  </tr>
+                ) : null}
               </tbody>
             </table>
           </div>
         )}
-        <div className="flex min-h-12 items-center justify-between gap-4 border-t border-default px-3 py-2 text-secondary">
+        <div className="flex min-h-12 items-center justify-between border-t border-default px-3 text-muted">
           <span>
             {view === "ledger"
-              ? `${filteredTransactions.length} transactions`
-              : `${filteredRent.length} rent schedules`}
+              ? `Showing ${filteredTransactions.length} of ${scopedTransactions.length} transactions`
+              : `Showing ${filteredRent.length} of ${scopedRent.length} rent charges`}
           </span>
-          <button className="flex h-8.5 items-center gap-1 rounded border border-default bg-surface px-2 text-primary">
-            <ChevronDown size={13} /> August 2026
-          </button>
         </div>
       </section>
+
       {formMode ? (
         <TransactionForm
           mode={formMode}
+          landlords={landlords}
           properties={scopedProperties}
+          units={scopedUnits}
           tenants={scopedTenants}
           onClose={() => setFormMode(null)}
         />
+      ) : null}
+
+      {voiding ? (
+        <div
+          className="fixed inset-0 z-60 grid place-items-center bg-primary/45 p-4"
+          onClick={() => setVoiding(null)}
+        >
+          <section
+            className="w-full max-w-sm rounded-md bg-surface p-6 shadow-xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h3>Void transaction?</h3>
+            <p className="text-secondary">
+              {voiding.category} — {money.format(voiding.amount)}. Voided transactions stay in the
+              ledger but are excluded from totals.
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <Button variant="secondary" type="button" onClick={() => setVoiding(null)}>
+                Cancel
+              </Button>
+              <Button className="text-danger" onClick={confirmVoid}>
+                Void transaction
+              </Button>
+            </div>
+          </section>
+        </div>
       ) : null}
     </main>
   );

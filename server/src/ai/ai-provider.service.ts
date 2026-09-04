@@ -6,7 +6,9 @@ import { EnvironmentVariables } from '../config/environment';
 
 @Injectable()
 export class AiProviderService {
-  constructor(private readonly config: ConfigService<EnvironmentVariables, true>) {}
+  constructor(
+    private readonly config: ConfigService<EnvironmentVariables, true>,
+  ) {}
 
   private normalizeBaseUrl(value: string, providerType: string) {
     const url = value.replace(/\/+$/, '');
@@ -17,7 +19,9 @@ export class AiProviderService {
   }
 
   configuration() {
-    const providerType = this.config.get('AI_DEFAULT_PROVIDER_TYPE', { infer: true });
+    const providerType = this.config.get('AI_DEFAULT_PROVIDER_TYPE', {
+      infer: true,
+    });
     const rawBaseUrl = this.config.get('AI_DEFAULT_BASE_URL', { infer: true });
     const apiKey = this.config.get('AI_DEFAULT_API_KEY', { infer: true });
     const modelId = this.config.get('AI_DEFAULT_MODEL_ID', { infer: true });

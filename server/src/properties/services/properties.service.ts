@@ -61,7 +61,11 @@ export class PropertiesService {
   async get(organizationId: string, id: string) {
     const property = await this.prisma.property.findFirst({
       where: { id, organizationId },
-      include: { landlord: true, units: true },
+      include: {
+        landlord: true,
+        units: true,
+        _count: { select: { tenants: true, leases: true } },
+      },
     });
 
     if (!property) {
@@ -101,6 +105,13 @@ export class PropertiesService {
 
     if (!property) {
       throw new NotFoundException('Property not found');
+    }
+
+    if (data.landlordId) {
+      const landlord = await this.prisma.landlord.findFirst({
+        where: { id: data.landlordId, organizationId, status: 'ACTIVE' },
+      });
+      if (!landlord) throw new NotFoundException('Landlord not found');
     }
 
     return this.prisma.property.update({

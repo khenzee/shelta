@@ -1,4 +1,13 @@
-import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsIn,
+  IsInt,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Max,
+  Min,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 import type { PropertyStatus } from '../../generated/prisma/enums';
 
 export class PropertyQueryDto {
@@ -18,4 +27,17 @@ export class PropertyQueryDto {
   @IsOptional()
   @IsIn(['ACTIVE', 'VACANT', 'UNDER_MAINTENANCE', 'SOLD', 'ARCHIVED'])
   status?: PropertyStatus;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  limit?: number;
 }

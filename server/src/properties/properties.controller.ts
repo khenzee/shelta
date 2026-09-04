@@ -31,7 +31,7 @@ export class PropertiesController {
   @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List properties' })
   list(@CurrentUser() user: JwtPayload, @Query() query: PropertyQueryDto) {
-    return this.propertiesService.list(user.organizationId, query);
+    return this.propertiesService.list(user.organizationId, query, query.page, query.limit);
   }
 
   @Get(':id')

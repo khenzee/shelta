@@ -46,6 +46,43 @@ export class FinancesService {
     return { items, total, page, limit };
   }
 
+  async rentSchedule(
+    organizationId: string,
+    query: TransactionQueryDto,
+    page = 1,
+    limit = 20,
+  ) {
+    const where: Prisma.RentChargeWhereInput = {
+      lease: {
+        organizationId,
+        ...(query.landlordId ? { landlordId: query.landlordId } : {}),
+        ...(query.propertyId ? { propertyId: query.propertyId } : {}),
+      },
+    };
+
+    const [items, total] = await Promise.all([
+      this.prisma.rentCharge.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        include: {
+          lease: {
+            include: {
+              tenant: true,
+              unit: true,
+              property: true,
+              landlord: true,
+            },
+          },
+        },
+        orderBy: { dueDate: 'desc' },
+      }),
+      this.prisma.rentCharge.count({ where }),
+    ]);
+
+    return { items, total, page, limit };
+  }
+
   async create(
     organizationId: string,
     data: CreateTransactionDto,

@@ -29,7 +29,19 @@ export class FinancesController {
   @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'List transactions' })
   list(@CurrentUser() user: JwtPayload, @Query() query: TransactionQueryDto) {
-    return this.financesService.list(user.organizationId, query);
+    return this.financesService.list(user.organizationId, query, query.page, query.limit);
+  }
+
+  @Get('rent-schedule')
+  @Roles('SUPER_ADMIN')
+  @ApiOperation({ summary: 'List rent charges for reconciliation' })
+  rentSchedule(@CurrentUser() user: JwtPayload, @Query() query: TransactionQueryDto) {
+    return this.financesService.rentSchedule(
+      user.organizationId,
+      query,
+      query.page,
+      query.limit,
+    );
   }
 
   @Post()

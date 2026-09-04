@@ -3,6 +3,7 @@
 import { Building2, Search, X } from "lucide-react";
 import { useDeferredValue, useState } from "react";
 import { useWorkspace } from "./WorkspaceProvider";
+import NotificationsBell from "./NotificationsBell";
 
 export default function WorkspaceTabs() {
   const [search, setSearch] = useState("");
@@ -15,10 +16,10 @@ export default function WorkspaceTabs() {
   );
 
   return (
-    <div className="flex h-[42px] items-center justify-between gap-3 border-b border-default bg-surface px-4 md:px-8">
+    <div className="flex h-10.5 items-center justify-between gap-3 border-b border-default bg-surface px-4 md:px-8">
       <div className="flex min-w-0 items-center gap-1 overflow-x-auto">
         <button
-          className={`flex h-[29px] items-center gap-1 whitespace-nowrap rounded px-2 text-secondary ${!activeLandlordId ? "bg-subtle text-primary" : ""}`}
+          className={`flex h-7.25 items-center gap-1 whitespace-nowrap rounded px-2 text-secondary ${!activeLandlordId ? "bg-subtle text-primary" : ""}`}
           onClick={showAgency}
         >
           <Building2 size={14} />
@@ -48,14 +49,15 @@ export default function WorkspaceTabs() {
           </div>
         ))}
       </div>
-      <div className="relative">
+      <div className="relative flex items-center gap-1">
         <button
-          className="flex h-[29px] items-center gap-1 whitespace-nowrap border-0 bg-transparent text-secondary"
+          className="flex h-[29px] items-center gap-1 whitespace-nowrap rounded border-0 bg-transparent px-2 text-secondary"
           onClick={() => setSearchOpen((current) => !current)}
         >
           <Search size={15} />
           <span className="hidden md:inline">Open landlord</span>
         </button>
+        <NotificationsBell />
         {searchOpen ? (
           <div className="absolute right-0 top-9 z-30 w-[310px] rounded-md border border-default bg-surface p-2 shadow-lg">
             <label className="flex items-center gap-2 border border-default p-2 text-muted">
@@ -69,27 +71,31 @@ export default function WorkspaceTabs() {
               />
             </label>
             <p className="mb-1 mt-3 px-2 text-muted">Landlords</p>
-            {results.map((landlord) => (
-              <button
-                className="flex w-full items-center gap-2 rounded border-0 bg-surface p-2 text-left hover:bg-sidebar"
-                key={landlord.id}
-                onClick={() => {
-                  openLandlord(landlord.id);
-                  setSearchOpen(false);
-                  setSearch("");
-                }}
-              >
-                <span className="grid size-[18px] place-items-center rounded bg-secondary font-bold text-inverse">
-                  {landlord.initials}
-                </span>
-                <span className="flex min-w-0 flex-col gap-0.5">
-                  <b className="text-primary">{landlord.name}</b>
-                  <small className="truncate text-muted">
-                    {landlord.properties} properties · {landlord.email}
-                  </small>
-                </span>
-              </button>
-            ))}
+            {results.length ? (
+              results.map((landlord) => (
+                <button
+                  className="flex w-full items-center gap-2 rounded border-0 bg-surface p-2 text-left hover:bg-sidebar"
+                  key={landlord.id}
+                  onClick={() => {
+                    openLandlord(landlord.id);
+                    setSearchOpen(false);
+                    setSearch("");
+                  }}
+                >
+                  <span className="grid size-[18px] place-items-center rounded bg-secondary font-bold text-inverse">
+                    {landlord.initials}
+                  </span>
+                  <span className="flex min-w-0 flex-col gap-0.5">
+                    <b className="text-primary">{landlord.name}</b>
+                    <small className="truncate text-muted">
+                      {landlord.properties} properties · {landlord.email}
+                    </small>
+                  </span>
+                </button>
+              ))
+            ) : (
+              <p className="px-2 py-3 text-sm text-muted">No landlords found</p>
+            )}
           </div>
         ) : null}
       </div>

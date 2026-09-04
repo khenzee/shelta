@@ -206,7 +206,8 @@ export function validateEnvironment(config: Record<string, unknown>) {
 
   if (
     validated.NODE_ENV === 'production' &&
-    (!validated.SUPERADMIN_PASSWORD || validated.SUPERADMIN_PASSWORD.length < 12)
+    (!validated.SUPERADMIN_PASSWORD ||
+      validated.SUPERADMIN_PASSWORD.length < 12)
   ) {
     throw new Error(
       'SUPERADMIN_PASSWORD must contain at least 12 characters in production',

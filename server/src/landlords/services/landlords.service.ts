@@ -47,11 +47,59 @@ export class LandlordsService {
         skip: (page - 1) * limit,
         take: limit,
         orderBy: { createdAt: 'desc' },
+        include: { _count: { select: { properties: true } } },
       }),
       this.prisma.landlord.count({ where }),
     ]);
 
-    return { items, total, page, limit };
+    const landlordIds = items.map((item) => item.id);
+    if (landlordIds.length === 0) return { items, total, page, limit };
+
+    const [unitRows, overdueRows] = await Promise.all([
+      this.prisma.unit.findMany({
+        where: {
+          property: { landlordId: { in: landlordIds } },
+          status: { not: 'ARCHIVED' },
+        },
+        select: {
+          monthlyRent: true,
+          property: { select: { landlordId: true } },
+        },
+      }),
+      this.prisma.rentCharge.findMany({
+        where: {
+          lease: { landlordId: { in: landlordIds } },
+          status: 'pending',
+          dueDate: { lt: new Date() },
+        },
+        select: { lease: { select: { landlordId: true } } },
+      }),
+    ]);
+
+    const unitsByLandlord = new Map<string, number>();
+    const rentByLandlord = new Map<string, number>();
+    for (const row of unitRows) {
+      const id = row.property.landlordId;
+      unitsByLandlord.set(id, (unitsByLandlord.get(id) ?? 0) + 1);
+      rentByLandlord.set(
+        id,
+        (rentByLandlord.get(id) ?? 0) + Number(row.monthlyRent),
+      );
+    }
+    const attentionByLandlord = new Map<string, number>();
+    for (const row of overdueRows) {
+      const id = row.lease.landlordId;
+      attentionByLandlord.set(id, (attentionByLandlord.get(id) ?? 0) + 1);
+    }
+
+    const enriched = items.map((item) => ({
+      ...item,
+      _count: { ...item._count, units: unitsByLandlord.get(item.id) ?? 0 },
+      monthlyRent: rentByLandlord.get(item.id) ?? 0,
+      attention: attentionByLandlord.get(item.id) ?? 0,
+    }));
+
+    return { items: enriched, total, page, limit };
   }
 
   async get(organizationId: string, id: string) {
@@ -93,7 +141,11 @@ export class LandlordsService {
     let verificationEmailSent = true;
     const url = `${this.config.get('FRONTEND_URL', { infer: true })}/verify-email?type=landlord&token=${encodeURIComponent(rawToken)}`;
     try {
-      await this.mail.sendContactVerification(landlord.email, landlord.name, url);
+      await this.mail.sendContactVerification(
+        landlord.email,
+        landlord.name,
+        url,
+      );
     } catch {
       verificationEmailSent = false;
     }

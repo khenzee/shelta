@@ -5,18 +5,18 @@ import { useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
-  Bell,
+  Banknote,
   Building2,
   CircleAlert,
+  DoorOpen,
   Download,
-  Plus,
   Search,
   TrendingUp,
   Users,
   Wrench,
-  X,
 } from "lucide-react";
 import { useWorkspace } from "@/components/layout/WorkspaceProvider";
+import QuickAdd from "@/components/overview/QuickAdd";
 
 const IconMap = {
   Building2,
@@ -40,11 +40,227 @@ const headingClass = "flex items-start justify-between gap-[15px]";
 const buttonClass =
   "flex h-[38px] items-center justify-center gap-[7px] rounded-md border px-[13px] font-semibold";
 
-export default function OverviewClient({ metrics, finance, unitStatus, monthLabels, notifications, unreadNotifications, activity, tasks }) {
-  const [globalSearch, setGlobalSearch] = useState("");
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
+const PERIODS = [
+  { id: "year", label: "Year" },
+  { id: "quarter", label: "Quarter" },
+  { id: "month", label: "Month" },
+];
+
+function computeFinance(transactions, period) {
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const month = now.getUTCMonth();
+  const quarterStartMonth = Math.floor(month / 3) * 3;
+  const start =
+    period === "year"
+      ? new Date(Date.UTC(year, 0, 1))
+      : period === "quarter"
+        ? new Date(Date.UTC(year, quarterStartMonth, 1))
+        : new Date(Date.UTC(year, month, 1));
+  const monthsInWindow = period === "year" ? 12 : period === "quarter" ? 3 : 1;
+  const monthly = Array.from({ length: monthsInWindow }, () => ({ income: 0, expenses: 0 }));
+  const labels = [];
+  for (let i = 0; i < monthsInWindow; i++) {
+    const labelMonth = period === "year" ? i : period === "quarter" ? quarterStartMonth + i : month;
+    labels.push(
+      new Date(Date.UTC(year, labelMonth, 1)).toLocaleDateString("en", { month: "short" }),
+    );
+  }
+  let income = 0;
+  let expenses = 0;
+  for (const item of transactions) {
+    if (String(item.status).toUpperCase() !== "COMPLETED") continue;
+    const date = new Date(item.transactionDate || item.createdAt);
+    if (Number.isNaN(date.getTime()) || date < start) continue;
+    const amount = Number(item.amount || 0);
+    if (Number.isNaN(amount)) continue;
+    const bucket =
+      period === "year"
+        ? date.getUTCMonth()
+        : period === "quarter"
+          ? date.getUTCMonth() - quarterStartMonth
+          : 0;
+    if (bucket < 0 || bucket >= monthsInWindow) continue;
+    if (String(item.type).toUpperCase() === "INCOME") {
+      income += amount;
+      monthly[bucket].income += amount;
+    } else {
+      expenses += amount;
+      monthly[bucket].expenses += amount;
+    }
+  }
+  return { income, expenses, monthly, labels };
+}
+
+export default function OverviewClient({
+  metrics,
+  finance,
+  unitStatus,
+  activity,
+  tasks,
+  landlords = [],
+  properties = [],
+  units = [],
+  tenants = [],
+  leases = [],
+  maintenanceRequests = [],
+  transactions = [],
+}) {
   const [activitySearch, setActivitySearch] = useState("");
+  const [financePeriod, setFinancePeriod] = useState("year");
   const { activeLandlord } = useWorkspace();
+
+  const scopedProperties = activeLandlord
+    ? properties.filter(
+        (property) =>
+          property.landlordId === activeLandlord.id || property.landlord === activeLandlord.name,
+      )
+    : properties;
+  const scopedUnits = activeLandlord
+    ? units.filter(
+        (unit) => unit.landlordId === activeLandlord.id || unit.landlord === activeLandlord.name,
+      )
+    : units;
+  const scopedTenants = activeLandlord
+    ? tenants.filter(
+        (tenant) =>
+          tenant.landlordId === activeLandlord.id || tenant.landlord === activeLandlord.name,
+      )
+    : tenants;
+  const scopedLeases = activeLandlord
+    ? leases.filter(
+        (lease) => lease.landlordId === activeLandlord.id || lease.landlord === activeLandlord.name,
+      )
+    : leases;
+  const scopedMaintenance = activeLandlord
+    ? maintenanceRequests.filter(
+        (request) =>
+          request.landlordId === activeLandlord.id ||
+          request.property?.landlordId === activeLandlord.id,
+      )
+    : maintenanceRequests;
+  const scopedTransactions = activeLandlord
+    ? transactions.filter(
+        (item) => item.landlordId === activeLandlord.id || item.landlord === activeLandlord.name,
+      )
+    : transactions;
+
+  const displayMetrics = activeLandlord
+    ? metrics.map((metric) => {
+        if (metric.label === "Landlords")
+          return {
+            ...metric,
+            label: "Expected monthly rent",
+            value: scopedProperties.reduce((sum, property) => sum + Number(property.rent || 0), 0),
+            money: true,
+            href: "/finances",
+            note: "Across this portfolio",
+          };
+        if (metric.label === "Properties")
+          return { ...metric, value: scopedProperties.length, note: "In this portfolio" };
+        if (metric.label === "Tenants")
+          return { ...metric, value: scopedTenants.length || metric.value, note: "In this portfolio" };
+        if (metric.label === "Active leases")
+          return {
+            ...metric,
+            value: scopedLeases.filter((item) => String(item.status).toUpperCase() === "ACTIVE")
+              .length,
+            note: "In this portfolio",
+          };
+        if (metric.label === "Pending maintenance")
+          return {
+            ...metric,
+            value: scopedMaintenance.filter(
+              (item) => String(item.status).toUpperCase() !== "VERIFIED",
+            ).length,
+            note: "In this portfolio",
+          };
+        return metric;
+      })
+    : metrics;
+
+  const displayUnitStatus = activeLandlord
+    ? {
+        occupied: scopedUnits.filter((unit) => String(unit.status).toUpperCase() === "OCCUPIED")
+          .length,
+        vacant: scopedUnits.filter((unit) => String(unit.status).toUpperCase() === "VACANT").length,
+        underRepair: scopedUnits.filter(
+          (unit) =>
+            String(unit.status).toUpperCase() === "UNDER_REPAIR" ||
+            String(unit.status) === "Under repair",
+        ).length,
+        total: scopedUnits.length,
+      }
+    : unitStatus;
+
+  const displayFinance = finance ? computeFinance(scopedTransactions, financePeriod) : null;
+
+  const occupiedUnits = scopedUnits.filter(
+    (unit) => String(unit.status).toUpperCase() === "OCCUPIED",
+  );
+  const vacantUnits = scopedUnits.filter((unit) => String(unit.status).toUpperCase() === "VACANT");
+  const expectedMonthlyRent = occupiedUnits.reduce((sum, unit) => sum + Number(unit.rent || 0), 0);
+  const vacancyAtRisk = vacantUnits.reduce((sum, unit) => sum + Number(unit.rent || 0), 0);
+  const monthsElapsedThisYear = new Date().getUTCMonth() + 1;
+  const expectedSoFar = expectedMonthlyRent * monthsElapsedThisYear;
+  const rentReceived = displayFinance?.income ?? 0;
+  const rentOutstanding = Math.max(0, expectedSoFar - rentReceived);
+  const collectionRate = expectedSoFar ? Math.round((rentReceived / expectedSoFar) * 100) : 0;
+
+  async function exportCsv() {
+    const formatMoney = (value) =>
+      new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+        maximumFractionDigits: 0,
+      }).format(value);
+    const scopeLabel = activeLandlord
+      ? `${activeLandlord.name} — scoped`
+      : "Shelta agency overview";
+    const rows = [
+      [scopeLabel, ""],
+      ["Generated", new Date().toLocaleString()],
+      ["", ""],
+      ["Metric", "Value"],
+      ...displayMetrics.map((metric) => [metric.label, metric.value]),
+      ["", ""],
+      ["Income recorded", formatMoney(displayFinance?.income ?? 0)],
+      ["Expenses recorded", formatMoney(displayFinance?.expenses ?? 0)],
+      ["Net", formatMoney((displayFinance?.income ?? 0) - (displayFinance?.expenses ?? 0))],
+      ["", ""],
+      ["Occupied units", displayUnitStatus.occupied],
+      ["Vacant units", displayUnitStatus.vacant],
+      ["Under repair", displayUnitStatus.underRepair],
+      ["Total units", displayUnitStatus.total],
+    ];
+    if (displayFinance?.monthly?.length) {
+      rows.push(["", ""], ["Month", "Income", "Expenses"]);
+      displayFinance.monthly.forEach((month, index) => {
+        rows.push([displayFinance.labels[index], month.income, month.expenses]);
+      });
+    }
+    rows.push(
+      [],
+      ["Activity"],
+      ...activity.map((item) => [item.title, item.meta, item.time, item.value]),
+    );
+    const csv = rows
+      .map((row) => row.map((cell) => `"${String(cell ?? "").replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `shelta-overview-${new Date().toISOString().slice(0, 10)}.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function markNotificationRead(notification) {
+    if (notification.readAt) return;
+    await fetch(`/api/notifications/${notification.id}`, { method: "PATCH" }).catch(() => {});
+    router.refresh();
+  }
   const today = new Intl.DateTimeFormat("en", {
     weekday: "long",
     day: "numeric",
@@ -60,11 +276,11 @@ export default function OverviewClient({ metrics, finance, unitStatus, monthLabe
     currency: "NGN",
     maximumFractionDigits: 0,
   });
-  const maxMonthlyValue = finance
-    ? Math.max(1, ...finance.monthly.flatMap((month) => [month.income, month.expenses]))
+  const maxMonthlyValue = displayFinance
+    ? Math.max(1, ...displayFinance.monthly.flatMap((month) => [month.income, month.expenses]))
     : 1;
-  const occupancyRate = unitStatus.total
-    ? Math.round((unitStatus.occupied / unitStatus.total) * 100)
+  const occupancyRate = displayUnitStatus.total
+    ? Math.round((displayUnitStatus.occupied / displayUnitStatus.total) * 100)
     : 0;
 
   return (
@@ -77,58 +293,7 @@ export default function OverviewClient({ metrics, finance, unitStatus, monthLabe
           </h1>
         </div>
         <div className="flex items-center gap-[9px]">
-          <label className="flex h-[38px] w-[258px] items-center gap-2 rounded-md border border-default bg-sidebar px-[10px] text-muted">
-            <Search size={18} />
-            <input
-              className="min-w-0 flex-1 border-0 bg-transparent text-primary outline-none"
-              value={globalSearch}
-              onChange={(event) => setGlobalSearch(event.target.value)}
-              placeholder="Search anything..."
-              aria-label="Search dashboard"
-            />
-            <span className="rounded border border-default bg-surface px-[5px] py-0.5 text-muted">
-              ⌘ K
-            </span>
-          </label>
-          <div className="relative">
-            <button
-              className="relative grid size-[38px] place-items-center rounded-md border border-default bg-surface text-primary"
-              onClick={() => setNotificationsOpen((open) => !open)}
-              aria-label="Notifications"
-            >
-              <Bell size={20} />
-              {unreadNotifications > 0 ? <i className="absolute right-[7px] top-[7px] size-1.5 rounded-full border border-inverse bg-danger" /> : null}
-            </button>
-            {notificationsOpen && (
-              <div className="absolute right-0 top-[46px] w-[285px] rounded-[7px] border border-default bg-surface p-[14px] shadow-xl">
-                <div className="mb-[9px] flex justify-between">
-                  <strong>Notifications</strong>
-                  <button
-                    className="border-0 bg-transparent text-secondary"
-                    onClick={() => setNotificationsOpen(false)}
-                    aria-label="Close notifications"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-                {notifications.length ? notifications.map(
-                  (notification) => (
-                    <p
-                      className="m-0 flex items-center gap-2 border-t border-default py-[10px] text-secondary"
-                      key={notification.id}
-                    >
-                      <span className="size-1.5 rounded-full bg-warning" />
-                      <span><b className="block text-primary">{notification.title}</b>{notification.body}</span>
-                    </p>
-                  ),
-                ) : <p className="border-t border-default py-3 text-muted">No notifications</p>}
-              </div>
-            )}
-          </div>
-          <button className={`${buttonClass} border-primary bg-primary text-inverse opacity-50`} disabled title="Quick add is not available yet">
-            <Plus size={18} />
-            <span>Quick add</span>
-          </button>
+          <QuickAdd landlords={landlords} properties={properties} units={units} />
         </div>
       </header>
 
@@ -147,8 +312,8 @@ export default function OverviewClient({ metrics, finance, unitStatus, monthLabe
           <div className="flex gap-2 max-md:w-full">
             <button
               className={`${buttonClass} border-default bg-surface text-primary max-md:flex-1`}
-              disabled
-              title="Report export is not available yet"
+              onClick={exportCsv}
+              type="button"
             >
               <Download size={14} /> Export report
             </button>
@@ -156,31 +321,29 @@ export default function OverviewClient({ metrics, finance, unitStatus, monthLabe
         </div>
 
         <div className="grid grid-cols-4 gap-[13px] max-[1050px]:grid-cols-2 max-[440px]:grid-cols-1">
-          {metrics.map((metric) => {
+          {displayMetrics.map((metric) => {
             const IconComponent = IconMap[metric.icon] || Building2;
             return (
-              <div
-                className="grid min-w-0 grid-cols-[36px_1fr] gap-x-[10px] rounded-[7px] border border-default bg-surface p-[15px] shadow-sm max-md:grid-cols-[30px_1fr] max-md:p-3"
+              <Link
+                href={metric.href || "/"}
+                className="flex min-w-0 flex-col rounded-[7px] border border-default bg-surface p-[15px] shadow-sm no-underline transition-colors hover:border-secondary max-md:p-3"
                 key={metric.label}
               >
-                <div
-                  className={`row-span-2 grid size-9 place-items-center rounded-md max-md:size-[30px] ${toneClasses[metric.tone] || toneClasses.green}`}
-                >
-                  <IconComponent size={20} />
-                </div>
-                <div className="flex min-w-0 items-center justify-between text-secondary">
-                  <span>{metric.label}</span>
-                </div>
-                <strong className="mt-1 font-semibold">{metric.value}</strong>
-                <div className="col-span-full mt-[14px] flex items-center justify-between border-t border-default pt-[10px] text-muted max-md:mt-[10px]">
-                  <span>{metric.note}</span>
-                  <b
-                    className={`rounded px-[5px] py-[3px] ${metric.change.startsWith("+") ? "bg-subtle text-secondary" : "bg-warning-subtle text-warning"}`}
+                <div className="flex items-start justify-between gap-2">
+                  <span
+                    className={`grid size-9 place-items-center rounded-md max-md:size-[30px] ${toneClasses[metric.tone] || toneClasses.green}`}
                   >
-                    {metric.change}
-                  </b>
+                    <IconComponent size={20} />
+                  </span>
+                  <span className="text-right text-secondary">{metric.label}</span>
                 </div>
-              </div>
+                <div className="mt-4 flex items-end justify-between gap-2 border-t border-default pt-3 max-md:mt-3 max-md:pt-2.5">
+                  <strong className="text-2xl font-semibold leading-none text-primary max-md:text-xl">
+                    {metric.money ? money.format(metric.value) : metric.value}
+                  </strong>
+                  <span className="text-right text-muted">{metric.note}</span>
+                </div>
+              </Link>
             );
           })}
         </div>
@@ -200,37 +363,73 @@ export default function OverviewClient({ metrics, finance, unitStatus, monthLabe
                   <i className="size-2 rounded-sm bg-secondary" /> Received
                 </span>
               </div>
-              <span className={`${buttonClass} border-default bg-surface text-primary`}>This year</span>
-            </div>
-            {finance ? <><div className="mt-[22px] flex items-end justify-between">
-              <div className="flex flex-col gap-[3px]">
-                <span className="text-secondary">Income recorded</span>
-                <strong>{money.format(finance.income)}</strong>
-              </div>
-              <div className="text-right"><b className="block text-primary">{money.format(finance.income - finance.expenses)}</b><span className="text-muted">Net after {money.format(finance.expenses)} expenses</span></div>
-            </div>
-            <div className="mt-[13px] flex h-[172px] justify-around gap-2 border-b border-default pt-[9px] max-[440px]:gap-[3px]">
-              {finance.monthly.map((month, i) => (
-                <div
-                  className="flex h-full flex-1 flex-col items-center gap-[7px]"
-                  key={monthLabels[i]}
-                >
-                  <div className="bars">
-                    <i
-                      className="w-[min(10px,38%)] rounded-t-sm bg-default"
-                      style={{ height: `${Math.max(2, (month.expenses / maxMonthlyValue) * 100)}%` }}
-                    />
-                    <b
-                      className="w-[min(10px,38%)] rounded-t-sm bg-secondary"
-                      style={{ height: `${Math.max(2, (month.income / maxMonthlyValue) * 100)}%` }}
-                    />
-                  </div>
-                  <span className="translate-y-[18px] text-muted max-[440px]:odd:invisible">
-                    {monthLabels[i]}
-                  </span>
+              <div className="flex items-center gap-[7px]">
+                <div className="flex items-center rounded-md border border-default bg-sidebar p-[3px]">
+                  {PERIODS.map((period) => (
+                    <button
+                      className={`h-[28px] rounded px-[9px] font-semibold ${
+                        financePeriod === period.id
+                          ? "border-0 bg-surface text-primary"
+                          : "border-0 bg-transparent text-secondary"
+                      }`}
+                      key={period.id}
+                      onClick={() => setFinancePeriod(period.id)}
+                      type="button"
+                    >
+                      {period.label}
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </div></> : <div className="grid min-h-[210px] place-items-center text-center text-muted"><p>Financial analytics are available to Admins only.</p></div>}
+              </div>
+            </div>
+            {displayFinance ? (
+              <>
+                <div className="mt-[22px] flex items-end justify-between">
+                  <div className="flex flex-col gap-[3px]">
+                    <span className="text-secondary">Income recorded</span>
+                    <strong>{money.format(displayFinance.income)}</strong>
+                  </div>
+                  <div className="text-right">
+                    <b className="block text-primary">
+                      {money.format(displayFinance.income - displayFinance.expenses)}
+                    </b>
+                    <span className="text-muted">
+                      Net after {money.format(displayFinance.expenses)} expenses
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-[13px] flex h-[172px] justify-around gap-2 border-b border-default pt-[9px] max-[440px]:gap-[3px]">
+                  {displayFinance.monthly.map((month, i) => (
+                    <div
+                      className="flex h-full flex-1 flex-col items-center gap-[7px]"
+                      key={displayFinance.labels[i]}
+                    >
+                      <div className="bars">
+                        <i
+                          className="w-[min(10px,38%)] rounded-t-sm bg-default"
+                          style={{
+                            height: `${Math.max(2, (month.expenses / maxMonthlyValue) * 100)}%`,
+                          }}
+                        />
+                        <b
+                          className="w-[min(10px,38%)] rounded-t-sm bg-secondary"
+                          style={{
+                            height: `${Math.max(2, (month.income / maxMonthlyValue) * 100)}%`,
+                          }}
+                        />
+                      </div>
+                      <span className="translate-y-[18px] text-muted max-[440px]:odd:invisible">
+                        {displayFinance.labels[i]}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="grid min-h-[210px] place-items-center text-center text-muted">
+                <p>Financial analytics are available to Admins only.</p>
+              </div>
+            )}
           </div>
 
           <div className={`${panelClass} flex min-h-[260px] flex-col`}>
@@ -241,7 +440,13 @@ export default function OverviewClient({ metrics, finance, unitStatus, monthLabe
               </div>
             </div>
             <div className="flex flex-1 items-center justify-center gap-[26px] py-[25px] pb-[18px] max-md:gap-[14px] max-[440px]:justify-around">
-              <div className="donut">
+              <div
+                className="donut"
+                style={{
+                  "--donut-occupied": `${displayUnitStatus.total ? (displayUnitStatus.occupied / displayUnitStatus.total) * 100 : 0}%`,
+                  "--donut-repair": `${displayUnitStatus.total ? ((displayUnitStatus.occupied + displayUnitStatus.underRepair) / displayUnitStatus.total) * 100 : 0}%`,
+                }}
+              >
                 <div>
                   <strong>{occupancyRate}%</strong>
                   <span>Occupied</span>
@@ -249,9 +454,9 @@ export default function OverviewClient({ metrics, finance, unitStatus, monthLabe
               </div>
               <div className="min-w-[105px]">
                 {[
-                  ["Occupied", unitStatus.occupied],
-                  ["Vacant", unitStatus.vacant],
-                  ["Under repair", unitStatus.underRepair],
+                  ["Occupied", displayUnitStatus.occupied],
+                  ["Vacant", displayUnitStatus.vacant],
+                  ["Under repair", displayUnitStatus.underRepair],
                 ].map(([label, value]) => (
                   <div
                     className="flex justify-between gap-[15px] py-[7px] text-secondary"
@@ -271,6 +476,77 @@ export default function OverviewClient({ metrics, finance, unitStatus, monthLabe
               className="flex w-full items-center justify-end gap-[3px] border-0 border-t border-default bg-transparent pt-[11px] font-semibold text-primary no-underline hover:text-secondary"
             >
               View unit details &rarr;
+            </Link>
+          </div>
+
+          <div className={panelClass}>
+            <div className={headingClass}>
+              <div>
+                <h3 className="mb-1 mt-0">Rent collection</h3>
+                <p className="m-0 text-muted">
+                  {activeLandlord ? "Expected and collected rent" : "Agency-wide rent position"}
+                </p>
+              </div>
+              <span className="grid size-9 place-items-center rounded-md bg-subtle text-primary">
+                <Banknote size={18} />
+              </span>
+            </div>
+            <div className="mt-[14px] grid grid-cols-3 gap-2 text-center">
+              <div className="rounded-md border border-default p-2.5">
+                <small className="block text-muted">Expected / month</small>
+                <b className="mt-1 block text-primary">{money.format(expectedMonthlyRent)}</b>
+              </div>
+              <div className="rounded-md border border-default p-2.5">
+                <small className="block text-muted">Collected YTD</small>
+                <b className="mt-1 block text-primary">{money.format(rentReceived)}</b>
+              </div>
+              <div className="rounded-md border border-default p-2.5">
+                <small className="block text-muted">Outstanding</small>
+                <b className="mt-1 block text-danger">{money.format(rentOutstanding)}</b>
+              </div>
+            </div>
+            <div className="mt-[14px] flex items-center justify-between text-secondary">
+              <span>Collection rate</span>
+              <b className="text-primary">{collectionRate}%</b>
+            </div>
+            <i className="mt-1 block h-1 overflow-hidden rounded bg-subtle">
+              <b
+                className="block h-full rounded bg-accent"
+                style={{ width: `${collectionRate}%` }}
+              />
+            </i>
+            {!finance ? (
+              <p className="mt-2 text-muted">
+                Collected totals are available to Admins only. Expected rent is still shown.
+              </p>
+            ) : null}
+          </div>
+
+          <div className={panelClass}>
+            <div className={headingClass}>
+              <div>
+                <h3 className="mb-1 mt-0">Vacancy at risk</h3>
+                <p className="m-0 text-muted">Rent not being earned on empty units</p>
+              </div>
+              <span className="grid size-9 place-items-center rounded-md bg-warning-subtle text-warning">
+                <DoorOpen size={18} />
+              </span>
+            </div>
+            <div className="mt-[14px] flex items-end justify-between">
+              <div className="flex flex-col gap-[3px]">
+                <span className="text-secondary">Vacant units</span>
+                <strong className="text-primary">{vacantUnits.length}</strong>
+              </div>
+              <div className="text-right">
+                <b className="block text-primary">{money.format(vacancyAtRisk)}</b>
+                <span className="text-muted">monthly rent not being earned</span>
+              </div>
+            </div>
+            <Link
+              href="/units"
+              className="mt-[14px] flex w-full items-center justify-end gap-[3px] border-0 border-t border-default bg-transparent pt-[11px] font-semibold text-primary no-underline hover:text-secondary"
+            >
+              Review vacant units &rarr;
             </Link>
           </div>
 
@@ -337,30 +613,33 @@ export default function OverviewClient({ metrics, finance, unitStatus, monthLabe
                 <h3 className="mb-1 mt-0">Upcoming tasks</h3>
                 <p className="m-0 text-muted">Prioritized items requiring attention</p>
               </div>
-              <button className="flex h-[30px] items-center justify-center gap-[7px] rounded-md border border-primary bg-primary px-[10px] font-semibold text-inverse opacity-50" disabled title="Task creation is not available yet">
-                <Plus size={14} />
-                <span>Add</span>
-              </button>
             </div>
             <div className="mt-[10px]">
-              {tasks.map((task, i) => (
-                <button
-                  className="flex w-full items-center gap-[10px] border-0 border-t border-default bg-transparent py-[10px] text-left"
-                  key={i}
-                >
-                  <div
-                    className={`flex h-[38px] w-[34px] flex-none flex-col items-center justify-center rounded-[5px] ${toneClasses[task.tone] || toneClasses.green}`}
+              {tasks.length ? (
+                tasks.map((task, i) => (
+                  <Link
+                    href={task.href || "/maintenance"}
+                    className="flex w-full items-center gap-[10px] border-t border-default py-[10px] text-left no-underline hover:bg-sidebar"
+                    key={task.id || i}
                   >
-                    <b>{task.date}</b>
-                    <small className="font-bold">{task.month}</small>
-                  </div>
-                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <strong>{task.title}</strong>
-                    <small className="text-muted">{task.detail}</small>
-                  </div>
-                  <ArrowUpRight className="text-muted" size={14} />
-                </button>
-              ))}
+                    <div
+                      className={`flex h-[38px] w-[34px] flex-none flex-col items-center justify-center rounded-[5px] ${toneClasses[task.tone] || toneClasses.green}`}
+                    >
+                      <b>{task.date}</b>
+                      <small className="font-bold">{task.month}</small>
+                    </div>
+                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                      <strong className="text-primary">{task.title}</strong>
+                      <small className="text-muted">{task.detail}</small>
+                    </div>
+                    <ArrowUpRight className="text-muted" size={14} />
+                  </Link>
+                ))
+              ) : (
+                <p className="border-t border-default py-6 text-center text-muted">
+                  No upcoming tasks. All portfolios are up to date.
+                </p>
+              )}
             </div>
           </div>
         </div>

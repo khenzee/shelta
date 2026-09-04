@@ -11,12 +11,14 @@ export default async function EmployeesPage() {
     authenticatedFetch("properties?limit=100"),
     authenticatedFetch("employees/roles/options"),
   ]);
-  const employees = employeesResponse.ok ? adaptEmployees((await employeesResponse.json()).items || []) : [];
-  const properties = propertiesResponse.ok ? adaptProperties((await propertiesResponse.json()).items || []) : [];
+  const employees = employeesResponse.ok
+    ? adaptEmployees((await employeesResponse.json()).items || [])
+    : [];
+  const properties = propertiesResponse.ok
+    ? adaptProperties((await propertiesResponse.json()).items || [])
+    : [];
   const roles = rolesResponse.ok
     ? ((await rolesResponse.json()).items || []).filter((role) => role.name !== "ADMIN")
     : [];
-  return (
-    <TeamClient employees={employees} properties={properties} rolePermissions={{}} roles={roles} />
-  );
+  return <TeamClient employees={employees} properties={properties} roles={roles} />;
 }

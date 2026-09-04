@@ -1,5 +1,9 @@
 import { authenticatedFetch, passThrough } from "@/lib/server/auth";
 
+export async function GET() {
+  return passThrough(await authenticatedFetch("landlords?limit=100"));
+}
+
 export async function POST(request) {
   return passThrough(await authenticatedFetch("landlords", {
     method: "POST",

@@ -28,7 +28,7 @@ export class DocumentsController {
   @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List documents' })
   list(@CurrentUser() user: JwtPayload, @Query() query: DocumentQueryDto) {
-    return this.documentsService.list(user.organizationId, query);
+    return this.documentsService.list(user.organizationId, query, query.page, query.limit);
   }
 
   @Get(':id')

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight, Building2, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
@@ -19,7 +20,7 @@ export default function LoginForm() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: form.get("login-email"), password: form.get("login-password") }),
+        body: JSON.stringify({ email: form.get("email"), password: form.get("password") }),
       });
       const raw = await response.text();
       let payload = {};
@@ -58,19 +59,19 @@ export default function LoginForm() {
             Use the account issued by your agency administrator.
           </p>
 
-          <form className="mt-8 space-y-5" onSubmit={submit} autoComplete="off">
+          <form className="mt-8 space-y-5" onSubmit={submit}>
             <label className="block">
               <span className="mb-2 block font-semibold text-primary">Email address</span>
               <span className="flex h-11 items-center gap-3 rounded-md border border-default bg-surface px-3 focus-within:border-secondary">
                 <Mail size={16} className="text-muted" />
-                <input className="min-w-0 flex-1 border-0 bg-transparent outline-none" name="login-email" type="email" autoComplete="off" data-lpignore="true" data-1p-ignore="true" required />
+                <input className="min-w-0 flex-1 border-0 bg-transparent outline-none" name="email" type="email" autoComplete="username" required />
               </span>
             </label>
             <label className="block">
               <span className="mb-2 block font-semibold text-primary">Password</span>
               <span className="flex h-11 items-center gap-3 rounded-md border border-default bg-surface px-3 focus-within:border-secondary">
                 <LockKeyhole size={16} className="text-muted" />
-                <input className="min-w-0 flex-1 border-0 bg-transparent outline-none" name="login-password" type={showPassword ? "text" : "password"} autoComplete="new-password" data-lpignore="true" data-1p-ignore="true" required />
+                <input className="min-w-0 flex-1 border-0 bg-transparent outline-none" name="password" type={showPassword ? "text" : "password"} autoComplete="current-password" required />
                 <button type="button" className="grid size-7 place-items-center border-0 bg-transparent text-muted" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? "Hide password" : "Show password"}>
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -84,16 +85,17 @@ export default function LoginForm() {
           </form>
         </div>
       </section>
-      <section className="relative hidden overflow-hidden border-l border-default bg-primary p-12 text-inverse lg:flex lg:flex-col lg:justify-between">
-        <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.12)_1px,transparent_1px)] [background-size:52px_52px]" />
+      <section className="relative rounded-l-4xl hidden overflow-hidden border-l border-default bg-primary p-12 text-inverse lg:flex lg:flex-col lg:justify-between">
+        <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(rgba(255,255,255,.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.12)_1px,transparent_1px)] [background-size:52px_52px]" />
+        <Image src="https://plus.unsplash.com/premium_photo-1678903964473-1271ecfb0288?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="background" width={900} height={500} className="absolute inset-0 z-0 w-full h-full object-cover" />
         <div className="relative max-w-xl">
-          <p className="text-xs font-semibold uppercase tracking-wider text-white/55">Property operations</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-white">Property operations</p>
           <h2 className="mt-4 max-w-lg text-4xl font-semibold leading-tight text-white">One operational record for every property, tenant, lease, and payment.</h2>
         </div>
-        <div className="relative grid max-w-xl grid-cols-3 border-y border-white/15 py-6">
-          <div><b className="block text-2xl">Private</b><span className="text-xs text-white/55">Invitation-only access</span></div>
-          <div><b className="block text-2xl">Scoped</b><span className="text-xs text-white/55">Role and property controls</span></div>
-          <div><b className="block text-2xl">Auditable</b><span className="text-xs text-white/55">Permanent operations trail</span></div>
+        <div className="relative grid max-w-xl grid-cols-3 border-y border-white/50 py-6">
+          <div><b className="block text-2xl">Private</b><span className="text-xs text-white">Invitation-only access</span></div>
+          <div><b className="block text-2xl">Scoped</b><span className="text-xs text-white">Role and property controls</span></div>
+          <div><b className="block text-2xl">Auditable</b><span className="text-xs text-white">Permanent operations trail</span></div>
         </div>
       </section>
     </main>

@@ -31,7 +31,11 @@ export class AiController {
   }
 
   @Post('chat')
-  async chat(@CurrentUser() user: JwtPayload, @Body() dto: ChatDto, @Res() response: Response) {
+  async chat(
+    @CurrentUser() user: JwtPayload,
+    @Body() dto: ChatDto,
+    @Res() response: Response,
+  ) {
     const { result, conversationId } = await this.ai.stream(user, dto);
     response.status(200);
     response.setHeader('content-type', 'text/plain; charset=utf-8');
@@ -43,11 +47,15 @@ export class AiController {
         response.write(chunk);
       }
     } catch {
-      response.write('The configured AI provider rejected the request. Check the provider URL, API key, model ID, and required headers.');
+      response.write(
+        'The configured AI provider rejected the request. Check the provider URL, API key, model ID, and required headers.',
+      );
       streamed = true;
     }
     if (!streamed) {
-      response.write('The AI provider returned no response. Check that the selected model supports OpenAI-compatible chat completions and streaming.');
+      response.write(
+        'The AI provider returned no response. Check that the selected model supports OpenAI-compatible chat completions and streaming.',
+      );
     }
     response.end();
   }

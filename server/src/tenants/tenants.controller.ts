@@ -31,7 +31,7 @@ export class TenantsController {
   @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List tenants' })
   list(@CurrentUser() user: JwtPayload, @Query() query: TenantQueryDto) {
-    return this.tenantsService.list(user.organizationId, query);
+    return this.tenantsService.list(user.organizationId, query, query.page, query.limit);
   }
 
   @Get(':id')

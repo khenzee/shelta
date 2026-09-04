@@ -25,7 +25,7 @@ export default async function RootLayout({ children }) {
       authenticatedFetch("landlords?limit=100"),
     ]);
     if (sessionResponse.ok) session = await sessionResponse.json();
-    if (landlordsResponse.ok) landlords = adaptLandlords((await landlordsResponse.json()).items || []);
+    if (landlordsResponse.ok) landlords = adaptLandlords(await landlordsResponse.json());
   }
 
   return (

@@ -51,6 +51,9 @@ export class AuthService {
     private readonly config: ConfigService<EnvironmentVariables, true>,
   ) {}
 
+  private static readonly DUMMY_HASH =
+    '$2b$10$CwTycUXWue0Thq9StjUM0uJ8DGjOtYtT9GLPFcBzT4Z9G8SEfhmVy';
+
   async validateUser(email: string, password: string, organizationId?: string) {
     const users = await this.prisma.user.findMany({
       where: {
@@ -63,11 +66,16 @@ export class AuthService {
     });
 
     if (users.length !== 1) {
+      // Constant-time response: compare against a dummy hash so that a
+      // missing account takes as long as a wrong password (prevents
+      // user enumeration through response timing).
+      await bcrypt.compare(password, AuthService.DUMMY_HASH);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const user = users[0];
     if (!user || !user.passwordHash) {
+      await bcrypt.compare(password, AuthService.DUMMY_HASH);
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -221,7 +229,8 @@ export class AuthService {
       },
       include: { user: { include: { employee: { include: { role: true } } } } },
     });
-    if (!invitation) throw new UnauthorizedException('Invitation is invalid or expired');
+    if (!invitation)
+      throw new UnauthorizedException('Invitation is invalid or expired');
     return {
       email: invitation.user.email,
       name: invitation.user.name,
@@ -241,7 +250,8 @@ export class AuthService {
       },
       include: { user: { include: { employee: true } } },
     });
-    if (!invitation) throw new UnauthorizedException('Invitation is invalid or expired');
+    if (!invitation)
+      throw new UnauthorizedException('Invitation is invalid or expired');
 
     const passwordHash = await bcrypt.hash(password, 12);
     await this.prisma.$transaction(async (tx) => {
@@ -280,19 +290,37 @@ export class AuthService {
           emailVerifiedAt: null,
         },
       });
-      if (!landlord) throw new UnauthorizedException('Verification link is invalid or expired');
+      if (!landlord)
+        throw new UnauthorizedException(
+          'Verification link is invalid or expired',
+        );
       await this.prisma.landlord.update({
         where: { id: landlord.id },
-        data: { emailVerifiedAt: now, emailVerifyHash: null, emailVerifyExpiry: null },
+        data: {
+          emailVerifiedAt: now,
+          emailVerifyHash: null,
+          emailVerifyExpiry: null,
+        },
       });
     } else {
       const tenant = await this.prisma.tenant.findFirst({
-        where: { emailVerifyHash, emailVerifyExpiry: { gt: now }, emailVerifiedAt: null },
+        where: {
+          emailVerifyHash,
+          emailVerifyExpiry: { gt: now },
+          emailVerifiedAt: null,
+        },
       });
-      if (!tenant) throw new UnauthorizedException('Verification link is invalid or expired');
+      if (!tenant)
+        throw new UnauthorizedException(
+          'Verification link is invalid or expired',
+        );
       await this.prisma.tenant.update({
         where: { id: tenant.id },
-        data: { emailVerifiedAt: now, emailVerifyHash: null, emailVerifyExpiry: null },
+        data: {
+          emailVerifiedAt: now,
+          emailVerifyHash: null,
+          emailVerifyExpiry: null,
+        },
       });
     }
 

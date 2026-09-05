@@ -1,8 +1,10 @@
 import 'dotenv/config';
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validateEnvironment } from './config/environment';
 import { DatabaseModule } from './database/database.module';
 import { StorageModule } from './storage/storage.module';
@@ -33,6 +35,21 @@ import { AiModule } from './ai/ai.module';
       isGlobal: true,
       validate: validateEnvironment,
     }),
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          name: 'auth',
+          ttl: config.get('NODE_ENV') === 'test' ? 1000 : 60_000,
+          limit: 10,
+        },
+        {
+          name: 'default',
+          ttl: 60_000,
+          limit: 200,
+        },
+      ],
+    }),
     DatabaseModule,
     StorageModule,
     MailModule,
@@ -57,6 +74,12 @@ import { AiModule } from './ai/ai.module';
     AiModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

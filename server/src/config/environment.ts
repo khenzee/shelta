@@ -182,11 +182,22 @@ export function validateEnvironment(config: Record<string, unknown>) {
     throw new Error(errors.toString());
   }
 
-  if (
-    validated.NODE_ENV === 'production' &&
-    validated.JWT_SECRET === 'super-secret-jwt-key-change-in-production'
-  ) {
-    throw new Error('JWT_SECRET must be replaced in production');
+  const weakSecrets = new Set([
+    'super-secret-jwt-key-change-in-production',
+    'replace-with-at-least-32-random-characters',
+    'secret',
+    'changeme',
+    'jwt_secret',
+  ]);
+  if (weakSecrets.has(validated.JWT_SECRET)) {
+    throw new Error(
+      "JWT_SECRET is a known placeholder. Generate a unique secret (e.g. `node -e \"console.log(require('crypto').randomBytes(48).toString('hex'))\"`).",
+    );
+  }
+  if (validated.NODE_ENV === 'production' && validated.JWT_SECRET.length < 32) {
+    throw new Error(
+      'JWT_SECRET must contain at least 32 characters in production',
+    );
   }
 
   if (Boolean(validated.SMTP_USER) !== Boolean(validated.SMTP_PASSWORD)) {

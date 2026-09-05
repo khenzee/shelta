@@ -6,12 +6,14 @@ import { EnvironmentVariables } from './config/environment';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService<EnvironmentVariables, true>);
 
   app.setGlobalPrefix('api/v1');
+  app.use(helmet());
   app.enableCors({
     origin: config.get('FRONTEND_URL', { infer: true }),
     credentials: true,
@@ -27,15 +29,17 @@ async function bootstrap() {
   const requestIdMiddleware = new RequestIdMiddleware();
   app.use(requestIdMiddleware.use.bind(requestIdMiddleware));
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Shelta API')
-    .setDescription('Real Estate Management System API')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+  if (config.get('NODE_ENV', { infer: true }) !== 'production') {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('Shelta API')
+      .setDescription('Real Estate Management System API')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api/docs', app, document);
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('api/docs', app, document);
+  }
 
   await app.listen(config.get('PORT', { infer: true }));
 }

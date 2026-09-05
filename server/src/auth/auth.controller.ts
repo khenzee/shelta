@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -17,28 +18,33 @@ interface LocalUser {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Throttle({ auth: { ttl: 60_000, limit: 20 } })
   @Get('invitations')
   validateInvitation(@Req() req: Request) {
     const token = String(req.query.token || '');
     return this.authService.validateInvitation(token);
   }
 
+  @Throttle({ auth: { ttl: 60_000, limit: 10 } })
   @Post('invitations/accept')
   acceptInvitation(@Body() dto: AcceptInvitationDto) {
     return this.authService.acceptInvitation(dto.token, dto.password);
   }
 
+  @Throttle({ auth: { ttl: 60_000, limit: 20 } })
   @Post('contacts/verify-email')
   verifyContactEmail(@Body() dto: VerifyContactEmailDto) {
     return this.authService.verifyContactEmail(dto.type, dto.token);
   }
 
+  @Throttle({ auth: { ttl: 60_000, limit: 10 } })
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() req: Request, @Body() _loginDto: LoginDto) {
     return this.authService.login((req.user as LocalUser).id);
   }
 
+  @Throttle({ auth: { ttl: 60_000, limit: 20 } })
   @Post('refresh')
   async refresh(@Body() dto: RefreshTokenDto) {
     return this.authService.refreshTokens(dto.refreshToken);

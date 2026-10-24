@@ -1,24 +1,24 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Put,
-  Delete,
-  Body,
-  Param,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { TenantsService } from './services/tenants.service';
-import { CreateTenantDto } from './dtos/create-tenant.dto';
-import { UpdateTenantDto } from './dtos/update-tenant.dto';
-import { TenantQueryDto } from './dtos/tenant-query.dto';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import type { JwtPayload } from '../auth/decorators/current-user.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { JwtPayload } from '../auth/decorators/current-user.decorator';
+import { CreateTenantDto } from './dtos/create-tenant.dto';
+import { TenantQueryDto } from './dtos/tenant-query.dto';
+import { UpdateTenantDto } from './dtos/update-tenant.dto';
+import { TenantsService } from './services/tenants.service';
 
 @ApiTags('tenants')
 @Controller('tenants')
@@ -31,7 +31,12 @@ export class TenantsController {
   @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List tenants' })
   list(@CurrentUser() user: JwtPayload, @Query() query: TenantQueryDto) {
-    return this.tenantsService.list(user.organizationId, query, query.page, query.limit);
+    return this.tenantsService.list(
+      user.organizationId,
+      query,
+      query.page,
+      query.limit,
+    );
   }
 
   @Get(':id')

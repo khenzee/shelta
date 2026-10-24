@@ -1,24 +1,24 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Put,
-  Delete,
-  Body,
-  Param,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { LandlordsService } from './services/landlords.service';
-import { CreateLandlordDto } from './dtos/create-landlord.dto';
-import { UpdateLandlordDto } from './dtos/update-landlord.dto';
-import { LandlordQueryDto } from './dtos/landlord-query.dto';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import type { JwtPayload } from '../auth/decorators/current-user.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { JwtPayload } from '../auth/decorators/current-user.decorator';
+import { CreateLandlordDto } from './dtos/create-landlord.dto';
+import { LandlordQueryDto } from './dtos/landlord-query.dto';
+import { UpdateLandlordDto } from './dtos/update-landlord.dto';
+import { LandlordsService } from './services/landlords.service';
 
 @ApiTags('landlords')
 @Controller('landlords')
@@ -31,7 +31,12 @@ export class LandlordsController {
   @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER')
   @ApiOperation({ summary: 'List landlords' })
   list(@CurrentUser() user: JwtPayload, @Query() query: LandlordQueryDto) {
-    return this.landlordsService.list(user.organizationId, query, query.page, query.limit);
+    return this.landlordsService.list(
+      user.organizationId,
+      query,
+      query.page,
+      query.limit,
+    );
   }
 
   @Get(':id')

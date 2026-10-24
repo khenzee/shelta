@@ -1,13 +1,13 @@
+import { Type } from 'class-transformer';
 import {
   IsIn,
   IsInt,
   IsOptional,
   IsString,
-  MaxLength,
   Max,
+  MaxLength,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import type { TenantStatus } from '../../generated/prisma/enums';
 
 export class TenantQueryDto {

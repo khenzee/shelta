@@ -1,24 +1,24 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Put,
-  Delete,
-  Body,
-  Param,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { PropertiesService } from './services/properties.service';
-import { CreatePropertyDto } from './dtos/create-property.dto';
-import { UpdatePropertyDto } from './dtos/update-property.dto';
-import { PropertyQueryDto } from './dtos/property-query.dto';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import type { JwtPayload } from '../auth/decorators/current-user.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import type { JwtPayload } from '../auth/decorators/current-user.decorator';
+import { CreatePropertyDto } from './dtos/create-property.dto';
+import { PropertyQueryDto } from './dtos/property-query.dto';
+import { UpdatePropertyDto } from './dtos/update-property.dto';
+import { PropertiesService } from './services/properties.service';
 
 @ApiTags('properties')
 @Controller('properties')
@@ -31,7 +31,12 @@ export class PropertiesController {
   @Roles('SUPER_ADMIN', 'PROPERTY_MANAGER', 'MAINTENANCE_OFFICER')
   @ApiOperation({ summary: 'List properties' })
   list(@CurrentUser() user: JwtPayload, @Query() query: PropertyQueryDto) {
-    return this.propertiesService.list(user.organizationId, query, query.page, query.limit);
+    return this.propertiesService.list(
+      user.organizationId,
+      query,
+      query.page,
+      query.limit,
+    );
   }
 
   @Get(':id')
